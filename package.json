@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "start": "node .output/server/index.mjs"
+  },
+  "devDependencies": {
+    "nuxt3": "latest"
+  },
+  "dependencies": {
+    "@tweakpane/core": "^1.0.8",
+    "@tweakpane/plugin-essentials": "^0.1.4",
+    "@types/three": "^0.137.0",
+    "sass": "^1.49.9",
+    "three": "^0.138.2",
+    "tweakpane": "^3.0.7"
+  }
+}
