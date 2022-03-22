@@ -1,17 +1,17 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { FolderApi } from 'tweakpane'
 import { WebGLAppContext } from '~/webgl'
 import pixelToScreenCoords from '~~/utils/webgl/pixelToScreenCoords'
 import AbstractScene from '~~/webgl/abstract/AbstractScene'
+import Camera from '~~/webgl/Components/Prototype/Camera'
 import Particles from '~~/webgl/Components/Prototype/Particles'
 
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
   private subFolder: FolderApi
-  private controls: OrbitControls
   private particles: Particles
   private raycastMesh: THREE.Object3D
+  private cameraComponent: Camera
   private sceneState = reactive({ raycastPosition: new THREE.Vector3() })
   private params = {
     backgroundColor: '#9e9e9e',
@@ -21,8 +21,10 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   constructor(context: WebGLAppContext) {
     super(context)
     this.subFolder = this.context.tweakpane.addFolder({ title: 'Main Scene' })
-    this.setCamera()
+    this.cameraComponent = new Camera(this.genContext())
     this.setObjects()
+    this.scene.add(this.cameraComponent.object)
+    this.camera = this.cameraComponent.camera
     this.context.renderer.compile(this.scene, this.camera)
 
     const raycast = new THREE.Raycaster()
@@ -37,11 +39,10 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       this.sceneState.raycastPosition.copy(intersection.point)
     }
 
-    window.addEventListener('resize', this.onResize)
     window.addEventListener('mousemove', onMouseMove)
     this.toUnbind(() => {
-      window.removeEventListener('resize', this.onResize)
       window.removeEventListener('mousemove', onMouseMove)
+      this.scene.remove(this.cameraComponent.object)
     })
   }
 
@@ -53,21 +54,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     sceneState: this.sceneState,
   })
 
-  private onResize = () => {
-    this.camera.aspect = window.innerWidth / window.innerHeight
-    this.camera.updateProjectionMatrix()
-  }
-
-  private setCamera() {
-    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100)
-    this.camera.position.z = 3
-    this.controls = new OrbitControls(this.camera, this.context.renderer.domElement)
-    this.controls.enabled = false
-    const input = this.subFolder.addInput(this.controls, 'enabled', { label: 'OrbitControls' })
-    this.toUnbind(() => input.dispose())
-    this.onResize()
-  }
-
   private setObjects() {
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color(this.params.backgroundColor)
@@ -75,17 +61,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     // this.scene.add(this.particles.object)
     const gltfLoader = new GLTFLoader()
     gltfLoader.loadAsync('./scene.glb').then(({ scene, cameras: [newCamera] }) => {
-      this.controls.reset()
-      newCamera.getWorldPosition(this.camera.position)
-      newCamera.getWorldQuaternion(this.camera.quaternion)
-      newCamera.getWorldScale(newCamera.scale)
-      this.camera.fov = (newCamera as THREE.PerspectiveCamera).fov
-      this.camera.updateMatrix()
-
-      this.controls.target = new THREE.Vector3(0, 0, -20).applyMatrix4(this.camera.matrix)
-      this.controls.target0 = new THREE.Vector3(0, 0, -20).applyMatrix4(this.camera.matrix)
-      this.onResize()
-
+      this.cameraComponent.updateCamera(newCamera as THREE.PerspectiveCamera)
       scene.traverse((o) => {
         if (o.name.startsWith('Crystal')) {
           ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
@@ -162,6 +138,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
   public tick(time: number, delta: number): void {
     // this.particles.tick(time, delta)
+    this.cameraComponent.tick(time, delta)
   }
 }
 export type MainSceneContext = ReturnType<MainScene['genContext']>
