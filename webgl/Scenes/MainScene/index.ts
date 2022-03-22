@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-import { PlaneGeometry, TextureLoader } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { FolderApi } from 'tweakpane'
@@ -14,6 +13,10 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   private particles: Particles
   private raycastMesh: THREE.Object3D
   private sceneState = reactive({ raycastPosition: new THREE.Vector3() })
+  private params = {
+    backgroundColor: '#9e9e9e',
+    hasFog: true,
+  }
 
   constructor(context: WebGLAppContext) {
     super(context)
@@ -67,7 +70,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
   private setObjects() {
     this.scene = new THREE.Scene()
-    this.scene.background = new THREE.Color(0x9e9e9e)
+    this.scene.background = new THREE.Color(this.params.backgroundColor)
     // this.particles = new Particles(this.genContext())
     // this.scene.add(this.particles.object)
     const gltfLoader = new GLTFLoader()
@@ -133,7 +136,25 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       })
     })
 
+    const fog = new THREE.FogExp2(this.params.backgroundColor, 0.01)
+    this.scene.fog = fog
+    const backgroundColor = this.subFolder.addInput(this.params, 'backgroundColor', { label: 'Background Color' })
+    backgroundColor.on('change', ({ value }) => {
+      ;(this.scene.background as THREE.Color).set(value)
+      fog.color.set(value)
+    })
+    const fogFolder = this.subFolder.addFolder({ title: 'Fog' })
+    const fogIntensity = fogFolder.addInput(fog, 'density', { label: 'Fog Density', step: 0.001 })
+    const fogEnable = fogFolder.addInput(this.params, 'hasFog', { label: 'Fog Enable' })
+    fogEnable.on('change', ({ value }) => {
+      this.scene.fog = value ? fog : null
+    })
+
     this.toUnbind(() => {
+      backgroundColor.dispose()
+      fogFolder.dispose()
+      fogIntensity.dispose()
+      fogEnable.dispose()
       // this.scene.remove(this.particles.object)
       // this.particles.destroy()
     })
