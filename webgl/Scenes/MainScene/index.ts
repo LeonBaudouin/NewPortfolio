@@ -6,13 +6,22 @@ import pixelToScreenCoords from '~~/utils/webgl/pixelToScreenCoords'
 import AbstractScene from '~~/webgl/abstract/AbstractScene'
 import Camera from '~~/webgl/Components/Prototype/Camera'
 import Particles from '~~/webgl/Components/Prototype/Particles'
+import HomeTexts from '~~/webgl/Components/Prototype/HomeTexts'
+import ColumnsGLTF from '~~/webgl/Components/Prototype/ColumnsGLTF'
+import tuple from '~~/utils/types/tuple'
 
+type Section = 'projects' | 'about' | 'lab'
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
   private subFolder: FolderApi
-  private particles: Particles
   private raycastMesh: THREE.Object3D
+  private particles: Particles
+  private texts: HomeTexts
   private cameraComponent: Camera
-  private sceneState = reactive({ raycastPosition: new THREE.Vector3() })
+  private sceneState = reactive({
+    raycastPosition: new THREE.Vector3(),
+    section: 'projects' as Section,
+    sectionPercentage: 0.5,
+  })
   private params = {
     backgroundColor: '#9e9e9e',
     hasFog: true,
@@ -21,15 +30,35 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   constructor(context: WebGLAppContext) {
     super(context)
     this.subFolder = this.context.tweakpane.addFolder({ title: 'Main Scene' })
+    this.setScene()
+
     this.cameraComponent = new Camera(this.genContext())
+
     this.setObjects()
+
     this.scene.add(this.cameraComponent.object)
     this.camera = this.cameraComponent.camera
+
     this.context.renderer.compile(this.scene, this.camera)
 
     const raycast = new THREE.Raycaster()
 
+    const sections: Record<Section, [number, number]> = {
+      about: tuple(0, 0.33),
+      projects: tuple(0.33, 0.66),
+      lab: tuple(0.66, 1),
+    }
+
     const onMouseMove = ({ clientX, clientY }: MouseEvent) => {
+      const pct = clientX / window.innerWidth
+      let section: Section = 'projects'
+      for (const [sectionName, sectionInterval] of Object.entries(sections)) {
+        section = sectionName as Section
+        if (pct >= sectionInterval[0] && pct < sectionInterval[1]) break
+      }
+      this.sceneState.section = section
+      this.sceneState.sectionPercentage = pct
+
       const mousePosition = pixelToScreenCoords(clientX, clientY)
       raycast.setFromCamera(mousePosition, this.camera)
       if (!this.raycastMesh) return
@@ -43,6 +72,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.toUnbind(() => {
       window.removeEventListener('mousemove', onMouseMove)
       this.scene.remove(this.cameraComponent.object)
+      this.cameraComponent.destroy()
     })
   }
 
@@ -54,66 +84,13 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     sceneState: this.sceneState,
   })
 
-  private setObjects() {
+  private setScene() {
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color(this.params.backgroundColor)
-    // this.particles = new Particles(this.genContext())
-    // this.scene.add(this.particles.object)
-    const gltfLoader = new GLTFLoader()
-    gltfLoader.loadAsync('./scene.glb').then(({ scene, cameras: [newCamera] }) => {
-      this.cameraComponent.updateCamera(newCamera as THREE.PerspectiveCamera)
-      scene.traverse((o) => {
-        if (o.name.startsWith('Crystal')) {
-          ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-            matcap: new THREE.TextureLoader().load('./crystal_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
-          })
-        }
-        if (o.name.startsWith('Queen')) {
-          ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-            matcap: new THREE.TextureLoader().load('./queen_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
-          })
-        }
-        if (o.name.startsWith('HeadSet')) {
-          o.traverse((v) => {
-            ;(v as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-              matcap: new THREE.TextureLoader().load('./queen_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
-            })
-          })
-        }
-        if (o.name.startsWith('Column')) {
-          ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-            matcap: new THREE.TextureLoader().load('./column_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
-          })
-        }
-        if (o.name.startsWith('Rock')) {
-          ;(o as THREE.Mesh).material = new THREE.MeshBasicMaterial({
-            map: new THREE.TextureLoader().load(
-              './rockShadow.png',
-              (t) => ((t.flipY = false), (t.encoding = THREE.sRGBEncoding))
-            ),
-          })
-        }
-        if (o.name.startsWith('Sand')) {
-          ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-            matcap: new THREE.TextureLoader().load('./sand_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
-            normalMap: new THREE.TextureLoader().load('./sand_steep_horizontal.jpg'),
-            normalScale: new THREE.Vector2(0.2, 0.2),
-          })
-        }
-        if (o.name.startsWith('Raycast')) {
-          this.raycastMesh = o
-          o.visible = false
-        }
-      })
-
-      this.scene.add(scene)
-      this.toUnbind(() => {
-        this.scene.remove(scene)
-      })
-    })
 
     const fog = new THREE.FogExp2(this.params.backgroundColor, 0.01)
     this.scene.fog = fog
+
     const backgroundColor = this.subFolder.addInput(this.params, 'backgroundColor', { label: 'Background Color' })
     backgroundColor.on('change', ({ value }) => {
       ;(this.scene.background as THREE.Color).set(value)
@@ -131,6 +108,31 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       fogFolder.dispose()
       fogIntensity.dispose()
       fogEnable.dispose()
+    })
+  }
+
+  private setObjects() {
+    // this.particles = new Particles(this.genContext())
+    // this.scene.add(this.particles.object)
+
+    const gltfLoader = new GLTFLoader()
+    gltfLoader.loadAsync('./scene.glb').then(({ scene, cameras: [newCamera] }) => {
+      this.cameraComponent.updateCamera(newCamera as THREE.PerspectiveCamera)
+      const columnsGLTF = new ColumnsGLTF(this.context, scene)
+      this.raycastMesh = columnsGLTF.raycastMesh
+
+      this.scene.add(columnsGLTF.object)
+      this.toUnbind(() => {
+        this.scene.remove(columnsGLTF.object)
+      })
+    })
+
+    this.texts = new HomeTexts(this.genContext())
+    this.scene.add(this.texts.object)
+
+    this.toUnbind(() => {
+      this.texts.destroy()
+      this.scene.remove(this.texts.object)
       // this.scene.remove(this.particles.object)
       // this.particles.destroy()
     })
@@ -139,6 +141,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   public tick(time: number, delta: number): void {
     // this.particles.tick(time, delta)
     this.cameraComponent.tick(time, delta)
+    this.texts.tick(time, delta)
   }
 }
 export type MainSceneContext = ReturnType<MainScene['genContext']>
