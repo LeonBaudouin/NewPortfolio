@@ -122,17 +122,25 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       this.raycastMesh = columnsGLTF.raycastMesh
 
       this.scene.add(columnsGLTF.object)
+
+      const worldCamera = newCamera.clone()
+      newCamera.getWorldPosition(worldCamera.position)
+      newCamera.getWorldQuaternion(worldCamera.quaternion)
+      newCamera.getWorldScale(worldCamera.scale)
+      worldCamera.updateMatrix()
+
+      this.texts = new HomeTexts(this.genContext(), worldCamera as THREE.PerspectiveCamera)
+      this.scene.add(this.texts.object)
+
       this.toUnbind(() => {
+        this.texts.destroy()
+        this.scene.remove(this.texts.object)
+        columnsGLTF.destroy()
         this.scene.remove(columnsGLTF.object)
       })
     })
 
-    this.texts = new HomeTexts(this.genContext())
-    this.scene.add(this.texts.object)
-
     this.toUnbind(() => {
-      this.texts.destroy()
-      this.scene.remove(this.texts.object)
       // this.scene.remove(this.particles.object)
       // this.particles.destroy()
     })
@@ -141,7 +149,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   public tick(time: number, delta: number): void {
     // this.particles.tick(time, delta)
     this.cameraComponent.tick(time, delta)
-    this.texts.tick(time, delta)
+    if (this.texts) this.texts.tick(time, delta)
   }
 }
 export type MainSceneContext = ReturnType<MainScene['genContext']>

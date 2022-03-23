@@ -3,30 +3,28 @@ import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import * as THREE from 'three'
 import ScrollingText from '../ScrollingText'
 import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
+import remap from '~~/utils/math/remap'
 
 export default class HomeTexts extends AbstractObject<MainSceneContext> {
   private projectsText: ScrollingText
   private aboutTexts: ScrollingText
 
-  constructor(context: MainSceneContext) {
+  constructor(context: MainSceneContext, camera: THREE.PerspectiveCamera) {
     super(context)
 
     this.object = new THREE.Object3D()
-    this.object.rotation.y = Math.PI / 2
 
-    this.projectsText = new ScrollingText(this.context)
+    this.projectsText = new ScrollingText(this.context, { camera, dist: 22, spacing: 2 })
     this.projectsText.object.visible = false
-    this.projectsText.object.position.set(0, 4.1, -7)
-    this.projectsText.object.rotation.set(0, 0, -0.15)
+    // this.projectsText.object.rotation.set(-0.15, 0, 0)
     this.object.add(this.projectsText.object)
 
-    this.aboutTexts = new ScrollingText(this.context)
+    this.aboutTexts = new ScrollingText(this.context, { camera, dist: 34, spacing: 3 })
     this.aboutTexts.object.visible = false
-    this.aboutTexts.object.position.set(0, 4.5, -18)
-    this.aboutTexts.object.rotation.set(0, 0, 0.15)
-    this.aboutTexts.object.scale.setScalar(1.2)
+    this.aboutTexts.object.position.y += 0.9
+    // this.aboutTexts.object.rotation.set(0.15, 0, 0)
+    // this.aboutTexts.object.scale.setScalar(1.2)
     this.object.add(this.aboutTexts.object)
-
     const assoc = {
       projects: this.projectsText,
       about: this.aboutTexts,
@@ -47,5 +45,18 @@ export default class HomeTexts extends AbstractObject<MainSceneContext> {
       this.object.remove(this.aboutTexts.object)
       this.aboutTexts.destroy()
     })
+  }
+
+  public tick(time: number, delta: number) {
+    this.aboutTexts.object.rotation.x = remap(
+      Math.sin(this.context.sceneState.sectionPercentage * Math.PI),
+      [0, 1],
+      [-0.16, -0.14]
+    )
+    this.projectsText.object.rotation.x = remap(
+      Math.sin(this.context.sceneState.sectionPercentage * Math.PI),
+      [0, 1],
+      [0.13, 0.17]
+    )
   }
 }
