@@ -10,7 +10,7 @@ import HomeTexts from '~~/webgl/Components/Prototype/HomeTexts'
 import ColumnsGLTF from '~~/webgl/Components/Prototype/ColumnsGLTF'
 import tuple from '~~/utils/types/tuple'
 
-type Section = 'projects' | 'about' | 'lab'
+export type Section = 'projects' | 'about' | 'lab'
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
   private subFolder: FolderApi
   private raycastMesh: THREE.Object3D
@@ -97,8 +97,13 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       fog.color.set(value)
     })
     const fogFolder = this.subFolder.addFolder({ title: 'Fog' })
-    const fogIntensity = fogFolder.addInput(fog, 'density', { label: 'Fog Density', step: 0.001 })
-    const fogEnable = fogFolder.addInput(this.params, 'hasFog', { label: 'Fog Enable' })
+    const fogIntensity = fogFolder.addInput(fog, 'density', {
+      label: 'Fog Density',
+      step: 0.001,
+    })
+    const fogEnable = fogFolder.addInput(this.params, 'hasFog', {
+      label: 'Fog Enable',
+    })
     fogEnable.on('change', ({ value }) => {
       this.scene.fog = value ? fog : null
     })

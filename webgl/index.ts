@@ -70,7 +70,7 @@ export default class WebGL extends LifeCycle {
   }
 
   public tick() {
-    const deltaTime = this.clock.getElapsedTime()
+    const deltaTime = this.clock.getDelta()
     const elapsedTime = this.clock.elapsedTime
 
     const currentScene = this.scenes[this.currentScene]

@@ -3,6 +3,7 @@ uniform float uTexRatio;
 uniform float uQuadRatio;
 uniform bool uHollow;
 uniform float uOffset;
+uniform float uAlpha;
 
 varying vec2 vUv;
 
@@ -22,6 +23,7 @@ void main() {
   imageUv.x += uOffset;
   vec4 tex = texture2D(uTexture, imageUv);
   float alpha = uHollow ? tex.g : tex.r;
+  alpha *= uAlpha;
   gl_FragColor = vec4(vec3(1.), alpha);
-  if (gl_FragColor.a < 0.2) discard;
+  if (gl_FragColor.a < 0.01) discard;
 }

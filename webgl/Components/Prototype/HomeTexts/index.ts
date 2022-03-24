@@ -1,62 +1,178 @@
-import { WebGLAppContext } from '~~/webgl'
 import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import * as THREE from 'three'
 import ScrollingText from '../ScrollingText'
-import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
-import remap from '~~/utils/math/remap'
+import { MainSceneContext, Section } from '~~/webgl/Scenes/MainScene'
+import GSAP from 'gsap'
+
+type ScrollingTextParams = ConstructorParameters<typeof ScrollingText>[1]
+type AnimationParams = {
+  current: ScrollingTextParams
+  enable: ScrollingTextParams
+  disable: ScrollingTextParams
+}
+
+const projectText: AnimationParams = {
+  current: reactive<ScrollingTextParams>({
+    camera: null as unknown as THREE.PerspectiveCamera,
+    offset: {
+      first: 0,
+      second: 0.5,
+    },
+    dist: 22,
+    depthSpacing: 2,
+    rotation: -0.15,
+    opacity: 1,
+  }),
+  enable: {
+    camera: null as unknown as THREE.PerspectiveCamera,
+    offset: {
+      first: 0,
+      second: 0.5,
+    },
+    dist: 22,
+    depthSpacing: 2,
+    rotation: -0.15,
+    opacity: 1,
+  },
+  disable: {
+    camera: null as unknown as THREE.PerspectiveCamera,
+    offset: {
+      first: 0,
+      second: 0.5,
+    },
+    dist: 22,
+    depthSpacing: 2,
+    rotation: -0.15,
+    opacity: 0,
+  },
+}
+
+const aboutText: AnimationParams = {
+  current: reactive<ScrollingTextParams>({
+    camera: null as unknown as THREE.PerspectiveCamera,
+    offset: {
+      first: 0,
+      second: 0.5,
+    },
+    dist: 34,
+    depthSpacing: 3,
+    rotation: 0.15,
+    opacity: 1,
+  }),
+  enable: {
+    camera: null as unknown as THREE.PerspectiveCamera,
+    offset: {
+      first: 0,
+      second: 0.5,
+    },
+    dist: 34,
+    depthSpacing: 3,
+    rotation: 0.15,
+    opacity: 1,
+  },
+  disable: {
+    camera: null as unknown as THREE.PerspectiveCamera,
+    offset: {
+      first: 0,
+      second: 0.5,
+    },
+    dist: 34,
+    depthSpacing: 3,
+    rotation: 0.15,
+    opacity: 0,
+  },
+}
+
+// offset: {
+//   first: 0,
+//   second: 0.5,
+// },
+// dist: 34,
+// depthSpacing: 3,
+// rotation: 0.15,
+// opacity: 0,
 
 export default class HomeTexts extends AbstractObject<MainSceneContext> {
-  private projectsText: ScrollingText
-  private aboutTexts: ScrollingText
+  private texts: Record<Section, ScrollingText>
+  private animations: Record<Section, AnimationParams> = {
+    projects: projectText,
+    about: aboutText,
+    lab: aboutText,
+  }
 
   constructor(context: MainSceneContext, camera: THREE.PerspectiveCamera) {
     super(context)
 
     this.object = new THREE.Object3D()
 
-    this.projectsText = new ScrollingText(this.context, { camera, dist: 22, spacing: 2 })
-    this.projectsText.object.visible = false
-    // this.projectsText.object.rotation.set(-0.15, 0, 0)
-    this.object.add(this.projectsText.object)
+    projectText.current.camera = camera
+    aboutText.current.camera = camera
 
-    this.aboutTexts = new ScrollingText(this.context, { camera, dist: 34, spacing: 3 })
-    this.aboutTexts.object.visible = false
-    this.aboutTexts.object.position.y += 0.9
-    // this.aboutTexts.object.rotation.set(0.15, 0, 0)
-    // this.aboutTexts.object.scale.setScalar(1.2)
-    this.object.add(this.aboutTexts.object)
-    const assoc = {
-      projects: this.projectsText,
-      about: this.aboutTexts,
-      lab: this.aboutTexts,
+    this.texts = {
+      projects: new ScrollingText(this.context, this.animations.projects.current),
+      about: new ScrollingText(this.context, this.animations.about.current),
+      lab: new ScrollingText(this.context, this.animations.lab.current),
+    }
+    this.object.add(this.texts.projects.object, this.texts.about.object, this.texts.lab.object)
+
+    const animate = (
+      current: ScrollingTextParams,
+      { dist, depthSpacing, rotation, opacity }: ScrollingTextParams,
+      gsapParams: GSAPTweenVars = {}
+    ) => {
+      GSAP.to(current, {
+        dist,
+        depthSpacing,
+        rotation,
+        opacity,
+        ease: 'Power4.easeOut',
+        duration: 1,
+        ...gsapParams,
+      })
     }
 
+    animate(
+      this.animations.projects.current,
+      this.animations.projects[this.context.sceneState.section === 'projects' ? 'enable' : 'disable'],
+      { duration: 0 }
+    )
+    animate(
+      this.animations.about.current,
+      this.animations.about[this.context.sceneState.section === 'about' ? 'enable' : 'disable'],
+      { duration: 0 }
+    )
+    animate(
+      this.animations.lab.current,
+      this.animations.lab[this.context.sceneState.section === 'lab' ? 'enable' : 'disable'],
+      { duration: 0 }
+    )
+
     this.toUnbind(
-      watchEffect((onCleanup) => {
-        const text = assoc[this.context.sceneState.section]
-        text.object.visible = true
-        onCleanup(() => (text.object.visible = false))
-      })
+      watch(
+        () => this.context.sceneState.section,
+        (section, _, onCleanup) => {
+          const { enable, disable, current } = this.animations[section]
+          animate(current, enable)
+          onCleanup(() => animate(current, disable))
+        },
+        { immediate: true }
+      )
     )
 
     this.toUnbind(() => {
-      this.object.remove(this.projectsText.object)
-      this.projectsText.destroy()
-      this.object.remove(this.aboutTexts.object)
-      this.aboutTexts.destroy()
+      this.object.remove(this.texts.projects.object, this.texts.about.object, this.texts.lab.object)
+      this.texts.projects.destroy()
+      this.texts.about.destroy()
+      this.texts.lab.destroy()
     })
   }
 
   public tick(time: number, delta: number) {
-    this.aboutTexts.object.rotation.x = remap(
-      Math.sin(this.context.sceneState.sectionPercentage * Math.PI),
-      [0, 1],
-      [-0.16, -0.14]
-    )
-    this.projectsText.object.rotation.x = remap(
-      Math.sin(this.context.sceneState.sectionPercentage * Math.PI),
-      [0, 1],
-      [0.13, 0.17]
-    )
+    this.animations.projects.current.offset!.first += delta * 0.06
+    this.animations.projects.current.offset!.second += delta * 0.1
+    this.animations.about.current.offset!.first += delta * 0.06
+    this.animations.about.current.offset!.second += delta * 0.1
+    this.animations.lab.current.offset!.first += delta * 0.06
+    this.animations.lab.current.offset!.second += delta * 0.1
   }
 }

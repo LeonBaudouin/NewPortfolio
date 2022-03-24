@@ -11,20 +11,28 @@ export default class ScrollingText extends AbstractObject {
 
   constructor(
     context: WebGLAppContext,
-    { camera, dist = 22, spacing = 2 }: { camera: THREE.PerspectiveCamera; dist?: number; spacing?: number }
+    params: {
+      camera: THREE.PerspectiveCamera
+      dist?: number
+      depthSpacing?: number
+      heightSpacing?: number
+      scale?: number
+      offset?: {
+        first: number
+        second: number
+      }
+      opacity?: number
+      rotation?: number
+    }
   ) {
     super(context)
 
-    const secondSpace = 0.8
-    const scaleFactor = 1 / 15
+    const { camera } = params
 
     this.object = new THREE.Object3D()
-    this.object.position.copy(camera.position)
 
     const rotationMatrix = new THREE.Matrix4()
     rotationMatrix.extractRotation(camera.matrix)
-
-    this.object.position.sub(new THREE.Vector3(0, 0, dist).applyMatrix4(rotationMatrix))
 
     const texture = new THREE.TextureLoader().load('./text.png', (t) => {
       t.wrapS = THREE.RepeatWrapping
@@ -34,7 +42,7 @@ export default class ScrollingText extends AbstractObject {
 
     const quadSize = new THREE.Vector2(50, 1)
 
-    const filledMaterial = new THREE.ShaderMaterial({
+    const hollowMaterial = new THREE.ShaderMaterial({
       fragmentShader: fragment,
       vertexShader: vertex,
       transparent: true,
@@ -43,20 +51,11 @@ export default class ScrollingText extends AbstractObject {
         uTexRatio: { value: 1 },
         uQuadRatio: { value: quadSize.x / quadSize.y },
         uHollow: { value: true },
-        uOffset: { value: 0.5 },
+        uOffset: { value: 0 },
+        uAlpha: { value: 1 },
       },
     })
-
-    this.firstMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(quadSize.x, quadSize.y), filledMaterial)
-    this.firstMesh.position.x = -spacing
-    this.firstMesh.rotation.y = Math.PI / 2
-    this.object.add(this.firstMesh)
-
-    const viewport1 = getViewport(camera, this.firstMesh.getWorldPosition(new THREE.Vector3()))
-    this.firstMesh.scale.setScalar(viewport1.height * scaleFactor)
-    this.firstMesh.position.y = secondSpace * viewport1.height * scaleFactor
-
-    const hollowMaterial = new THREE.ShaderMaterial({
+    const filledMaterial = new THREE.ShaderMaterial({
       fragmentShader: fragment,
       vertexShader: vertex,
       transparent: true,
@@ -66,17 +65,49 @@ export default class ScrollingText extends AbstractObject {
         uQuadRatio: { value: quadSize.x / quadSize.y },
         uHollow: { value: false },
         uOffset: { value: 0 },
+        uAlpha: { value: 1 },
       },
     })
 
-    this.secondMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(quadSize.x, quadSize.y), hollowMaterial)
-    this.secondMesh.position.x = spacing
-    this.secondMesh.rotation.y = Math.PI / 2
-    this.object.add(this.secondMesh)
+    this.firstMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(quadSize.x, quadSize.y), hollowMaterial)
+    this.object.add(this.firstMesh)
+    this.firstMesh.rotation.y = Math.PI / 2
 
-    const viewport2 = getViewport(camera, this.secondMesh.getWorldPosition(new THREE.Vector3()))
-    this.secondMesh.scale.setScalar(viewport2.height * scaleFactor)
-    this.secondMesh.position.y = -secondSpace * viewport2.height * scaleFactor
+    this.secondMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(quadSize.x, quadSize.y), filledMaterial)
+    this.object.add(this.secondMesh)
+    this.secondMesh.rotation.y = Math.PI / 2
+
+    this.toUnbind(
+      watchEffect(() => {
+        hollowMaterial.uniforms.uOffset.value = params.offset?.first || 0
+        filledMaterial.uniforms.uOffset.value = params.offset?.second || 0
+      }),
+      watchEffect(() => {
+        this.object.visible = params.opacity != 0
+        hollowMaterial.uniforms.uAlpha.value = params.opacity
+        filledMaterial.uniforms.uAlpha.value = params.opacity
+      }),
+      watchEffect(() => {
+        this.object.rotation.x = params.rotation || 0
+      }),
+      watch(
+        [() => params.dist, () => params.depthSpacing, () => params.heightSpacing, () => params.scale],
+        ([dist = 22, depthSpacing = 2, heightSpacing = 0.8, scale = 1 / 15]) => {
+          this.object.position.copy(camera.position)
+          this.object.position.sub(new THREE.Vector3(0, 0, dist).applyMatrix4(rotationMatrix))
+          this.firstMesh.position.x = -depthSpacing
+          const viewport1 = getViewport(camera, this.firstMesh.getWorldPosition(new THREE.Vector3()))
+          this.firstMesh.scale.setScalar(viewport1.height * scale)
+          this.firstMesh.position.y = heightSpacing * viewport1.height * scale
+
+          this.secondMesh.position.x = depthSpacing
+          const viewport2 = getViewport(camera, this.secondMesh.getWorldPosition(new THREE.Vector3()))
+          this.secondMesh.scale.setScalar(viewport2.height * scale)
+          this.secondMesh.position.y = -heightSpacing * viewport2.height * scale
+        },
+        { immediate: true }
+      )
+    )
 
     this.toUnbind(() => {
       this.firstMesh.geometry.dispose()
