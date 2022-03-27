@@ -2,7 +2,7 @@ import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import * as THREE from 'three'
 import ScrollingText from '../ScrollingText'
 import { MainSceneContext, Section } from '~~/webgl/Scenes/MainScene'
-import GSAP from 'gsap'
+import gsap from 'gsap'
 
 type ScrollingTextParams = ConstructorParameters<typeof ScrollingText>[1]
 type AnimationParams = {
@@ -20,8 +20,10 @@ const projectText: AnimationParams = {
     },
     dist: 22,
     depthSpacing: 2,
+    heightSpacing: 0.75,
     rotation: -0.15,
     opacity: 1,
+    enable: true,
   }),
   enable: {
     camera: null as unknown as THREE.PerspectiveCamera,
@@ -33,6 +35,7 @@ const projectText: AnimationParams = {
     depthSpacing: 2,
     rotation: -0.15,
     opacity: 1,
+    enable: true,
   },
   disable: {
     camera: null as unknown as THREE.PerspectiveCamera,
@@ -43,7 +46,8 @@ const projectText: AnimationParams = {
     dist: 22,
     depthSpacing: 2,
     rotation: -0.15,
-    opacity: 0,
+    opacity: 1,
+    enable: false,
   },
 }
 
@@ -56,8 +60,10 @@ const aboutText: AnimationParams = {
     },
     dist: 34,
     depthSpacing: 3,
+    heightSpacing: 0.9,
     rotation: 0.15,
     opacity: 1,
+    enable: true,
   }),
   enable: {
     camera: null as unknown as THREE.PerspectiveCamera,
@@ -69,6 +75,7 @@ const aboutText: AnimationParams = {
     depthSpacing: 3,
     rotation: 0.15,
     opacity: 1,
+    enable: true,
   },
   disable: {
     camera: null as unknown as THREE.PerspectiveCamera,
@@ -79,25 +86,57 @@ const aboutText: AnimationParams = {
     dist: 34,
     depthSpacing: 3,
     rotation: 0.15,
-    opacity: 0,
+    opacity: 1,
+    enable: false,
   },
 }
 
-// offset: {
-//   first: 0,
-//   second: 0.5,
-// },
-// dist: 34,
-// depthSpacing: 3,
-// rotation: 0.15,
-// opacity: 0,
+const labText: AnimationParams = {
+  current: reactive<ScrollingTextParams>({
+    camera: null as unknown as THREE.PerspectiveCamera,
+    offset: {
+      first: 0,
+      second: 0.5,
+    },
+    dist: 34,
+    depthSpacing: 3,
+    heightSpacing: 0.75,
+    rotation: 0.15,
+    opacity: 1,
+    enable: true,
+  }),
+  enable: {
+    camera: null as unknown as THREE.PerspectiveCamera,
+    offset: {
+      first: 0,
+      second: 0.5,
+    },
+    dist: 34,
+    depthSpacing: 3,
+    rotation: 0.15,
+    opacity: 1,
+    enable: true,
+  },
+  disable: {
+    camera: null as unknown as THREE.PerspectiveCamera,
+    offset: {
+      first: 0,
+      second: 0.5,
+    },
+    dist: 34,
+    depthSpacing: 3,
+    rotation: 0.15,
+    opacity: 1,
+    enable: false,
+  },
+}
 
 export default class HomeTexts extends AbstractObject<MainSceneContext> {
   private texts: Record<Section, ScrollingText>
   private animations: Record<Section, AnimationParams> = {
     projects: projectText,
     about: aboutText,
-    lab: aboutText,
+    lab: labText,
   }
 
   constructor(context: MainSceneContext, camera: THREE.PerspectiveCamera) {
@@ -107,26 +146,29 @@ export default class HomeTexts extends AbstractObject<MainSceneContext> {
 
     projectText.current.camera = camera
     aboutText.current.camera = camera
+    labText.current.camera = camera
 
     this.texts = {
       projects: new ScrollingText(this.context, this.animations.projects.current),
       about: new ScrollingText(this.context, this.animations.about.current),
       lab: new ScrollingText(this.context, this.animations.lab.current),
     }
+    this.texts.about.object.position.y += 2
     this.object.add(this.texts.projects.object, this.texts.about.object, this.texts.lab.object)
 
     const animate = (
       current: ScrollingTextParams,
-      { dist, depthSpacing, rotation, opacity }: ScrollingTextParams,
+      { dist, depthSpacing, rotation, opacity, enable }: ScrollingTextParams,
       gsapParams: GSAPTweenVars = {}
     ) => {
-      GSAP.to(current, {
+      gsap.to(current, {
         dist,
         depthSpacing,
         rotation,
         opacity,
-        ease: 'Power4.easeOut',
-        duration: 1,
+        enable,
+        ease: 'Power3.easeOut',
+        duration: 1.2,
         ...gsapParams,
       })
     }
@@ -148,6 +190,9 @@ export default class HomeTexts extends AbstractObject<MainSceneContext> {
     )
 
     this.toUnbind(
+      this.texts.projects.destroy,
+      this.texts.about.destroy,
+      this.texts.lab.destroy,
       watch(
         () => this.context.sceneState.section,
         (section, _, onCleanup) => {
@@ -161,9 +206,6 @@ export default class HomeTexts extends AbstractObject<MainSceneContext> {
 
     this.toUnbind(() => {
       this.object.remove(this.texts.projects.object, this.texts.about.object, this.texts.lab.object)
-      this.texts.projects.destroy()
-      this.texts.about.destroy()
-      this.texts.lab.destroy()
     })
   }
 

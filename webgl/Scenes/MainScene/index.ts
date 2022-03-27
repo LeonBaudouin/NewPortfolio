@@ -6,7 +6,7 @@ import pixelToScreenCoords from '~~/utils/webgl/pixelToScreenCoords'
 import AbstractScene from '~~/webgl/abstract/AbstractScene'
 import Camera from '~~/webgl/Components/Prototype/Camera'
 import Particles from '~~/webgl/Components/Prototype/Particles'
-import HomeTexts from '~~/webgl/Components/Prototype/HomeTexts'
+import MainTexts from '~~/webgl/Components/Prototype/MainTexts'
 import ColumnsGLTF from '~~/webgl/Components/Prototype/ColumnsGLTF'
 import tuple from '~~/utils/types/tuple'
 
@@ -15,7 +15,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   private subFolder: FolderApi
   private raycastMesh: THREE.Object3D
   private particles: Particles
-  private texts: HomeTexts
+  private texts: MainTexts
   private cameraComponent: Camera
   private sceneState = reactive({
     raycastPosition: new THREE.Vector3(),
@@ -108,12 +108,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       this.scene.fog = value ? fog : null
     })
 
-    this.toUnbind(() => {
-      backgroundColor.dispose()
-      fogFolder.dispose()
-      fogIntensity.dispose()
-      fogEnable.dispose()
-    })
+    this.toUnbind(backgroundColor.dispose, fogFolder.dispose, fogIntensity.dispose, fogEnable.dispose)
   }
 
   private setObjects() {
@@ -123,7 +118,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     const gltfLoader = new GLTFLoader()
     gltfLoader.loadAsync('./scene.glb').then(({ scene, cameras: [newCamera] }) => {
       this.cameraComponent.updateCamera(newCamera as THREE.PerspectiveCamera)
-      const columnsGLTF = new ColumnsGLTF(this.context, scene)
+      const columnsGLTF = new ColumnsGLTF(this.genContext(), scene)
       this.raycastMesh = columnsGLTF.raycastMesh
 
       this.scene.add(columnsGLTF.object)
@@ -134,7 +129,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       newCamera.getWorldScale(worldCamera.scale)
       worldCamera.updateMatrix()
 
-      this.texts = new HomeTexts(this.genContext(), worldCamera as THREE.PerspectiveCamera)
+      this.texts = new MainTexts(this.genContext(), worldCamera as THREE.PerspectiveCamera)
       this.scene.add(this.texts.object)
 
       this.toUnbind(() => {

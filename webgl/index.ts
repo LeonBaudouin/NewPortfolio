@@ -4,9 +4,11 @@ import LifeCycle from './abstract/LifeCycle'
 import MainScene from './Scenes/MainScene'
 
 import { Params } from '~~/plugins/params.client'
+import TestScene from './Scenes/TestScene'
 
 type Scenes = {
   main: MainScene
+  test: TestScene
 }
 
 export default class WebGL extends LifeCycle {
@@ -37,7 +39,7 @@ export default class WebGL extends LifeCycle {
     }) as ListApi<string>
 
     sceneBlade.on('change', ({ value }) => (this.currentScene = value as keyof Scenes))
-    this.toUnbind(() => sceneBlade.dispose())
+    this.toUnbind(sceneBlade.dispose)
   }
 
   private genContext = () => ({
@@ -50,10 +52,9 @@ export default class WebGL extends LifeCycle {
   private setupScenes() {
     this.scenes = {
       main: new MainScene(this.genContext()),
+      test: new TestScene(this.genContext()),
     }
-    this.toUnbind(() => {
-      this.scenes.main.destroy()
-    })
+    this.toUnbind(this.scenes.main.destroy, this.scenes.test.destroy)
   }
 
   private setupRenderer() {
