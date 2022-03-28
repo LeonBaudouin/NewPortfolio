@@ -60,8 +60,6 @@ export default class ColumnsGLTF extends AbstractObject<MainSceneContext> {
       if (o.name.startsWith('Sand')) {
         ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
           matcap: new THREE.TextureLoader().load('./sand_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
-          normalMap: new THREE.TextureLoader().load('./sand_steep_horizontal.jpg'),
-          normalScale: new THREE.Vector2(0.2, 0.2),
         })
       }
       if (o.name.startsWith('Raycast')) {

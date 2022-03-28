@@ -31,6 +31,7 @@ export default class TestScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.debugCamera = new DebugCamera(this.genContext(), { defaultPosition: new THREE.Vector3(0, 3, 15) })
     this.setScene()
     this.scene.add(this.mainCamera.object)
+    this.scene.add(this.mainCamera.cameraHelper)
     this.scene.add(this.debugCamera.object)
     this.setObjects()
 
@@ -38,6 +39,7 @@ export default class TestScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
     this.toUnbind(() => {
       this.scene.remove(this.mainCamera.object)
+      this.scene.remove(this.mainCamera.cameraHelper)
       this.mainCamera.destroy()
       this.scene.remove(this.debugCamera.object)
       this.debugCamera.destroy()
