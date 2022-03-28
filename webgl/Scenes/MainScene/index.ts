@@ -12,7 +12,6 @@ import tuple from '~~/utils/types/tuple'
 
 export type Section = 'projects' | 'about' | 'lab'
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
-  private subFolder: FolderApi
   private raycastMesh: THREE.Object3D
   private particles: Particles
   private texts: MainTexts
@@ -31,7 +30,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
   constructor(context: WebGLAppContext) {
     super(context)
-    this.subFolder = this.context.tweakpane.addFolder({ title: 'Main Scene' })
     this.setScene()
 
     this.cameraComponent = new Camera(this.genContext())
@@ -80,7 +78,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
   private genContext = () => ({
     ...this.context,
-    tweakpane: this.subFolder,
     camera: this.camera,
     scene: this.scene,
     sceneState: this.sceneState,
@@ -93,12 +90,14 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     const fog = new THREE.FogExp2(this.params.backgroundColor, 0.01)
     this.scene.fog = fog
 
-    const backgroundColor = this.subFolder.addInput(this.params, 'backgroundColor', { label: 'Background Color' })
+    const backgroundColor = this.context.tweakpane.addInput(this.params, 'backgroundColor', {
+      label: 'Background Color',
+    })
     backgroundColor.on('change', ({ value }) => {
       ;(this.scene.background as THREE.Color).set(value)
       fog.color.set(value)
     })
-    const fogFolder = this.subFolder.addFolder({ title: 'Fog' })
+    const fogFolder = this.context.tweakpane.addFolder({ title: 'Fog' })
     const fogIntensity = fogFolder.addInput(fog, 'density', {
       label: 'Fog Density',
       step: 0.001,

@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { FolderApi, ListApi, Pane } from 'tweakpane'
+import { FolderApi, ListApi, Pane, TabPageApi } from 'tweakpane'
 import LifeCycle from './abstract/LifeCycle'
 import MainScene from './Scenes/MainScene'
 
@@ -42,19 +42,24 @@ export default class WebGL extends LifeCycle {
     this.toUnbind(sceneBlade.dispose)
   }
 
-  private genContext = () => ({
+  private genContext = (tweakpane: FolderApi | TabPageApi | null = null) => ({
     clock: this.clock,
     renderer: this.renderer,
     state: this.state,
-    tweakpane: this.tweakpane,
+    tweakpane: tweakpane || (this.tweakpane as FolderApi | TabPageApi),
   })
 
   private setupScenes() {
+    const tabs = this.tweakpane.addTab({ pages: [{ title: 'MainScene' }] })
+
+    const mainPage = tabs.pages[0]
+    const testPage = tabs.addPage({ title: 'TestScene' })
+
     this.scenes = {
-      main: new MainScene(this.genContext()),
-      test: new TestScene(this.genContext()),
+      main: new MainScene(this.genContext(mainPage)),
+      test: new TestScene(this.genContext(testPage)),
     }
-    this.toUnbind(this.scenes.main.destroy, this.scenes.test.destroy)
+    this.toUnbind(this.scenes.main.destroy, this.scenes.test.destroy, tabs.dispose)
   }
 
   private setupRenderer() {

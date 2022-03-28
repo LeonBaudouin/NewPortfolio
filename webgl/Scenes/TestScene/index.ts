@@ -21,7 +21,6 @@ const sections: Record<Section, [number, number]> = {
 }
 
 export default class TestScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
-  private subFolder: FolderApi
   private mainCamera: TravellingCamera
   private debugCamera: DebugCamera
   private sceneState: { raycastPosition: THREE.Vector3; section: Section | null; sectionPercentage: number }
@@ -36,7 +35,6 @@ export default class TestScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
   constructor(context: WebGLAppContext) {
     super(context)
-    this.subFolder = this.context.tweakpane.addFolder({ title: 'Test Scene' })
     this.sceneState = reactive({
       sectionPercentage: 0,
       raycastPosition: new THREE.Vector3(),
@@ -55,7 +53,7 @@ export default class TestScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
     this.context.renderer.compile(this.scene, this.camera)
 
-    const sectionInput = this.subFolder.addInput(this.sceneState, 'sectionPercentage', {
+    const sectionInput = this.context.tweakpane.addInput(this as any, 'targetPercentage', {
       options: [
         { text: 'projects', value: 0 },
         { text: 'lab', value: 0.5 },
@@ -64,8 +62,8 @@ export default class TestScene extends AbstractScene<WebGLAppContext, THREE.Pers
       label: 'Section',
       index: 0,
     })
-    const scrollSpeedInput = this.subFolder.addInput(this.params, 'scrollSpeed', { label: 'Scroll Speed' })
-    const scrollLerpInput = this.subFolder.addInput(this.params, 'scrollLerp', {
+    const scrollSpeedInput = this.context.tweakpane.addInput(this.params, 'scrollSpeed', { label: 'Scroll Speed' })
+    const scrollLerpInput = this.context.tweakpane.addInput(this.params, 'scrollLerp', {
       label: 'Scroll Lerp',
       min: 0,
       max: 0.2,
@@ -88,7 +86,6 @@ export default class TestScene extends AbstractScene<WebGLAppContext, THREE.Pers
       this.mainCamera.destroy,
       this.debugCamera.destroy,
       sectionInput.dispose,
-      this.subFolder.dispose,
       scrollSpeedInput.dispose,
       scrollLerpInput.dispose
     )
@@ -96,7 +93,6 @@ export default class TestScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
   private genContext = () => ({
     ...this.context,
-    tweakpane: this.subFolder,
     camera: this.camera,
     scene: this.scene,
     sceneState: this.sceneState,
@@ -109,14 +105,14 @@ export default class TestScene extends AbstractScene<WebGLAppContext, THREE.Pers
     const fog = new THREE.FogExp2(this.params.backgroundColor, 0.01)
     this.scene.fog = fog
 
-    const backgroundColor = this.subFolder.addInput(this.params, 'backgroundColor', {
+    const backgroundColor = this.context.tweakpane.addInput(this.params, 'backgroundColor', {
       label: 'Background Color',
     })
     backgroundColor.on('change', ({ value }) => {
       ;(this.scene.background as THREE.Color).set(value)
       fog.color.set(value)
     })
-    const fogFolder = this.subFolder.addFolder({ title: 'Fog' })
+    const fogFolder = this.context.tweakpane.addFolder({ title: 'Fog' })
     const fogIntensity = fogFolder.addInput(fog, 'density', {
       label: 'Fog Density',
       step: 0.001,
@@ -128,7 +124,7 @@ export default class TestScene extends AbstractScene<WebGLAppContext, THREE.Pers
       this.scene.fog = value ? fog : null
     })
 
-    const cameraInput = this.subFolder.addInput(this.params, 'debugCamera', { label: 'Debug Camera', index: 0 })
+    const cameraInput = this.context.tweakpane.addInput(this.params, 'debugCamera', { label: 'Debug Camera', index: 0 })
 
     const updateCam = (isDebug: boolean) => {
       this.camera = isDebug ? this.debugCamera.object : this.mainCamera.camera

@@ -1,14 +1,7 @@
 import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import * as THREE from 'three'
 import { MainSceneContext, Section } from '~~/webgl/Scenes/MainScene'
-import gsap from 'gsap'
-import { CubicBezier } from '@tweakpane/plugin-essentials'
 
-const assoc: Record<Section, number> = {
-  projects: 0,
-  lab: 0.5,
-  about: 1,
-}
 export default class TravellingCamera extends AbstractObject<MainSceneContext> {
   private mixer: THREE.AnimationMixer
   public cameraHelper: THREE.CameraHelper
