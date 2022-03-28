@@ -39,7 +39,8 @@ export default class Crystal extends AbstractObject<MainSceneContext> {
       watchEffect(() => {
         gsap.to(gsapProxyData, {
           enableFactor: this.isEnabled ? 1 : 0,
-          ease: this.isEnabled ? 'Power2.easeOut' : 'Power2.easeIn',
+          ease: this.isEnabled ? 'Power3.easeOut' : 'Power2.easeIn',
+          duration: this.isEnabled ? 1.5 : 1,
           onUpdate: () => {
             lerpVectors(this.disableObject, this.enableObject, gsapProxyData.enableFactor, this.object)
           },

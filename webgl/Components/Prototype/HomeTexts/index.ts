@@ -196,6 +196,7 @@ export default class HomeTexts extends AbstractObject<MainSceneContext> {
       watch(
         () => this.context.sceneState.section,
         (section, _, onCleanup) => {
+          if (!section) return
           const { enable, disable, current } = this.animations[section]
           animate(current, enable)
           onCleanup(() => animate(current, disable))

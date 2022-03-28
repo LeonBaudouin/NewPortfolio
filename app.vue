@@ -36,7 +36,7 @@ useCleanup(() => {
 </script>
 
 <style lang="scss">
-canvas {
+body > canvas {
   position: absolute;
   inset: 0;
   z-index: -1;

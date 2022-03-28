@@ -17,11 +17,13 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   private particles: Particles
   private texts: MainTexts
   private cameraComponent: Camera
-  private sceneState = reactive({
-    raycastPosition: new THREE.Vector3(),
-    section: 'projects' as Section,
-    sectionPercentage: 0.5,
-  })
+  private sceneState = reactive<{ raycastPosition: THREE.Vector3; section: Section | null; sectionPercentage: number }>(
+    {
+      raycastPosition: new THREE.Vector3(),
+      section: 'projects' as Section,
+      sectionPercentage: 0.5,
+    }
+  )
   private params = {
     backgroundColor: '#9e9e9e',
     hasFog: true,
@@ -129,12 +131,12 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       newCamera.getWorldScale(worldCamera.scale)
       worldCamera.updateMatrix()
 
-      this.texts = new MainTexts(this.genContext(), worldCamera as THREE.PerspectiveCamera)
-      this.scene.add(this.texts.object)
+      // this.texts = new MainTexts(this.genContext(), worldCamera as THREE.PerspectiveCamera)
+      // this.scene.add(this.texts.object)
 
       this.toUnbind(() => {
-        this.texts.destroy()
-        this.scene.remove(this.texts.object)
+        // this.texts.destroy()
+        // this.scene.remove(this.texts.object)
         columnsGLTF.destroy()
         this.scene.remove(columnsGLTF.object)
       })

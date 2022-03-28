@@ -5,6 +5,8 @@ import fragment from './index.frag?raw'
 import vertex from './index.vert?raw'
 import getViewport from '~~/utils/webgl/viewport'
 import gsap from 'gsap'
+import copyMatrix from '~~/utils/webgl/copyMatrix'
+import copyWorldMatrix from '~~/utils/webgl/copyWorldMatrix'
 
 type Params = {
   camera: THREE.PerspectiveCamera
@@ -20,6 +22,7 @@ type Params = {
   rotation?: number
   enable?: boolean
   leftToRight?: boolean
+  revert?: boolean
 }
 
 type Data = Required<Params>
@@ -30,7 +33,7 @@ export default class ScrollingText extends AbstractObject {
       first: 0,
       second: 0.5,
     },
-    dist: 22,
+    dist: 15,
     depthSpacing: 2,
     heightSpacing: 0.75,
     rotation: -0.15,
@@ -38,8 +41,10 @@ export default class ScrollingText extends AbstractObject {
     enable: true,
     leftToRight: true,
     scale: 1 / 15,
+    revert: false,
   }
 
+  private wrapper: THREE.Group
   private firstMesh: THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
   private secondMesh: THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
 
@@ -61,7 +66,9 @@ export default class ScrollingText extends AbstractObject {
     Object.assign(params, { ...ScrollingText.DEFAULT_PARAMS, ...params })
     this.data = (isReactive(params) ? params : reactive(params)) as Data
 
-    this.object = new THREE.Object3D()
+    this.object = new THREE.Group()
+    this.wrapper = new THREE.Group()
+    this.object.add(this.wrapper)
 
     const texture = new THREE.TextureLoader().load('./text.png', (t) => {
       t.wrapS = THREE.RepeatWrapping
@@ -101,12 +108,10 @@ export default class ScrollingText extends AbstractObject {
     })
 
     this.firstMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(quadSize.x, quadSize.y), hollowMaterial)
-    this.object.add(this.firstMesh)
-    this.firstMesh.rotation.y = Math.PI / 2
+    this.wrapper.add(this.firstMesh)
 
     this.secondMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(quadSize.x, quadSize.y), filledMaterial)
-    this.object.add(this.secondMesh)
-    this.secondMesh.rotation.y = Math.PI / 2
+    this.wrapper.add(this.secondMesh)
 
     const tempVector = new THREE.Vector3()
 
@@ -121,19 +126,18 @@ export default class ScrollingText extends AbstractObject {
             this.data.offset,
             {
               first: fromValue,
-              second: fromValue,
+              second: fromValue * (this.data.revert ? -1 : 1),
             },
             {
               first: toValue,
-              second: toValue,
+              second: toValue * (this.data.revert ? -1 : 1),
               duration: 1,
               onComplete: () => {
                 this.isAnimated = false
               },
             }
           )
-        },
-        { immediate: true }
+        }
       ),
       watchEffect(() => {
         hollowMaterial.uniforms.uOffset.value = this.data.offset?.first || 0
@@ -145,7 +149,7 @@ export default class ScrollingText extends AbstractObject {
         filledMaterial.uniforms.uAlpha.value = this.data.opacity
       }),
       watchEffect(() => {
-        this.object.rotation.x = this.data.rotation || 0
+        this.wrapper.rotation.z = this.data.rotation || 0
       }),
       watch(
         [
@@ -157,20 +161,18 @@ export default class ScrollingText extends AbstractObject {
         ],
         ([dist, depthSpacing, heightSpacing, scale, camera]) => {
           if (!camera) return
+          console.log(camera.getWorldPosition(new THREE.Vector3()))
+          copyWorldMatrix(camera, this.object)
+          this.wrapper.position.z = -dist
+          // tempVector.set(0, 0, dist)
+          // this.object.position.sub(tempVector.applyMatrix4(rotationMatrix))
 
-          const rotationMatrix = new THREE.Matrix4()
-          rotationMatrix.extractRotation(camera.matrix)
-
-          this.object.position.copy(camera.position)
-          tempVector.set(0, 0, dist)
-          this.object.position.sub(tempVector.applyMatrix4(rotationMatrix))
-
-          this.firstMesh.position.x = -depthSpacing
+          this.firstMesh.position.z = -depthSpacing
           const viewport1 = getViewport(camera, this.firstMesh.getWorldPosition(tempVector))
           this.firstMesh.scale.setScalar(viewport1.height * scale)
           this.firstMesh.position.y = heightSpacing * viewport1.height * scale
 
-          this.secondMesh.position.x = depthSpacing
+          this.secondMesh.position.z = depthSpacing
           const viewport2 = getViewport(camera, this.secondMesh.getWorldPosition(tempVector))
           this.secondMesh.scale.setScalar(viewport2.height * scale)
           this.secondMesh.position.y = -heightSpacing * viewport2.height * scale
@@ -196,7 +198,7 @@ export default class ScrollingText extends AbstractObject {
   public tick(time: number, delta: number): void {
     if (!this.shouldLoop) return
     const firstSpeed = 0.1 * this.direction
-    const secondSpeed = 0.06 * this.direction
+    const secondSpeed = 0.06 * this.direction * (this.data.revert ? -1 : 1)
     this.data.offset!.second = (firstSpeed * delta + this.data.offset!.second) % 1
     this.data.offset!.second = this.data.offset!.second % 1
     this.data.offset!.first = (secondSpeed * delta + this.data.offset!.first) % 1

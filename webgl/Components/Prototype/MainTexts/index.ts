@@ -65,6 +65,7 @@ export default class MainTexts extends AbstractObject<MainSceneContext> {
       },
       watchEffect((onCleanup) => {
         const currentSection = this.context.sceneState.section
+        if (!currentSection) return
         this.texts[currentSection].data.enable = true
         onCleanup(() => (this.texts[currentSection].data.enable = false))
       })
