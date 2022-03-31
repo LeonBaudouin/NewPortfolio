@@ -4,6 +4,7 @@ import copyMatrix from '~~/utils/webgl/copyMatrix'
 import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
 import lerpVectors from '~~/utils/webgl/lerpMatrix'
 import gsap from 'gsap'
+import { CubicBezier } from '@tweakpane/plugin-essentials'
 
 export default class Crystal extends AbstractObject<MainSceneContext> {
   private enableObject: THREE.Object3D
@@ -37,10 +38,11 @@ export default class Crystal extends AbstractObject<MainSceneContext> {
       texture.dispose,
       this.mesh.material.dispose,
       watchEffect(() => {
+        const cubicBezier = new CubicBezier(0.32, 0, 0.3, 1)
         gsap.to(gsapProxyData, {
           enableFactor: this.isEnabled ? 1 : 0,
-          ease: this.isEnabled ? 'Power3.easeOut' : 'Power2.easeIn',
-          duration: this.isEnabled ? 1.5 : 1,
+          ease: this.isEnabled ? (n: number) => cubicBezier.y(n) : 'Power2.easeIn',
+          duration: this.isEnabled ? 1 : 0.8,
           onUpdate: () => {
             lerpVectors(this.disableObject, this.enableObject, gsapProxyData.enableFactor, this.object)
           },

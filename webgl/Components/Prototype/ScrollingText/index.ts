@@ -33,7 +33,7 @@ export default class ScrollingText extends AbstractObject {
       first: 0,
       second: 0.5,
     },
-    dist: 15,
+    dist: 22,
     depthSpacing: 2,
     heightSpacing: 0.75,
     rotation: -0.15,
@@ -76,7 +76,7 @@ export default class ScrollingText extends AbstractObject {
       hollowMaterial.uniforms.uTexRatio.value = t.image.width / t.image.height
     })
 
-    const quadSize = new THREE.Vector2(40, 1)
+    const quadSize = new THREE.Vector2(35, 1)
 
     const hollowMaterial = new THREE.ShaderMaterial({
       fragmentShader: fragment,
@@ -89,7 +89,7 @@ export default class ScrollingText extends AbstractObject {
         uHollow: { value: true },
         uOffset: { value: 0 },
         uAlpha: { value: 1 },
-        uSize: { value: 5 },
+        uSize: { value: 3 },
       },
     })
     const filledMaterial = new THREE.ShaderMaterial({
@@ -103,7 +103,7 @@ export default class ScrollingText extends AbstractObject {
         uHollow: { value: false },
         uOffset: { value: 0 },
         uAlpha: { value: 1 },
-        uSize: { value: 5 },
+        uSize: { value: 3 },
       },
     })
 
@@ -119,8 +119,8 @@ export default class ScrollingText extends AbstractObject {
       watch(
         () => this.data.enable,
         (enable) => {
-          const toValue = enable ? 0 : 4 * this.direction
-          const fromValue = enable ? -4 * this.direction : 0
+          const toValue = enable ? 0 : 3.5 * this.direction
+          const fromValue = enable ? -3.5 * this.direction : 0
           this.isAnimated = true
           gsap.fromTo(
             this.data.offset,

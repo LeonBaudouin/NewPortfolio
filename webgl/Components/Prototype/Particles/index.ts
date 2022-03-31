@@ -11,7 +11,7 @@ import { onSphere } from '~~/utils/math/onSphere'
 import { inSphere } from '~~/utils/math/inSphere'
 import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
 
-export default class Ripples extends AbstractObject<
+export default class Particles extends AbstractObject<
   MainSceneContext,
   THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial>
 > {

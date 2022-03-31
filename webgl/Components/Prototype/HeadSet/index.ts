@@ -4,11 +4,13 @@ import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
 import lerpVectors from '~~/utils/webgl/lerpMatrix'
 import copyMatrix from '~~/utils/webgl/copyMatrix'
 import gsap from 'gsap'
+import fragment from './index.frag?raw'
+import vertex from './index.vert?raw'
 
 export default class HeadSet extends AbstractObject<MainSceneContext> {
   private enableObject: THREE.Object3D
   private disableObject: THREE.Object3D
-  private mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshMatcapMaterial>
+  private mesh: THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
 
   public get isEnabled() {
     return this.context.sceneState.section === 'about'
@@ -23,9 +25,33 @@ export default class HeadSet extends AbstractObject<MainSceneContext> {
     this.disableObject.visible = false
 
     const { geometry } = this.enableObject as THREE.Mesh
-    const texture = new THREE.TextureLoader().load('./queen_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
+    const loader = new THREE.TextureLoader()
+    const headsetTexture = loader.load('./headset_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
+    const headsetLeatherTexture = loader.load('./headset_leather_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
+    const headsetLightTexture = loader.load('./headset_light_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
+    const aoTex = loader.load('./headset_ao.png', (t) => ((t.encoding = THREE.sRGBEncoding), (t.flipY = false)))
 
-    this.mesh = new THREE.Mesh(geometry, new THREE.MeshMatcapMaterial({ matcap: texture }))
+    this.mesh = new THREE.Mesh(
+      geometry,
+      new THREE.ShaderMaterial({
+        fragmentShader: fragment,
+        vertexShader: vertex,
+        vertexColors: true,
+        fog: true,
+        uniforms: {
+          uHeadsetMatcap: { value: headsetTexture },
+          uLeatherMatcap: { value: headsetLeatherTexture },
+          uLightMatcap: { value: headsetLightTexture },
+          uAoMap: { value: aoTex },
+          uAoAmount: { value: 1 },
+          ...THREE.UniformsLib['fog'],
+        },
+      })
+    )
+    const subfolder = this.context.tweakpane.addFolder({ title: 'HeadSeat' })
+    subfolder.addInput(this.mesh.material.uniforms.uAoAmount, 'value', { label: 'ao amount', min: 0, max: 2 })
+    console.log(this.mesh.material)
+
     this.object.add(this.mesh)
 
     copyMatrix(this.isEnabled ? this.enableObject : this.disableObject, this.object)
@@ -34,7 +60,6 @@ export default class HeadSet extends AbstractObject<MainSceneContext> {
     }
 
     this.toUnbind(
-      texture.dispose,
       this.mesh.material.dispose,
       watchEffect(() => {
         gsap.to(gsapProxyData, {
@@ -46,5 +71,9 @@ export default class HeadSet extends AbstractObject<MainSceneContext> {
         })
       })
     )
+  }
+
+  tick(time: number, delta: number) {
+    this.mesh.rotation.y = Math.sin(time * 0.3) * 0.2
   }
 }

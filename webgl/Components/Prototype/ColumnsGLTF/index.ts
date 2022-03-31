@@ -8,12 +8,13 @@ import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
 
 export default class ColumnsGLTF extends AbstractObject<MainSceneContext> {
   public raycastMesh: THREE.Object3D
+  private headset: HeadSet
   constructor(context: MainSceneContext, scene: THREE.Group) {
     super(context)
     this.object = scene
 
-    const headSet = new HeadSet(this.context, scene)
-    this.object.add(headSet.object)
+    this.headset = new HeadSet(this.context, scene)
+    this.object.add(this.headset.object)
 
     const crystal = new Crystal(this.context, scene)
     this.object.add(crystal.object)
@@ -22,8 +23,8 @@ export default class ColumnsGLTF extends AbstractObject<MainSceneContext> {
     this.object.add(chessPiece.object)
 
     this.toUnbind(() => {
-      this.object.remove(headSet.object)
-      headSet.destroy()
+      this.object.remove(this.headset.object)
+      this.headset.destroy()
       this.object.remove(crystal.object)
       crystal.destroy()
       this.object.remove(chessPiece.object)
@@ -67,5 +68,9 @@ export default class ColumnsGLTF extends AbstractObject<MainSceneContext> {
         o.visible = false
       }
     })
+  }
+
+  tick(time: number, delta: number) {
+    this.headset.tick(time, delta)
   }
 }

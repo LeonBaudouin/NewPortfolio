@@ -10,23 +10,27 @@ import tuple from '~~/utils/types/tuple'
 import AbstractScene from '~~/webgl/abstract/AbstractScene'
 import ColumnsGLTF from '~~/webgl/Components/Prototype/ColumnsGLTF'
 import DebugCamera from '~~/webgl/Components/Prototype/DebugCamera'
+import Exploding from '~~/webgl/Components/Prototype/Exploding'
 import ScrollingText from '~~/webgl/Components/Prototype/ScrollingText'
+import TestTexts from '~~/webgl/Components/Prototype/TestTexts'
 import TravellingCamera from '~~/webgl/Components/Prototype/TravelingCamera'
 import { Section } from '../MainScene'
 
-const sections: Record<Section, [number, number]> = {
-  projects: tuple(0, 0.025),
-  lab: tuple(0.4875, 0.5125),
-  about: tuple(0.925, 1),
+const sections: Record<Section, number> = {
+  projects: 0,
+  lab: 0.5,
+  about: 1,
 }
 
 export default class TestScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
   private mainCamera: TravellingCamera
   private debugCamera: DebugCamera
+  private columnsGLTF: ColumnsGLTF
+  // private texts: TestTexts
   private sceneState: { raycastPosition: THREE.Vector3; section: Section | null; sectionPercentage: number }
   private targetPercentage: number
   private params = {
-    backgroundColor: '#9e9e9e',
+    backgroundColor: '#CACACF',
     hasFog: true,
     debugCamera: false,
     scrollLerp: 0.04,
@@ -151,28 +155,26 @@ export default class TestScene extends AbstractScene<WebGLAppContext, THREE.Pers
       const { scene, cameras, animations } = gltf
       const cameraAnimation = animations.find((cam) => cam.name.startsWith('Camera'))!
       const animatedCamera = cameras.find((cam) => cam.name.startsWith('CameraBake')) as THREE.PerspectiveCamera
-      const projectCamera = cameras.find((cam) => cam.name.startsWith('Camera_01')) as THREE.PerspectiveCamera
-      const text = new ScrollingText(this.genContext(), {
-        camera: projectCamera,
-        heightSpacing: 0.6,
-        revert: true,
-        rotation: 0.15,
-        enable: true,
-        offset: { first: 0, second: 0.5 },
-      })
       this.mainCamera.setAnimation(cameraAnimation, animatedCamera)
       // this.cameraComponent.updateCamera(newCamera as THREE.PerspectiveCamera)
-      const columnsGLTF = new ColumnsGLTF(this.genContext(), scene)
+      this.columnsGLTF = new ColumnsGLTF(this.genContext(), scene)
+      // this.texts = new TestTexts(this.genContext(), gltf.cameras as THREE.PerspectiveCamera[])
 
-      this.scene.add(columnsGLTF.object)
-      this.scene.add(text.object)
+      // this.scene.add(this.texts.object)
+
+      this.scene.add(this.columnsGLTF.object)
 
       this.toUnbind(() => {
-        columnsGLTF.destroy()
-        this.scene.remove(columnsGLTF.object)
-        text.destroy()
-        this.scene.remove(text.object)
+        this.scene.remove(this.columnsGLTF.object)
+        this.columnsGLTF.destroy()
+        // this.scene.remove(this.texts.object)
+        // this.texts.destroy()
       })
+    })
+
+    gltfLoader.loadAsync('./Blender/split_queen.gltf').then((gltf) => {
+      const exploding = new Exploding(this.genContext(), gltf)
+      this.scene.add(exploding.object)
     })
 
     this.toUnbind(() => {
@@ -182,6 +184,15 @@ export default class TestScene extends AbstractScene<WebGLAppContext, THREE.Pers
   }
 
   public tick(time: number, delta: number): void {
+    // const pct = this.sceneState.sectionPercentage || 0
+    const targetPct = this.targetPercentage || 0
+    let closest: Section | null = null
+    for (const [sectionName, sectionInterval] of Object.entries(sections)) {
+      if (Math.abs(targetPct - sectionInterval) < 0.1) closest = sectionName as Section
+    }
+
+    if (closest) this.targetPercentage = round(lerp(this.targetPercentage, sections[closest], 0.05), 4)
+
     this.sceneState.sectionPercentage = round(
       lerp(this.sceneState.sectionPercentage, this.targetPercentage, this.params.scrollLerp),
       4
@@ -190,10 +201,12 @@ export default class TestScene extends AbstractScene<WebGLAppContext, THREE.Pers
     const pct = this.sceneState.sectionPercentage || 0
     let section: Section | null = null
     for (const [sectionName, sectionInterval] of Object.entries(sections)) {
-      if (pct >= sectionInterval[0] && pct < sectionInterval[1]) section = sectionName as Section
+      if (Math.abs(pct - sectionInterval) < 0.1) section = sectionName as Section
     }
     this.sceneState.section = section
 
+    // this.texts?.tick(time, delta)
+    this.columnsGLTF?.tick(time, delta)
     this.mainCamera.tick(time, delta)
     this.debugCamera.tick(time, delta)
   }

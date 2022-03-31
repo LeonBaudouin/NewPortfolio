@@ -23,9 +23,11 @@ export default class ChessPiece extends AbstractObject<MainSceneContext> {
     this.disableObject.visible = false
 
     const { geometry } = this.enableObject as THREE.Mesh
-    const texture = new THREE.TextureLoader().load('./queen_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
+    const loader = new THREE.TextureLoader()
+    const texture = loader.load('./queen_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
+    const aoTex = loader.load('./Queen_ao.png', (t) => ((t.encoding = THREE.sRGBEncoding), (t.flipY = false)))
 
-    this.mesh = new THREE.Mesh(geometry, new THREE.MeshMatcapMaterial({ matcap: texture }))
+    this.mesh = new THREE.Mesh(geometry, new THREE.MeshMatcapMaterial({ matcap: texture, map: aoTex }))
     this.object.add(this.mesh)
 
     copyMatrix(this.isEnabled ? this.enableObject : this.disableObject, this.object)
