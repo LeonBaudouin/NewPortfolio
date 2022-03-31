@@ -6,19 +6,20 @@ import particlesVertex from './particles.vert?raw'
 import vertex from './default.vert?raw'
 import positionFragment from './position.frag?raw'
 import velocityFragment from './velocity.frag?raw'
-import pixelToScreenCoords from '~~/utils/webgl/pixelToScreenCoords'
 import { onSphere } from '~~/utils/math/onSphere'
 import { inSphere } from '~~/utils/math/inSphere'
-import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
+import { WebGLAppContext } from '~~/webgl'
+
+type NeededContext = WebGLAppContext & { sceneState: { raycastPosition: THREE.Vector3 } }
 
 export default class Particles extends AbstractObject<
-  MainSceneContext,
+  NeededContext,
   THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial>
 > {
   private position: GPGPU
   private velocity: GPGPU
 
-  constructor(context: MainSceneContext) {
+  constructor(context: NeededContext) {
     super(context)
     const size = new THREE.Vector2(256, 256)
 
@@ -103,7 +104,6 @@ export default class Particles extends AbstractObject<
     geometry.setAttribute('aPixelPosition', new THREE.BufferAttribute(pixelPos, 2, false))
 
     this.object = new THREE.Points(geometry, mat)
-    // this.object.add(new THREE.Mesh(new THREE.PlaneGeometry(), new THREE.MeshBasicMaterial({ map: randomForceTex })))
 
     const unbindUniformsUpdate = watch(
       () => this.context.sceneState.raycastPosition.x,
@@ -131,17 +131,3 @@ export default class Particles extends AbstractObject<
     this.object.material.uniforms.uPosTexture.value = this.position.outputTexture
   }
 }
-
-// const [intersection] = this.context.raycaster.intersectObject(this.output)
-// const draw = !!intersection && this.drawing
-// if (draw) {
-//   const { x, y } = intersection.uv!
-//   const { uEndPoint, uStartPoint, uDrawing } = this.simulationShader.uniforms
-
-//   const d = uStartPoint.value.distanceTo(uEndPoint.value)
-
-//   uStartPoint.value.copy(uEndPoint.value)
-//   uEndPoint.value.set(x, y)
-//   if (!uDrawing.value) uStartPoint.value.copy(uEndPoint.value)
-// }
-// this.simulationShader.uniforms.uDrawing.value = !!draw

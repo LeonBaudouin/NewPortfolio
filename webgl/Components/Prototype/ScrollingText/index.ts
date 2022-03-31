@@ -4,8 +4,6 @@ import * as THREE from 'three'
 import fragment from './index.frag?raw'
 import vertex from './index.vert?raw'
 import getViewport from '~~/utils/webgl/viewport'
-import gsap from 'gsap'
-import copyMatrix from '~~/utils/webgl/copyMatrix'
 import copyWorldMatrix from '~~/utils/webgl/copyWorldMatrix'
 
 type Params = {
@@ -20,7 +18,6 @@ type Params = {
   }
   opacity?: number
   rotation?: number
-  enable?: boolean
   leftToRight?: boolean
   revert?: boolean
 }
@@ -38,7 +35,6 @@ export default class ScrollingText extends AbstractObject {
     heightSpacing: 0.75,
     rotation: -0.15,
     opacity: 1,
-    enable: true,
     leftToRight: true,
     scale: 1 / 15,
     revert: false,
@@ -48,17 +44,7 @@ export default class ScrollingText extends AbstractObject {
   private firstMesh: THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
   private secondMesh: THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
 
-  private isAnimated = false
-
   public data: Data
-
-  private get shouldLoop(): boolean {
-    return !this.isAnimated && !!this.data.enable
-  }
-
-  private get direction(): number {
-    return this.data.leftToRight ? 1 : -1
-  }
 
   constructor(context: WebGLAppContext, params: Params) {
     super(context)
@@ -116,29 +102,6 @@ export default class ScrollingText extends AbstractObject {
     const tempVector = new THREE.Vector3()
 
     this.toUnbind(
-      watch(
-        () => this.data.enable,
-        (enable) => {
-          const toValue = enable ? 0 : 3.5 * this.direction
-          const fromValue = enable ? -3.5 * this.direction : 0
-          this.isAnimated = true
-          gsap.fromTo(
-            this.data.offset,
-            {
-              first: fromValue,
-              second: fromValue * (this.data.revert ? -1 : 1),
-            },
-            {
-              first: toValue,
-              second: toValue * (this.data.revert ? -1 : 1),
-              duration: 1,
-              onComplete: () => {
-                this.isAnimated = false
-              },
-            }
-          )
-        }
-      ),
       watchEffect(() => {
         hollowMaterial.uniforms.uOffset.value = this.data.offset?.first || 0
         filledMaterial.uniforms.uOffset.value = this.data.offset?.second || 0
@@ -164,8 +127,6 @@ export default class ScrollingText extends AbstractObject {
           console.log(camera.getWorldPosition(new THREE.Vector3()))
           copyWorldMatrix(camera, this.object)
           this.wrapper.position.z = -dist
-          // tempVector.set(0, 0, dist)
-          // this.object.position.sub(tempVector.applyMatrix4(rotationMatrix))
 
           this.firstMesh.position.z = -depthSpacing
           const viewport1 = getViewport(camera, this.firstMesh.getWorldPosition(tempVector))
@@ -196,12 +157,11 @@ export default class ScrollingText extends AbstractObject {
   }
 
   public tick(time: number, delta: number): void {
-    if (!this.shouldLoop) return
-    const firstSpeed = 0.1 * this.direction
-    const secondSpeed = 0.06 * this.direction * (this.data.revert ? -1 : 1)
-    this.data.offset!.second = (firstSpeed * delta + this.data.offset!.second) % 1
-    this.data.offset!.second = this.data.offset!.second % 1
-    this.data.offset!.first = (secondSpeed * delta + this.data.offset!.first) % 1
-    this.data.offset!.first = this.data.offset!.first % 1
+    // const firstSpeed = 0.1 * this.direction
+    // const secondSpeed = 0.06 * this.direction * (this.data.revert ? -1 : 1)
+    // this.data.offset!.second = (firstSpeed * delta + this.data.offset!.second) % 1
+    // this.data.offset!.second = this.data.offset!.second % 1
+    // this.data.offset!.first = (secondSpeed * delta + this.data.offset!.first) % 1
+    // this.data.offset!.first = this.data.offset!.first % 1
   }
 }

@@ -4,13 +4,9 @@ import LifeCycle from './abstract/LifeCycle'
 import MainScene from './Scenes/MainScene'
 
 import { Params } from '~~/plugins/params.client'
-import TestScene from './Scenes/TestScene'
-import SurfaceScene from './Scenes/SurfaceScene'
 
 type Scenes = {
   main: MainScene
-  test: TestScene
-  surface: SurfaceScene
 }
 
 export default class WebGL extends LifeCycle {
@@ -55,15 +51,11 @@ export default class WebGL extends LifeCycle {
     const tabs = this.tweakpane.addTab({ pages: [{ title: 'MainScene' }] })
 
     const mainPage = tabs.pages[0]
-    const testPage = tabs.addPage({ title: 'TestScene' })
-    const surfacePage = tabs.addPage({ title: 'SurfaceScene' })
 
     this.scenes = {
       main: new MainScene(this.genContext(mainPage)),
-      test: new TestScene(this.genContext(testPage)),
-      surface: new SurfaceScene(this.genContext(surfacePage)),
     }
-    this.toUnbind(this.scenes.main.destroy, this.scenes.test.destroy, this.scenes.surface.destroy, tabs.dispose)
+    this.toUnbind(this.scenes.main.destroy, tabs.dispose)
   }
 
   private setupRenderer() {

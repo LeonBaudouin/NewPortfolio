@@ -1,13 +1,16 @@
 import * as THREE from 'three'
 import AbstractObject from '~~/webgl/abstract/AbstractObject'
-import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
 import lerpVectors from '~~/utils/webgl/lerpMatrix'
 import copyMatrix from '~~/utils/webgl/copyMatrix'
 import gsap from 'gsap'
 import fragment from './index.frag?raw'
 import vertex from './index.vert?raw'
+import { WebGLAppContext } from '~~/webgl'
+import { CubicBezier } from '@tweakpane/plugin-essentials'
 
-export default class HeadSet extends AbstractObject<MainSceneContext> {
+type NeededContext = WebGLAppContext & { sceneState: { section: 'about' | 'projects' | 'lab' | null } }
+
+export default class HeadSet extends AbstractObject<NeededContext> {
   private enableObject: THREE.Object3D
   private disableObject: THREE.Object3D
   private mesh: THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
@@ -16,7 +19,7 @@ export default class HeadSet extends AbstractObject<MainSceneContext> {
     return this.context.sceneState.section === 'about'
   }
 
-  constructor(context: MainSceneContext, scene: THREE.Object3D) {
+  constructor(context: NeededContext, scene: THREE.Object3D) {
     super(context)
     this.object = new THREE.Object3D()
     this.enableObject = scene.getObjectByName('HeadSet_enable')!
@@ -62,9 +65,11 @@ export default class HeadSet extends AbstractObject<MainSceneContext> {
     this.toUnbind(
       this.mesh.material.dispose,
       watchEffect(() => {
+        const cubicBezier = new CubicBezier(0.32, 0, 0.3, 1)
         gsap.to(gsapProxyData, {
           enableFactor: this.isEnabled ? 1 : 0,
-          ease: this.isEnabled ? 'Power2.easeOut' : 'Power2.easeIn',
+          ease: this.isEnabled ? (n: number) => cubicBezier.y(n) : 'Power2.easeIn',
+          duration: this.isEnabled ? 1 : 0.8,
           onUpdate: () => {
             lerpVectors(this.disableObject, this.enableObject, gsapProxyData.enableFactor, this.object)
           },

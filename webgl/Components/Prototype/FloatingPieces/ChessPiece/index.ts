@@ -1,32 +1,36 @@
-import * as THREE from 'three'
 import AbstractObject from '~~/webgl/abstract/AbstractObject'
+import * as THREE from 'three'
 import copyMatrix from '~~/utils/webgl/copyMatrix'
-import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
 import lerpVectors from '~~/utils/webgl/lerpMatrix'
 import gsap from 'gsap'
+import { WebGLAppContext } from '~~/webgl'
 import { CubicBezier } from '@tweakpane/plugin-essentials'
 
-export default class Crystal extends AbstractObject<MainSceneContext> {
+type NeededContext = WebGLAppContext & { sceneState: { section: 'about' | 'projects' | 'lab' | null } }
+
+export default class ChessPiece extends AbstractObject<NeededContext> {
   private enableObject: THREE.Object3D
   private disableObject: THREE.Object3D
   private mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshMatcapMaterial>
 
   public get isEnabled() {
-    return this.context.sceneState.section === 'projects'
+    return this.context.sceneState.section === 'lab'
   }
 
-  constructor(context: MainSceneContext, scene: THREE.Object3D) {
+  constructor(context: NeededContext, scene: THREE.Object3D) {
     super(context)
     this.object = new THREE.Object3D()
-    this.enableObject = scene.getObjectByName('Crystal_enable')!
+    this.enableObject = scene.getObjectByName('Queen_enable')!
     this.enableObject.visible = false
-    this.disableObject = scene.getObjectByName('Crystal_disable')!
+    this.disableObject = scene.getObjectByName('Queen_disable')!
     this.disableObject.visible = false
 
     const { geometry } = this.enableObject as THREE.Mesh
-    const texture = new THREE.TextureLoader().load('./crystal_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
+    const loader = new THREE.TextureLoader()
+    const texture = loader.load('./queen_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
+    const aoTex = loader.load('./Queen_ao.png', (t) => ((t.encoding = THREE.sRGBEncoding), (t.flipY = false)))
 
-    this.mesh = new THREE.Mesh(geometry, new THREE.MeshMatcapMaterial({ matcap: texture }))
+    this.mesh = new THREE.Mesh(geometry, new THREE.MeshMatcapMaterial({ matcap: texture, map: aoTex }))
     this.object.add(this.mesh)
 
     copyMatrix(this.isEnabled ? this.enableObject : this.disableObject, this.object)
@@ -35,7 +39,6 @@ export default class Crystal extends AbstractObject<MainSceneContext> {
     }
 
     this.toUnbind(
-      texture.dispose,
       this.mesh.material.dispose,
       watchEffect(() => {
         const cubicBezier = new CubicBezier(0.32, 0, 0.3, 1)

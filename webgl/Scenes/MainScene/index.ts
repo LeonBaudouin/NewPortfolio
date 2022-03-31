@@ -1,64 +1,44 @@
 import * as THREE from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { FolderApi } from 'tweakpane'
 import { WebGLAppContext } from '~/webgl'
 import pixelToScreenCoords from '~~/utils/webgl/pixelToScreenCoords'
 import AbstractScene from '~~/webgl/abstract/AbstractScene'
-import Camera from '~~/webgl/Components/Prototype/Camera'
 import Particles from '~~/webgl/Components/Prototype/Particles'
-import MainTexts from '~~/webgl/Components/Prototype/MainTexts'
-import ColumnsGLTF from '~~/webgl/Components/Prototype/ColumnsGLTF'
-import tuple from '~~/utils/types/tuple'
+import DebugCamera from '~~/webgl/Components/Prototype/Camera/DebugCamera'
+import Environment from '~~/webgl/Components/Prototype/Environment'
+import { Reflector } from 'three/examples/jsm/objects/Reflector'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import Exploding from '~~/webgl/Components/Prototype/Exploding'
 
 export type Section = 'projects' | 'about' | 'lab'
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
   private raycastMesh: THREE.Object3D
-  private particles: Particles
-  private texts: MainTexts
-  private cameraComponent: Camera
-  private sceneState = reactive<{ raycastPosition: THREE.Vector3; section: Section | null; sectionPercentage: number }>(
-    {
-      raycastPosition: new THREE.Vector3(),
-      section: 'projects' as Section,
-      sectionPercentage: 0.5,
-    }
-  )
-  private params = {
-    backgroundColor: '#9e9e9e',
-    hasFog: true,
-  }
+  // private particles: Particles
+  private cameraComponent: DebugCamera
+  private environment: Environment
+
+  private sceneState = reactive<{ raycastPosition: THREE.Vector3; section: Section | null }>({
+    raycastPosition: new THREE.Vector3(),
+    section: 'projects' as Section,
+  })
 
   constructor(context: WebGLAppContext) {
     super(context)
     this.setScene()
 
-    this.cameraComponent = new Camera(this.genContext())
-
-    this.setObjects()
+    this.cameraComponent = new DebugCamera(this.genContext(), { defaultPosition: new THREE.Vector3(0, 3, 15) })
+    this.scene = new THREE.Scene()
+    this.scene.add(new THREE.AxesHelper())
 
     this.scene.add(this.cameraComponent.object)
-    this.camera = this.cameraComponent.camera
+    this.camera = this.cameraComponent.object
+
+    this.setObjects()
 
     this.context.renderer.compile(this.scene, this.camera)
 
     const raycast = new THREE.Raycaster()
 
-    const sections: Record<Section, [number, number]> = {
-      about: tuple(0, 0.33),
-      projects: tuple(0.33, 0.66),
-      lab: tuple(0.66, 1),
-    }
-
     const onMouseMove = ({ clientX, clientY }: MouseEvent) => {
-      const pct = clientX / window.innerWidth
-      let section: Section = 'projects'
-      for (const [sectionName, sectionInterval] of Object.entries(sections)) {
-        section = sectionName as Section
-        if (pct >= sectionInterval[0] && pct < sectionInterval[1]) break
-      }
-      this.sceneState.section = section
-      this.sceneState.sectionPercentage = pct
-
       const mousePosition = pixelToScreenCoords(clientX, clientY)
       raycast.setFromCamera(mousePosition, this.camera)
       if (!this.raycastMesh) return
@@ -83,74 +63,40 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     sceneState: this.sceneState,
   })
 
-  private setScene() {
-    this.scene = new THREE.Scene()
-    this.scene.background = new THREE.Color(this.params.backgroundColor)
-
-    const fog = new THREE.FogExp2(this.params.backgroundColor, 0.01)
-    this.scene.fog = fog
-
-    const backgroundColor = this.context.tweakpane.addInput(this.params, 'backgroundColor', {
-      label: 'Background Color',
-    })
-    backgroundColor.on('change', ({ value }) => {
-      ;(this.scene.background as THREE.Color).set(value)
-      fog.color.set(value)
-    })
-    const fogFolder = this.context.tweakpane.addFolder({ title: 'Fog' })
-    const fogIntensity = fogFolder.addInput(fog, 'density', {
-      label: 'Fog Density',
-      step: 0.001,
-    })
-    const fogEnable = fogFolder.addInput(this.params, 'hasFog', {
-      label: 'Fog Enable',
-    })
-    fogEnable.on('change', ({ value }) => {
-      this.scene.fog = value ? fog : null
-    })
-
-    this.toUnbind(backgroundColor.dispose, fogFolder.dispose, fogIntensity.dispose, fogEnable.dispose)
-  }
+  private setScene() {}
 
   private setObjects() {
+    this.environment = new Environment(this.genContext())
+    this.scene.add(this.environment.object)
+
     // this.particles = new Particles(this.genContext())
     // this.scene.add(this.particles.object)
-
-    const gltfLoader = new GLTFLoader()
-    gltfLoader.loadAsync('./scene.glb').then(({ scene, cameras: [newCamera] }) => {
-      this.cameraComponent.updateCamera(newCamera as THREE.PerspectiveCamera)
-      const columnsGLTF = new ColumnsGLTF(this.genContext(), scene)
-      this.raycastMesh = columnsGLTF.raycastMesh
-
-      this.scene.add(columnsGLTF.object)
-
-      const worldCamera = newCamera.clone()
-      newCamera.getWorldPosition(worldCamera.position)
-      newCamera.getWorldQuaternion(worldCamera.quaternion)
-      newCamera.getWorldScale(worldCamera.scale)
-      worldCamera.updateMatrix()
-
-      // this.texts = new MainTexts(this.genContext(), worldCamera as THREE.PerspectiveCamera)
-      // this.scene.add(this.texts.object)
-
-      this.toUnbind(() => {
-        // this.texts.destroy()
-        // this.scene.remove(this.texts.object)
-        columnsGLTF.destroy()
-        this.scene.remove(columnsGLTF.object)
-      })
-    })
 
     this.toUnbind(() => {
       // this.scene.remove(this.particles.object)
       // this.particles.destroy()
+      this.environment.destroy()
+    })
+
+    const gltfLoader = new GLTFLoader()
+    gltfLoader.loadAsync('./Blender/split_queen.gltf').then((gltf) => {
+      const exploding = new Exploding(this.genContext(), gltf)
+
+      const plane = new Reflector(new THREE.PlaneGeometry(20000, 20000), {
+        clipBias: 0.003,
+        textureWidth: window.innerWidth * window.devicePixelRatio,
+        textureHeight: window.innerHeight * window.devicePixelRatio,
+      })
+      plane.position.y = -2.2
+      plane.rotation.x = -Math.PI / 2
+      this.scene.add(exploding.object)
+      this.scene.add(plane)
     })
   }
 
   public tick(time: number, delta: number): void {
     // this.particles.tick(time, delta)
     this.cameraComponent.tick(time, delta)
-    if (this.texts) this.texts.tick(time, delta)
   }
 }
 export type MainSceneContext = ReturnType<MainScene['genContext']>

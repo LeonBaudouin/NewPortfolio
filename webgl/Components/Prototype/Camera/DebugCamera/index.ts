@@ -12,6 +12,7 @@ export default class DebugCamera extends AbstractObject<WebGLAppContext, THREE.P
     this.object.position.copy(defaultPosition)
 
     this.controls = new OrbitControls(this.object, this.context.renderer.domElement)
+    this.controls.enableDamping = true
 
     window.addEventListener('resize', this.onResize)
 
@@ -27,5 +28,7 @@ export default class DebugCamera extends AbstractObject<WebGLAppContext, THREE.P
     this.object.updateProjectionMatrix()
   }
 
-  public tick(time: number, delta: number): void {}
+  public tick(time: number, delta: number): void {
+    this.controls.update()
+  }
 }

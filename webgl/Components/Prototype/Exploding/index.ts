@@ -4,7 +4,6 @@ import * as THREE from 'three'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import fragment from './index.frag?raw'
 import vertex from './index.vert?raw'
-import { MeshMatcapMaterial, MeshNormalMaterial } from 'three'
 
 export default class Exploding extends AbstractObject<
   WebGLAppContext,
@@ -18,8 +17,6 @@ export default class Exploding extends AbstractObject<
     const geom = (gltf.scene.children[0] as THREE.Mesh).geometry
     this.object = new THREE.Mesh(
       geom,
-      // new MeshNormalMaterial()
-      // new MeshMatcapMaterial({ matcap })
       new THREE.ShaderMaterial({
         fragmentShader: fragment,
         vertexShader: vertex,
@@ -34,11 +31,5 @@ export default class Exploding extends AbstractObject<
         },
       })
     )
-
-    // this.context.tweakpane.addInput(this.object.material.uniforms.offset, 'value', {
-    //   label: 'Explode',
-    //   min: 0,
-    //   max: 10,
-    // })
   }
 }

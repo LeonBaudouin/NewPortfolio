@@ -1,15 +1,15 @@
-import { WebGLAppContext } from '~~/webgl'
 import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import * as THREE from 'three'
-import HeadSet from '../HeadSet'
-import Crystal from '../Crystal'
-import ChessPiece from '../ChessPiece'
-import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
+import HeadSet from '../FloatingPieces/HeadSet'
+import Crystal from '../FloatingPieces/Crystal'
+import ChessPiece from '../FloatingPieces/ChessPiece'
+import { WebGLAppContext } from '~~/webgl'
 
-export default class ColumnsGLTF extends AbstractObject<MainSceneContext> {
-  public raycastMesh: THREE.Object3D
+type NeededContext = WebGLAppContext & { sceneState: { section: 'about' | 'projects' | 'lab' | null } }
+
+export default class ColumnsGLTF extends AbstractObject<NeededContext> {
   private headset: HeadSet
-  constructor(context: MainSceneContext, scene: THREE.Group) {
+  constructor(context: NeededContext, scene: THREE.Group) {
     super(context)
     this.object = scene
 
@@ -32,11 +32,6 @@ export default class ColumnsGLTF extends AbstractObject<MainSceneContext> {
     })
 
     scene.traverse((o) => {
-      // if (o.name.startsWith('Crystal')) {
-      //   ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-      //     matcap: new THREE.TextureLoader().load('./crystal_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
-      //   })
-      // }
       if (o.name.startsWith('Queen')) {
         ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
           matcap: new THREE.TextureLoader().load('./queen_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
@@ -51,21 +46,11 @@ export default class ColumnsGLTF extends AbstractObject<MainSceneContext> {
         ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
           matcap: new THREE.TextureLoader().load('./rock_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
         })
-        // ;(o as THREE.Mesh).material = new THREE.MeshBasicMaterial({
-        //   map: new THREE.TextureLoader().load(
-        //     './rockShadow.png',
-        //     (t) => ((t.flipY = false), (t.encoding = THREE.sRGBEncoding))
-        //   ),
-        // })
       }
       if (o.name.startsWith('Sand')) {
         ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
           matcap: new THREE.TextureLoader().load('./sand_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
         })
-      }
-      if (o.name.startsWith('Raycast')) {
-        this.raycastMesh = o
-        o.visible = false
       }
     })
   }
