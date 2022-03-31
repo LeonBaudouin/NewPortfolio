@@ -6,12 +6,12 @@ import Background from '../Background'
 
 export default class Environment extends AbstractObject<SceneContext> {
   private data = reactive({
-    fogColor: '#9e9e9e',
+    fogColor: '#cacacf',
     hasFog: true,
   })
 
   constructor({ tweakpane: parentTP, ...context }: SceneContext) {
-    super({ tweakpane: parentTP.addFolder({ title: 'Environment' }), ...context })
+    super({ tweakpane: parentTP.addFolder({ title: 'Environment', expanded: false }), ...context })
 
     const background = new Background(this.context)
     this.object = background.object

@@ -5,9 +5,9 @@ import AbstractScene from '~~/webgl/abstract/AbstractScene'
 import Particles from '~~/webgl/Components/Prototype/Particles'
 import DebugCamera from '~~/webgl/Components/Prototype/Camera/DebugCamera'
 import Environment from '~~/webgl/Components/Prototype/Environment'
-import { Reflector } from 'three/examples/jsm/objects/Reflector'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import Exploding from '~~/webgl/Components/Prototype/Exploding'
+import Water from '~~/webgl/Components/Prototype/Water'
 
 export type Section = 'projects' | 'about' | 'lab'
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
@@ -15,6 +15,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   // private particles: Particles
   private cameraComponent: DebugCamera
   private environment: Environment
+  private water: Water
 
   private sceneState = reactive<{ raycastPosition: THREE.Vector3; section: Section | null }>({
     raycastPosition: new THREE.Vector3(),
@@ -81,22 +82,16 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     const gltfLoader = new GLTFLoader()
     gltfLoader.loadAsync('./Blender/split_queen.gltf').then((gltf) => {
       const exploding = new Exploding(this.genContext(), gltf)
-
-      const plane = new Reflector(new THREE.PlaneGeometry(20000, 20000), {
-        clipBias: 0.003,
-        textureWidth: window.innerWidth * window.devicePixelRatio,
-        textureHeight: window.innerHeight * window.devicePixelRatio,
-      })
-      plane.position.y = -2.2
-      plane.rotation.x = -Math.PI / 2
       this.scene.add(exploding.object)
-      this.scene.add(plane)
     })
+    this.water = new Water(this.genContext())
+    this.scene.add(this.water.object)
   }
 
   public tick(time: number, delta: number): void {
     // this.particles.tick(time, delta)
     this.cameraComponent.tick(time, delta)
+    this.water.tick(time, delta)
   }
 }
 export type MainSceneContext = ReturnType<MainScene['genContext']>

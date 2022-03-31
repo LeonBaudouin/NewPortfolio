@@ -47,6 +47,6 @@ body > canvas {
 }
 
 .tp-dfwv {
-  overflow-x: hidden;
+  overflow: hidden;
 }
 </style>
