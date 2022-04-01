@@ -31,5 +31,4 @@ void main() {
   gl_FragColor = vec4(color.rgb * ao.rgb, 1.);
   gl_FragColor = linearToOutputTexel( gl_FragColor );
   #include <fog_fragment>
-  // gl_FragColor = vec4(vColor, 1.);
 }

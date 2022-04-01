@@ -36,6 +36,9 @@ useCleanup(() => {
 </script>
 
 <style lang="scss">
+body {
+  overflow: hidden;
+}
 body > canvas {
   position: absolute;
   inset: 0;
@@ -44,9 +47,5 @@ body > canvas {
 .tp-fldv_c > .tp-cntv,
 .tp-tabv_c .tp-brkv > .tp-cntv {
   margin-left: 0 !important;
-}
-
-.tp-dfwv {
-  overflow: hidden;
 }
 </style>

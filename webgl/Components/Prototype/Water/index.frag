@@ -1,9 +1,11 @@
 uniform vec3 color;
 uniform sampler2D tDiffuse;
-uniform sampler2D tNormal;
+uniform sampler2D tRipples;
+uniform bool uDebugNormals;
 varying vec4 vUv;
 varying vec3 vPosition;
 
+#include <common>
 #include <logdepthbuf_pars_fragment>
 
 const float M_PI = 3.141592653589793;
@@ -58,8 +60,22 @@ vec3 blendOverlay( vec3 base, vec3 blend ) {
   return vec3( blendOverlay( base.r, blend.r ), blendOverlay( base.g, blend.g ), blendOverlay( base.b, blend.b ) );
 }
 
+float distToEdge(vec2 _st) {
+  return max(abs(0.5-_st.x), abs(0.5-_st.y));
+}
+
+float isNorm(vec2 _st) {
+  if (_st.x > 1. || _st.y > 1. || _st.x < 0. || _st.y < 0.)
+    return 0.;
+  return 1.;
+}
+
 vec3 getDisplacedPosition(vec2 _position) {
-  return  vec3(_position, texture2D(tNormal, _position + .5).r);
+  vec2 uv = _position + .5;
+  vec3 defaultPosition = vec3(_position, 0.);
+  vec3 ripplePosition =  vec3(_position, texture2D(tRipples, uv).r);
+  return mix(defaultPosition, ripplePosition, cremap(distToEdge(uv), 0., 1., 1., 0.));
+  // return vec3(_position, distToEdge(uv));
 }
 
 void main() {
@@ -84,7 +100,7 @@ void main() {
   );
   my_normal = normalize(my_normal);
 
-  // vec4 normalColor = texture2D(tNormal, vPosition.xy * 0.1);
+  // vec4 normalColor = texture2D(tRipples, vPosition.xy * 0.1);
 
   // vec3 tex_normal = normalize( vec3( normalColor.r * 2.0 - 1.0, normalColor.b, normalColor.g * 2.0 - 1.0 ) );
 
@@ -97,6 +113,9 @@ void main() {
   vec4 mirrorCoord = vUv;
   mirrorCoord.xz += my_normal.xy * 0.1;
   vec4 base = texture2DProj( tDiffuse, mirrorCoord );
-  gl_FragColor = vec4( blendOverlay( base.rgb, color ) + light, 1.0 );
-  // gl_FragColor = vec4(my_normal, 1.);
+  base = linearToOutputTexel(base);
+  vec3 c = blendOverlay( base.rgb, color ) + light;
+  gl_FragColor = vec4(c, 1.);
+  if (uDebugNormals) gl_FragColor = vec4(my_normal, 1.);
+  // gl_FragColor = vec4(position.x, position.y, 0., 1.);
 }

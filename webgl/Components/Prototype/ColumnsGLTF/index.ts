@@ -16,30 +16,27 @@ export default class ColumnsGLTF extends AbstractObject<NeededContext> {
     this.headset = new HeadSet(this.context, scene)
     this.object.add(this.headset.object)
 
-    const crystal = new Crystal(this.context, scene)
-    this.object.add(crystal.object)
+    // const crystal = new Crystal(this.context, scene)
+    // this.object.add(crystal.object)
 
-    const chessPiece = new ChessPiece(this.context, scene)
-    this.object.add(chessPiece.object)
+    // const chessPiece = new ChessPiece(this.context, scene)
+    // this.object.add(chessPiece.object)
 
     this.toUnbind(() => {
       this.object.remove(this.headset.object)
       this.headset.destroy()
-      this.object.remove(crystal.object)
-      crystal.destroy()
-      this.object.remove(chessPiece.object)
-      chessPiece.destroy()
+      // this.object.remove(crystal.object)
+      // crystal.destroy()
+      // this.object.remove(chessPiece.object)
+      // chessPiece.destroy()
     })
 
     scene.traverse((o) => {
-      if (o.name.startsWith('Queen')) {
-        ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-          matcap: new THREE.TextureLoader().load('./queen_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
-        })
-      }
+      console.log(o)
+
       if (o.name.startsWith('Column')) {
         ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-          matcap: new THREE.TextureLoader().load('./column_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
+          matcap: new THREE.TextureLoader().load('./column2_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
         })
       }
       if (o.name.startsWith('Rock')) {

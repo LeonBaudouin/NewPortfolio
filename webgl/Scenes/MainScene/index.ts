@@ -2,18 +2,20 @@ import * as THREE from 'three'
 import { WebGLAppContext } from '~/webgl'
 import pixelToScreenCoords from '~~/utils/webgl/pixelToScreenCoords'
 import AbstractScene from '~~/webgl/abstract/AbstractScene'
-import Particles from '~~/webgl/Components/Prototype/Particles'
 import DebugCamera from '~~/webgl/Components/Prototype/Camera/DebugCamera'
 import Environment from '~~/webgl/Components/Prototype/Environment'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import Exploding from '~~/webgl/Components/Prototype/Exploding'
 import Water from '~~/webgl/Components/Prototype/Water'
+import SimpleCamera from '~~/webgl/Components/Prototype/Camera/SimpleCamera'
+import ColumnsGLTF from '~~/webgl/Components/Prototype/ColumnsGLTF'
+import copyWorldMatrix from '~~/utils/webgl/copyWorldMatrix'
 
 export type Section = 'projects' | 'about' | 'lab'
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
   private raycastMesh: THREE.Object3D
   // private particles: Particles
-  private cameraComponent: DebugCamera
+  private debugCamera: DebugCamera
+  private mainCamera: SimpleCamera
   private environment: Environment
   private water: Water
 
@@ -22,16 +24,28 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     section: 'projects' as Section,
   })
 
+  private params = {
+    debugCam: false,
+  }
+
   constructor(context: WebGLAppContext) {
     super(context)
     this.setScene()
 
-    this.cameraComponent = new DebugCamera(this.genContext(), { defaultPosition: new THREE.Vector3(0, 3, 15) })
+    this.debugCamera = new DebugCamera(this.genContext(), { defaultPosition: new THREE.Vector3(0, 3, 15) })
     this.scene = new THREE.Scene()
     this.scene.add(new THREE.AxesHelper())
+    this.scene.add(this.debugCamera.object)
 
-    this.scene.add(this.cameraComponent.object)
-    this.camera = this.cameraComponent.object
+    this.mainCamera = new SimpleCamera(this.genContext(), { defaultPosition: new THREE.Vector3(0, 3, 15) })
+
+    this.scene.add(this.debugCamera.object)
+    this.scene.add(this.mainCamera.object)
+    this.camera = this.params.debugCam ? this.debugCamera.object : this.mainCamera.object
+
+    this.context.tweakpane
+      .addInput(this.params, 'debugCam')
+      .on('change', ({ value }) => (this.camera = value ? this.debugCamera.object : this.mainCamera.object))
 
     this.setObjects()
 
@@ -52,8 +66,8 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     window.addEventListener('mousemove', onMouseMove)
     this.toUnbind(() => {
       window.removeEventListener('mousemove', onMouseMove)
-      this.scene.remove(this.cameraComponent.object)
-      this.cameraComponent.destroy()
+      this.scene.remove(this.debugCamera.object)
+      this.debugCamera.destroy()
     })
   }
 
@@ -80,18 +94,27 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     })
 
     const gltfLoader = new GLTFLoader()
-    gltfLoader.loadAsync('./Blender/split_queen.gltf').then((gltf) => {
-      const exploding = new Exploding(this.genContext(), gltf)
-      this.scene.add(exploding.object)
+    gltfLoader.loadAsync('./scene_3.glb').then((gltf) => {
+      const plane = gltf.scene.getObjectByName('Plane')!
+      plane.visible = false
+      const columns = new ColumnsGLTF(this.genContext(), gltf.scene)
+      copyWorldMatrix(gltf.cameras[0], this.mainCamera.object)
+      console.log((gltf.cameras[0] as THREE.PerspectiveCamera).fov)
+      this.mainCamera.object.fov = (gltf.cameras[0] as THREE.PerspectiveCamera).fov
+      this.scene.add(columns.object)
+      this.water = new Water(this.genContext())
+      this.scene.add(this.water.object)
     })
-    this.water = new Water(this.genContext())
-    this.scene.add(this.water.object)
+    // gltfLoader.loadAsync('./Blender/split_queen.gltf').then((gltf) => {
+    //   const exploding = new Exploding(this.genContext(), gltf)
+    //   this.scene.add(exploding.object)
+    // })
   }
 
   public tick(time: number, delta: number): void {
     // this.particles.tick(time, delta)
-    this.cameraComponent.tick(time, delta)
-    this.water.tick(time, delta)
+    this.debugCamera.tick(time, delta)
+    this.water?.tick(time, delta)
   }
 }
 export type MainSceneContext = ReturnType<MainScene['genContext']>

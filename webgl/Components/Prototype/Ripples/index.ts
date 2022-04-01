@@ -63,7 +63,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
       initTexture,
     })
 
-    const geom = new THREE.PlaneGeometry(20, 20).rotateX(-Math.PI / 2).translate(0, -2, 0)
+    const geom = new THREE.PlaneGeometry(20, 20).rotateX(-Math.PI / 2).translate(0, 0, 0)
     const mat = new THREE.MeshBasicMaterial({ wireframe: true })
     this.raycastMesh = new THREE.Mesh(geom, mat)
     this.context.scene.add(this.raycastMesh)

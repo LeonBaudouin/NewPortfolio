@@ -62,7 +62,7 @@ export default class WebGL extends LifeCycle {
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
     })
-    // this.renderer.outputEncoding = THREE.LinearEncoding
+    this.renderer.outputEncoding = THREE.LinearEncoding
     this.renderer.outputEncoding = THREE.sRGBEncoding
     this.renderer.debug.checkShaderErrors = true
     const resize = () => {
