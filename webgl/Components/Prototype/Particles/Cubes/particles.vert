@@ -3,6 +3,7 @@ attribute vec2 aPixelPosition;
 uniform sampler2D uPosTexture;
 uniform sampler2D uPreviousPosTexture;
 uniform sampler2D uVelocityTexture;
+uniform sampler2D uNormalTexture;
 uniform float uSize;
 
 varying vec3 vViewPosition;
@@ -31,14 +32,18 @@ float cremap(float value, float start1, float stop1, float start2, float stop2) 
 }
 
 void main() {
+  vec3 attractorNormal = texture2D(uNormalTexture, aPixelPosition).xyz;
   vec4 data = texture2D(uPosTexture, aPixelPosition);
   vec4 previousData = texture2D(uPreviousPosTexture, aPixelPosition);
   vec4 velocityData = texture2D(uVelocityTexture, aPixelPosition);
   float speed = length(velocityData.xyz);
   vec3 offset = data.rgb;
-  float scale = cremap(speed, 0.3, 0.1, 0.8, 1.2) * uSize;
+  float scale = cremap(speed, 0.1, 0.3, 0.8, 1.2) * uSize;
 
-	mat4 localRotation = mat4( calcLookAtMatrix( data.xyz, previousData.xyz, 0. ) );
+  float diff = length(data.xyz - previousData.xyz);
+  vec3 prevPos = diff == 0. ? data.xyz - attractorNormal : previousData.xyz ;
+  // attractorNormal
+	mat4 localRotation = mat4( calcLookAtMatrix( data.xyz, prevPos.xyz, 0. ) );
   vec3 newPosition = (localRotation * vec4(position, 1.0)).xyz;
   vec4 mvPosition = modelViewMatrix * vec4((newPosition * scale + offset), 1.0);
 

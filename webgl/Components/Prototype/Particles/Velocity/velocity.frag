@@ -2,6 +2,7 @@ varying vec2 vUv;
 uniform sampler2D uFbo;
 uniform sampler2D uPositionFbo;
 uniform sampler2D uRandomForces;
+uniform sampler2D uAttractorsTexture;
 uniform vec3 uAttractor;
 
 float rand(vec2 co){
@@ -19,14 +20,24 @@ void main() {
 
   vec3 position = positionData.xyz;
 
-  vec3 attractor = uAttractor;
+
+  bool useCursor = true;
+
+
+  bool textureAttractors = !useCursor;
+  // ------ TEXTURE ATTRACTOR
+  vec3 attractor = textureAttractors
+    ? texture2D(uAttractorsTexture, vUv).xyz
+    : uAttractor;
+
+
+  // ------ ATTRACTION
   if (length(position - attractor) == 0.) attractor.x += 0.1;
   float dist = length(position - attractor);
   dist = max(dist - 0.1, 0.);
 
-  float G = 20.;
+  float G = 10.;
   float force = G * ((0.001 + rand(vUv) * 100.) / (dist * 0.01));
-  // float force = G * (1. / (dist * 0.01));
   force = min(force, 0.01);
 
   vec3 dir = normalize(attractor - position);
@@ -36,7 +47,27 @@ void main() {
   float amount = length(inputData.xyz);
   vec3 velocity = normalize(inputData.xyz);
 
-  amount = max(amount * 0.98, remap(rand(vUv+1.), 0., 1., 0.07, 0.09));
+
+  bool capForce = useCursor;
+  // ------ CAP FORCE
+  float minForce = capForce
+    ? remap(rand(vUv+1.), 0., 1., 0.05, 0.09)
+    : 0.;
+  amount = max(amount * 0.98, minForce);
+
+
+  bool fixOnAttractor = !useCursor;
+  // ------ FIX ON ATTRACTOR
+  if (fixOnAttractor) {
+    if (amount < 0.05 && length(positionData.xyz - attractor.xyz) < 0.05) {
+      amount = 0.001;
+      velocity = dir;
+    }
+    if (amount < 0.01 && length(positionData.xyz - attractor.xyz) < 0.01) {
+      amount = 0.;
+    }
+  }
+
   inputData.xyz = velocity * amount;
 
 	gl_FragColor = inputData;

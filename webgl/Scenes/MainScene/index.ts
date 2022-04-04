@@ -88,9 +88,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.environment = new Environment(this.genContext())
     this.scene.add(this.environment.object)
 
-    this.particles = new Particles(this.genContext())
-    this.scene.add(this.particles.object)
-
     this.toUnbind(() => {
       // this.scene.remove(this.particles.object)
       // this.particles.destroy()
@@ -103,29 +100,39 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       // plane.visible = false
       // const headSet = new HeadSet(this.genContext(), gltf.scene)
       // this.scene.add(headSet.object)
-      // this.scene.add(gltf.scene)
-      // gltf.scene.traverse((o) => {
-      //   if (o.name.startsWith('Crystal')) {
-      //     ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-      //       matcap: new THREE.TextureLoader().load('./headset_2_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
-      //     })
-      //   }
-      // })
-      // this.scene.add(gltf.scene)
-      // gltf.scene.traverse((o) => {
-      //   if (o.name.startsWith('Chess')) {
-      //     ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-      //       matcap: new THREE.TextureLoader().load('./headset_2_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
-      //     })
-      //   }
-      // })
+      this.scene.add(gltf.scene)
+      gltf.scene.traverse((o) => {
+        if (o.name.startsWith('Crystal')) {
+          ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
+            matcap: new THREE.TextureLoader().load(
+              './headset_leather_2_256px.png',
+              (t) => (t.encoding = THREE.LinearEncoding)
+            ),
+          })
+          o.visible = false
+        }
+        if (o.name.startsWith('Chess')) {
+          ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
+            matcap: new THREE.TextureLoader().load('./headset_2_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
+          })
+          o.visible = false
+        }
+      })
       // const columns = new ColumnsGLTF(this.genContext(), gltf.scene)
       // this.scene.add(columns.object)
-      console.log(gltf.scene)
+
       const plane = gltf.scene.getObjectByName('Plane001') as THREE.Mesh
+      const queen = gltf.scene.getObjectByName('Chess') as THREE.Mesh
+      plane.visible = false
+      this.particles = new Particles(this.genContext(), { mesh: queen })
+      this.scene.add(this.particles.object)
+
       this.raycastMesh = new THREE.Mesh(plane.geometry, new THREE.MeshNormalMaterial({ wireframe: true }))
+      this.raycastMesh.visible = false
       copyMatrix(plane, this.raycastMesh)
       this.scene.add(this.raycastMesh)
+      this.context.tweakpane.addInput(this.raycastMesh, 'visible', { label: 'Raycast Mesh' })
+
       copyWorldMatrix(gltf.cameras[0], this.mainCamera.object)
       this.mainCamera.object.fov = (gltf.cameras[0] as THREE.PerspectiveCamera).fov
       // this.water = new Water(this.genContext())
@@ -142,7 +149,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   }
 
   public tick(time: number, delta: number): void {
-    this.particles.tick(time, delta)
+    this.particles?.tick(time, delta)
     this.debugCamera.tick(time, delta)
     this.water?.tick(time, delta)
   }

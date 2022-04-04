@@ -1,13 +1,7 @@
 import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import * as THREE from 'three'
-import GPGPU from '~~/utils/GPGPU'
 import particlesFragment from './particles.frag?raw'
 import particlesVertex from './particles.vert?raw'
-import vertex from './default.vert?raw'
-import positionFragment from './position.frag?raw'
-import velocityFragment from './velocity.frag?raw'
-import { onSphere } from '~~/utils/math/onSphere'
-import { inSphere } from '~~/utils/math/inSphere'
 import { WebGLAppContext } from '~~/webgl'
 
 type NeededContext = WebGLAppContext & { sceneState: { raycastPosition: THREE.Vector3 } }
@@ -27,6 +21,7 @@ export default class Cubes extends AbstractObject<
         uPosTexture: { value: null },
         uPreviousPosTexture: { value: null },
         uVelocityTexture: { value: null },
+        uNormalTexture: { value: null },
         uMatcap: {
           value: new THREE.TextureLoader().load(
             './headset_light_2_256px.png',
@@ -81,5 +76,9 @@ export default class Cubes extends AbstractObject<
     this.object.material.uniforms.uPosTexture.value = positionTexture
     this.object.material.uniforms.uPreviousPosTexture.value = previousPositionTexture
     this.object.material.uniforms.uVelocityTexture.value = velocityTexture
+  }
+
+  public setAttractorTexture(normalTexture: THREE.Texture) {
+    this.object.material.uniforms.uNormalTexture.value = normalTexture
   }
 }

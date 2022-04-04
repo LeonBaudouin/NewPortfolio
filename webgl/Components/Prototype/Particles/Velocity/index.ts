@@ -36,6 +36,7 @@ export default class Velocity extends AbstractComponent<NeededContext> {
       uniforms: {
         uFbo: { value: null },
         uPositionFbo: { value: null },
+        uAttractorsTexture: { value: null },
         uAttractor: { value: new THREE.Vector3() },
         uRandomForces: { value: randomForceTex },
       },
@@ -64,6 +65,10 @@ export default class Velocity extends AbstractComponent<NeededContext> {
 
   public updateTexture(tex: THREE.Texture) {
     this.velocity.quad.material.uniforms.uPositionFbo.value = tex
+  }
+
+  public setAttractorTexture(positionTexture: THREE.Texture) {
+    this.velocity.quad.material.uniforms.uAttractorsTexture.value = positionTexture
   }
 
   public getTexture() {

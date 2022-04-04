@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <Start />
 </template>
 
 <script setup lang="ts">
@@ -36,6 +36,8 @@ useCleanup(() => {
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Spartan:wght@100;400;900&display=swap');
+
 body {
   overflow: hidden;
 }

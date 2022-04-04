@@ -44,7 +44,7 @@ export default class WebGL extends LifeCycle {
         uSRGB: { value: false },
       },
     })
-    this.tweakpane.addInput(this.shaderPass.material.uniforms.uSRGB, 'value', { label: 'sRGB' })
+    // this.tweakpane.addInput(this.shaderPass.material.uniforms.uSRGB, 'value', { label: 'sRGB' })
     this.postProcessing.addPass(this.renderPass)
     this.postProcessing.addPass(this.shaderPass)
 
