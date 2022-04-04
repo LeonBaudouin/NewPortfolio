@@ -26,10 +26,13 @@ export default class HeadSet extends AbstractObject<NeededContext> {
 
     const { geometry } = this.enableObject as THREE.Mesh
     const loader = new THREE.TextureLoader()
-    const headsetTexture = loader.load('./headset_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
-    const headsetLeatherTexture = loader.load('./headset_leather_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
-    const headsetLightTexture = loader.load('./headset_light_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
-    const aoTex = loader.load('./headset_ao.png', (t) => ((t.encoding = THREE.sRGBEncoding), (t.flipY = false)))
+    const headsetTexture = loader.load('./headset_2_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
+    const headsetLeatherTexture = loader.load(
+      './headset_leather_2_256px.png',
+      (t) => (t.encoding = THREE.LinearEncoding)
+    )
+    const headsetLightTexture = loader.load('./headset_light_2_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
+    const aoTex = loader.load('./headset_ao.png', (t) => ((t.encoding = THREE.LinearEncoding), (t.flipY = false)))
 
     this.mesh = new THREE.Mesh(
       geometry,
@@ -43,13 +46,13 @@ export default class HeadSet extends AbstractObject<NeededContext> {
           uLeatherMatcap: { value: headsetLeatherTexture },
           uLightMatcap: { value: headsetLightTexture },
           uAoMap: { value: aoTex },
-          uAoAmount: { value: 1 },
+          uAoAmount: { value: 2 },
           ...THREE.UniformsLib['fog'],
         },
       })
     )
     const subfolder = this.context.tweakpane.addFolder({ title: 'HeadSeat' })
-    subfolder.addInput(this.mesh.material.uniforms.uAoAmount, 'value', { label: 'ao amount', min: 0, max: 2 })
+    subfolder.addInput(this.mesh.material.uniforms.uAoAmount, 'value', { label: 'AO Amount', min: 0, max: 2 })
 
     this.object.add(this.mesh)
 
@@ -73,6 +76,9 @@ export default class HeadSet extends AbstractObject<NeededContext> {
     // )
 
     copyMatrix(this.enableObject, this.object)
+    // this.object.rotation.y = 0
+    // this.object.rotation.x = 0
+    // this.object.rotation.z = 0
   }
 
   tick(time: number, delta: number) {

@@ -7,15 +7,27 @@ import pixelToScreenCoords from '~~/utils/webgl/pixelToScreenCoords'
 import { SceneContext } from '~~/webgl/abstract/Context'
 import AbstractComponent from '~~/webgl/abstract/AbstractComponent'
 
+const temp1 = new THREE.Vector3()
+
 export default class Ripples extends AbstractComponent<SceneContext> {
   private simulation: GPGPU
   private dropSimulation: GPGPU
   private raycaster = new THREE.Raycaster()
   private lastTexture: THREE.Texture
   private raycastMesh: THREE.Object3D
+  private shader: THREE.Shader
+  private shader2: THREE.Shader
 
+  public get matrix(): THREE.Matrix4 {
+    this.raycastMesh.updateMatrix()
+    return this.raycastMesh.matrix
+  }
   public get texture(): THREE.Texture {
     return this.simulation.getBuffer().texture
+  }
+
+  private params = {
+    debugAnimation: false,
   }
 
   constructor(context: SceneContext) {
@@ -37,8 +49,10 @@ export default class Ripples extends AbstractComponent<SceneContext> {
         uFbo: { value: null },
         uDelta: { value: new THREE.Vector2(1 / 512, 1 / 512) },
         uCenter: { value: new THREE.Vector2(-100, -100) },
+        uPosition: { value: new THREE.Vector3() },
       },
     })
+    this.shader = simulationShader
     this.simulation = new GPGPU({
       size,
       renderer: this.context.renderer,
@@ -63,9 +77,12 @@ export default class Ripples extends AbstractComponent<SceneContext> {
       initTexture,
     })
 
-    const geom = new THREE.PlaneGeometry(20, 20).rotateX(-Math.PI / 2).translate(0, 0, 0)
+    const geom = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2)
     const mat = new THREE.MeshBasicMaterial({ wireframe: true })
     this.raycastMesh = new THREE.Mesh(geom, mat)
+    this.raycastMesh.position.y = 0.1
+    this.raycastMesh.visible = false
+    this.raycastMesh.scale.setScalar(20)
     this.context.scene.add(this.raycastMesh)
 
     const mouseMove = (e: MouseEvent) => {
@@ -77,6 +94,13 @@ export default class Ripples extends AbstractComponent<SceneContext> {
         this.lastTexture = this.dropSimulation.outputTexture
       }
     }
+
+    addDropShader.uniforms.uCenter.value.copy(new THREE.Vector2(0.5, 0.5))
+    this.dropSimulation.render(this.simulation.outputTexture)
+    this.lastTexture = this.dropSimulation.outputTexture
+
+    this.context.tweakpane.addInput(this.params, 'debugAnimation', { label: 'Debug Animation' })
+    this.context.tweakpane.addInput(this.raycastMesh, 'visible', { label: 'Show Plane' })
 
     window.addEventListener('mousemove', mouseMove)
 
@@ -91,6 +115,17 @@ export default class Ripples extends AbstractComponent<SceneContext> {
   }
 
   public tick(time: number, delta: number): void {
+    if (this.params.debugAnimation) {
+      // this.raycastMesh.rotateY(delta)
+      // this.raycastMesh.scale.setScalar((Math.sin(time) + 2) * 10)
+      this.raycastMesh.position.set(Math.cos(time) * 5, 0, Math.sin(time) * 5)
+      if (temp1.length() == 0) temp1.copy(this.raycastMesh.position)
+    }
+
+    temp1.sub(this.raycastMesh.position)
+    // console.log(temp1)
+    this.shader.uniforms.uPosition.value.copy(temp1)
+    temp1.copy(this.raycastMesh.position)
     this.simulation.render(this.lastTexture)
     this.lastTexture = this.simulation.outputTexture
   }

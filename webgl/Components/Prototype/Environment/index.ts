@@ -6,7 +6,7 @@ import Background from '../Background'
 
 export default class Environment extends AbstractObject<SceneContext> {
   private data = reactive({
-    fogColor: '#cacacf',
+    fogColor: '#131313',
     hasFog: true,
   })
 

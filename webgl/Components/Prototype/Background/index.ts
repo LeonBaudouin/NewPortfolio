@@ -7,8 +7,8 @@ import { FolderApi } from 'tweakpane'
 
 export default class Background extends AbstractObject<SceneContext> {
   private data = reactive({
-    downColor: '#ffac4f',
-    upColor: '#cacacf',
+    downColor: '#090909',
+    upColor: '#1f1f1f',
     gradientStart: -0.4,
     gradientEnd: 0.3,
   })

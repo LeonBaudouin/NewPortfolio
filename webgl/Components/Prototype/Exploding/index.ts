@@ -12,9 +12,10 @@ export default class Exploding extends AbstractObject<
   constructor(context: WebGLAppContext, gltf: GLTF) {
     super(context)
     const loader = new THREE.TextureLoader()
-    const matcap = loader.load('./queen_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
-    const aoTex = loader.load('./Queen_ao.png', (t) => ((t.encoding = THREE.sRGBEncoding), (t.flipY = false)))
+    const matcap = loader.load('./headset_light_2_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
+    const aoTex = loader.load('./Queen_ao.png', (t) => ((t.encoding = THREE.LinearEncoding), (t.flipY = false)))
     const geom = (gltf.scene.children[0] as THREE.Mesh).geometry
+
     this.object = new THREE.Mesh(
       geom,
       new THREE.ShaderMaterial({
@@ -25,11 +26,12 @@ export default class Exploding extends AbstractObject<
         uniforms: {
           uMatcap: { value: matcap },
           uAoMap: { value: aoTex },
-          uAoAmount: { value: 0 },
+          uAoAmount: { value: 1.5 },
           offset: { value: 0.1 },
           ...THREE.UniformsLib['fog'],
         },
       })
     )
+    this.context.tweakpane.addInput(this.object.material.uniforms.offset, 'value', { label: 'Explode', min: 0, max: 1 })
   }
 }

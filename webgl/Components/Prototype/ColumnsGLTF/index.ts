@@ -32,21 +32,19 @@ export default class ColumnsGLTF extends AbstractObject<NeededContext> {
     })
 
     scene.traverse((o) => {
-      console.log(o)
-
       if (o.name.startsWith('Column')) {
         ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-          matcap: new THREE.TextureLoader().load('./column2_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
+          matcap: new THREE.TextureLoader().load('./column2_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
         })
       }
       if (o.name.startsWith('Rock')) {
         ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-          matcap: new THREE.TextureLoader().load('./rock_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
+          matcap: new THREE.TextureLoader().load('./rock_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
         })
       }
       if (o.name.startsWith('Sand')) {
         ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-          matcap: new THREE.TextureLoader().load('./sand_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
+          matcap: new THREE.TextureLoader().load('./sand_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
         })
       }
     })

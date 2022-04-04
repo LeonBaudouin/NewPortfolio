@@ -3,9 +3,11 @@ varying vec3 vViewPosition;
 varying vec3 vNormal;
 varying vec3 vColor;
 varying vec2 vUv;
+varying float vInside;
 
 attribute vec3 _center;
 attribute vec3 _direction;
+attribute float _inside;
 
 uniform float offset;
 
@@ -28,4 +30,5 @@ void main() {
 	vViewPosition = - mvPosition.xyz;
   vColor = color.rgb;
   vUv = uv;
+  vInside = _inside;
 }

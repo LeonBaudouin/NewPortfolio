@@ -10,6 +10,7 @@ varying vec3 vViewPosition;
 varying vec3 vNormal;
 varying vec3 vColor;
 varying vec2 vUv;
+varying float vInside;
 
 void main() {
 	vec3 normal = normalize( vNormal );
@@ -24,7 +25,7 @@ void main() {
   vec4 ao = texture2D(uAoMap, vUv);
   ao = 1. - ((1. - ao) * uAoAmount);
 
-  gl_FragColor = vec4(color.rgb * ao.rgb, 1.);
+  gl_FragColor = vec4(color.rgb * mix(ao.rgb, vec3(1.), vInside), 1.);
   gl_FragColor = linearToOutputTexel( gl_FragColor );
   #include <fog_fragment>
   // gl_FragColor = vec4(vColor, 1.);

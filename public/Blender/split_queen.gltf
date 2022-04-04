@@ -48,6 +48,16 @@
 			"bufferView":4,
 			"componentType":5126,
 			"count":10253,
+			"type":"SCALAR",
+			"min":[0
+			],
+			"max":[1
+			]
+		},
+		{
+			"bufferView":5,
+			"componentType":5126,
+			"count":10253,
 			"type":"VEC2",
 			"min":[0,0
 			],
@@ -55,7 +65,7 @@
 			]
 		},
 		{
-			"bufferView":5,
+			"bufferView":6,
 			"componentType":5126,
 			"count":10253,
 			"type":"VEC3",
@@ -65,7 +75,7 @@
 			]
 		},
 		{
-			"bufferView":6,
+			"bufferView":7,
 			"componentType":5125,
 			"count":10253,
 			"type":"SCALAR",
@@ -78,7 +88,7 @@
 	"buffers":[
 		{
 			"uri":"split_queen_data.bin",
-			"byteLength":676548,
+			"byteLength":717560,
 			"name":"main_buffer"
 		}
 	],
@@ -109,18 +119,24 @@
 		{
 			"buffer":0,
 			"byteOffset":430476,
+			"byteLength":41012,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteOffset":471488,
 			"byteLength":82024,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteOffset":512500,
+			"byteOffset":553512,
 			"byteLength":123036,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteOffset":635536,
+			"byteOffset":676548,
 			"byteLength":41012,
 			"target":34962
 		}
@@ -136,10 +152,11 @@
 			"primitives":[
 				{
 					"attributes":{
-						"_cellpt":6,
-						"NORMAL":5,
-						"TEXCOORD_0":4,
+						"_cellpt":7,
+						"NORMAL":6,
+						"TEXCOORD_0":5,
 						"_center":3,
+						"_inside":4,
 						"_direction":2,
 						"POSITION":1
 					},

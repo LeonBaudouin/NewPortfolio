@@ -1,42 +1,89 @@
 uniform vec3 color;
 uniform sampler2D tDiffuse;
 uniform sampler2D tRipples;
-uniform bool uDebugNormals;
+uniform mat4 uRipplesMatrix;
+uniform int uDebug;
+uniform float uTime;
+
 varying vec4 vUv;
 varying vec3 vPosition;
 
 #include <common>
 #include <logdepthbuf_pars_fragment>
 
-const float M_PI = 3.141592653589793;
+//	Simplex 3D Noise
+//	by Ian McEwan, Ashima Arts
+//
+vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
+vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
 
-vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+float snoise(vec3 v){
+  const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+  const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
 
-float snoise(vec2 v){
-  const vec4 C = vec4(0.211324865405187, 0.366025403784439,
-           -0.577350269189626, 0.024390243902439);
-  vec2 i  = floor(v + dot(v, C.yy) );
-  vec2 x0 = v -   i + dot(i, C.xx);
-  vec2 i1;
-  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-  vec4 x12 = x0.xyxy + C.xxzz;
-  x12.xy -= i1;
-  i = mod(i, 289.0);
-  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
-  + i.x + vec3(0.0, i1.x, 1.0 ));
-  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy),
-    dot(x12.zw,x12.zw)), 0.0);
-  m = m*m ;
-  m = m*m ;
-  vec3 x = 2.0 * fract(p * C.www) - 1.0;
-  vec3 h = abs(x) - 0.5;
-  vec3 ox = floor(x + 0.5);
-  vec3 a0 = x - ox;
-  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
-  vec3 g;
-  g.x  = a0.x  * x0.x  + h.x  * x0.y;
-  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-  return 130.0 * dot(m, g);
+// First corner
+  vec3 i  = floor(v + dot(v, C.yyy) );
+  vec3 x0 =   v - i + dot(i, C.xxx) ;
+
+// Other corners
+  vec3 g = step(x0.yzx, x0.xyz);
+  vec3 l = 1.0 - g;
+  vec3 i1 = min( g.xyz, l.zxy );
+  vec3 i2 = max( g.xyz, l.zxy );
+
+  //  x0 = x0 - 0. + 0.0 * C
+  vec3 x1 = x0 - i1 + 1.0 * C.xxx;
+  vec3 x2 = x0 - i2 + 2.0 * C.xxx;
+  vec3 x3 = x0 - 1. + 3.0 * C.xxx;
+
+// Permutations
+  i = mod(i, 289.0 );
+  vec4 p = permute( permute( permute(
+             i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+           + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
+           + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+
+// Gradients
+// ( N*N points uniformly over a square, mapped onto an octahedron.)
+  float n_ = 1.0/7.0; // N=7
+  vec3  ns = n_ * D.wyz - D.xzx;
+
+  vec4 j = p - 49.0 * floor(p * ns.z *ns.z);  //  mod(p,N*N)
+
+  vec4 x_ = floor(j * ns.z);
+  vec4 y_ = floor(j - 7.0 * x_ );    // mod(j,N)
+
+  vec4 x = x_ *ns.x + ns.yyyy;
+  vec4 y = y_ *ns.x + ns.yyyy;
+  vec4 h = 1.0 - abs(x) - abs(y);
+
+  vec4 b0 = vec4( x.xy, y.xy );
+  vec4 b1 = vec4( x.zw, y.zw );
+
+  vec4 s0 = floor(b0)*2.0 + 1.0;
+  vec4 s1 = floor(b1)*2.0 + 1.0;
+  vec4 sh = -step(h, vec4(0.0));
+
+  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+  vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+
+  vec3 p0 = vec3(a0.xy,h.x);
+  vec3 p1 = vec3(a0.zw,h.y);
+  vec3 p2 = vec3(a1.xy,h.z);
+  vec3 p3 = vec3(a1.zw,h.w);
+
+//Normalise gradients
+  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+  p0 *= norm.x;
+  p1 *= norm.y;
+  p2 *= norm.z;
+  p3 *= norm.w;
+
+// Mix final noise value
+  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+  m = m * m;
+  return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
+                                dot(p2,x2), dot(p3,x3) ) );
 }
 
 // ------------
@@ -70,12 +117,13 @@ float isNorm(vec2 _st) {
   return 1.;
 }
 
-vec3 getDisplacedPosition(vec2 _position) {
-  vec2 uv = _position + .5;
+vec3 getDisplacedPosition(vec2 _position, vec2 basePosition) {
+  vec2 uv = _position * vec2(1., -1.) + .5;
   vec3 defaultPosition = vec3(_position, 0.);
   vec3 ripplePosition =  vec3(_position, texture2D(tRipples, uv).r);
-  return mix(defaultPosition, ripplePosition, cremap(distToEdge(uv), 0., 1., 1., 0.));
-  // return vec3(_position, distToEdge(uv));
+  ripplePosition =  mix(defaultPosition, ripplePosition, cremap(distToEdge(uv), 0., .5, 1., 0.));
+  ripplePosition.z += snoise(vec3(basePosition * .5, uTime * 0.1) + vec3(uTime, 0., 0.)) * .4;
+  return ripplePosition;
 }
 
 void main() {
@@ -85,14 +133,15 @@ void main() {
   float distanceA = 1. / 512.;
   float distanceB = 1. / 512.;
 
-  vec2 position = vPosition.xy * 0.05;
-  vec3 displacedPosition = getDisplacedPosition(position);
+  vec2 position = (uRipplesMatrix * vec4(vPosition.x, 0., -vPosition.y, 1.)).xz;
+  vec2 basePosition = vPosition.xy;
+  vec3 displacedPosition = getDisplacedPosition(position, basePosition);
 
   vec2 positionA = position + vec2(distanceA, 0.);
-  vec3 displacedPositionA = getDisplacedPosition(positionA);
+  vec3 displacedPositionA = getDisplacedPosition(positionA, basePosition + vec2(distanceA, 0.));
 
   vec2 positionB = position + vec2(0., distanceB);
-  vec3 displacedPositionB = getDisplacedPosition(positionB);
+  vec3 displacedPositionB = getDisplacedPosition(positionB, basePosition + vec2(0., distanceB));
 
   vec3 my_normal = cross(
     displacedPositionA - displacedPosition.xyz,
@@ -100,22 +149,20 @@ void main() {
   );
   my_normal = normalize(my_normal);
 
-  // vec4 normalColor = texture2D(tRipples, vPosition.xy * 0.1);
-
-  // vec3 tex_normal = normalize( vec3( normalColor.r * 2.0 - 1.0, normalColor.b, normalColor.g * 2.0 - 1.0 ) );
-
-  // my_normal = tex_normal;
 
   vec3 lightDir = normalize(vec3(30., 20., 1.));
-  // float light = cremap(dot(lightDir, my_normal), 1., 0.8, 0., 1.);
   float light = cremap(dot(lightDir, my_normal), 0.5, 1., 0., .1);
 
   vec4 mirrorCoord = vUv;
   mirrorCoord.xz += my_normal.xy * 0.1;
   vec4 base = texture2DProj( tDiffuse, mirrorCoord );
-  base = linearToOutputTexel(base);
+  // base = linearToOutputTexel(base);
   vec3 c = blendOverlay( base.rgb, color ) + light;
   gl_FragColor = vec4(c, 1.);
-  if (uDebugNormals) gl_FragColor = vec4(my_normal, 1.);
-  // gl_FragColor = vec4(position.x, position.y, 0., 1.);
+
+  vec2 uv = position * vec2(1., -1.) + .5;
+
+  if (uDebug == 1) gl_FragColor = vec4(my_normal, 1.);
+  if (uDebug == 2) gl_FragColor = vec4(position.x + 0.5, position.y + 0.5, 1., 1.);
+  if (uDebug == 3) gl_FragColor = vec4(texture2D(tRipples, uv).rgb, 1.);
 }

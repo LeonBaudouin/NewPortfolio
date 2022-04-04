@@ -13,8 +13,8 @@ void main() {
   mvPosition = viewMatrix * modelMatrix * worldPosition;
   gl_Position = projectionMatrix * mvPosition;
 
-  vNormal = normalMatrix * normal;
 	#include <fog_vertex>
+  vNormal = normalMatrix * normal;
 	vViewPosition = - mvPosition.xyz;
   vColor = color.rgb;
   vUv = uv;

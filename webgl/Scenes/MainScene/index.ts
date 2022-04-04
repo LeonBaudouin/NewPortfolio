@@ -9,11 +9,15 @@ import Water from '~~/webgl/Components/Prototype/Water'
 import SimpleCamera from '~~/webgl/Components/Prototype/Camera/SimpleCamera'
 import ColumnsGLTF from '~~/webgl/Components/Prototype/ColumnsGLTF'
 import copyWorldMatrix from '~~/utils/webgl/copyWorldMatrix'
+import HeadSet from '~~/webgl/Components/Prototype/FloatingPieces/HeadSet'
+import Exploding from '~~/webgl/Components/Prototype/Exploding'
+import Particles from '~~/webgl/Components/Prototype/Particles'
+import copyMatrix from '~~/utils/webgl/copyMatrix'
 
 export type Section = 'projects' | 'about' | 'lab'
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
   private raycastMesh: THREE.Object3D
-  // private particles: Particles
+  private particles: Particles
   private debugCamera: DebugCamera
   private mainCamera: SimpleCamera
   private environment: Environment
@@ -34,7 +38,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
     this.debugCamera = new DebugCamera(this.genContext(), { defaultPosition: new THREE.Vector3(0, 3, 15) })
     this.scene = new THREE.Scene()
-    this.scene.add(new THREE.AxesHelper())
+    // this.scene.add(new THREE.AxesHelper())
     this.scene.add(this.debugCamera.object)
 
     this.mainCamera = new SimpleCamera(this.genContext(), { defaultPosition: new THREE.Vector3(0, 3, 15) })
@@ -84,8 +88,8 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.environment = new Environment(this.genContext())
     this.scene.add(this.environment.object)
 
-    // this.particles = new Particles(this.genContext())
-    // this.scene.add(this.particles.object)
+    this.particles = new Particles(this.genContext())
+    this.scene.add(this.particles.object)
 
     this.toUnbind(() => {
       // this.scene.remove(this.particles.object)
@@ -94,25 +98,51 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     })
 
     const gltfLoader = new GLTFLoader()
-    gltfLoader.loadAsync('./scene_3.glb').then((gltf) => {
-      const plane = gltf.scene.getObjectByName('Plane')!
-      plane.visible = false
-      const columns = new ColumnsGLTF(this.genContext(), gltf.scene)
+    gltfLoader.loadAsync('./scene_4.glb').then((gltf) => {
+      // const plane = gltf.scene.getObjectByName('Plane')!
+      // plane.visible = false
+      // const headSet = new HeadSet(this.genContext(), gltf.scene)
+      // this.scene.add(headSet.object)
+      // this.scene.add(gltf.scene)
+      // gltf.scene.traverse((o) => {
+      //   if (o.name.startsWith('Crystal')) {
+      //     ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
+      //       matcap: new THREE.TextureLoader().load('./headset_2_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
+      //     })
+      //   }
+      // })
+      // this.scene.add(gltf.scene)
+      // gltf.scene.traverse((o) => {
+      //   if (o.name.startsWith('Chess')) {
+      //     ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
+      //       matcap: new THREE.TextureLoader().load('./headset_2_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
+      //     })
+      //   }
+      // })
+      // const columns = new ColumnsGLTF(this.genContext(), gltf.scene)
+      // this.scene.add(columns.object)
+      console.log(gltf.scene)
+      const plane = gltf.scene.getObjectByName('Plane001') as THREE.Mesh
+      this.raycastMesh = new THREE.Mesh(plane.geometry, new THREE.MeshNormalMaterial({ wireframe: true }))
+      copyMatrix(plane, this.raycastMesh)
+      this.scene.add(this.raycastMesh)
       copyWorldMatrix(gltf.cameras[0], this.mainCamera.object)
-      console.log((gltf.cameras[0] as THREE.PerspectiveCamera).fov)
       this.mainCamera.object.fov = (gltf.cameras[0] as THREE.PerspectiveCamera).fov
-      this.scene.add(columns.object)
-      this.water = new Water(this.genContext())
-      this.scene.add(this.water.object)
+      // this.water = new Water(this.genContext())
+      // this.scene.add(this.water.object)
+      // const mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(1, 8), new THREE.MeshBasicMaterial({ color: 0xff3333 }))
+      // mesh.rotateY(Math.PI / 2)
+      // this.scene.add(mesh)
     })
     // gltfLoader.loadAsync('./Blender/split_queen.gltf').then((gltf) => {
     //   const exploding = new Exploding(this.genContext(), gltf)
     //   this.scene.add(exploding.object)
+    //   exploding.object.position.y = 2.5
     // })
   }
 
   public tick(time: number, delta: number): void {
-    // this.particles.tick(time, delta)
+    this.particles.tick(time, delta)
     this.debugCamera.tick(time, delta)
     this.water?.tick(time, delta)
   }
