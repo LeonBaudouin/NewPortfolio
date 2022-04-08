@@ -6,11 +6,17 @@ import { SceneContext } from '~~/webgl/abstract/Context'
 import { FolderApi } from 'tweakpane'
 
 export default class Background extends AbstractObject<SceneContext> {
+  // private data = reactive({
+  //   downColor: '#090909',
+  //   upColor: '#1f1f1f',
+  //   gradientStart: -0.4,
+  //   gradientEnd: 0.3,
+  // })
   private data = reactive({
-    downColor: '#090909',
-    upColor: '#1f1f1f',
-    gradientStart: -0.4,
-    gradientEnd: 0.3,
+    downColor: '#060606',
+    upColor: '#1c1612',
+    gradientStart: -0.35,
+    gradientEnd: 0.09,
   })
 
   private uniforms: Record<string, THREE.IUniform>
@@ -43,7 +49,7 @@ export default class Background extends AbstractObject<SceneContext> {
         glslVersion: THREE.GLSL3,
       })
     )
-    this.object.renderOrder = -1
+    this.object.renderOrder = -100
     this.object.frustumCulled = false
 
     this.context.tweakpane.addInput(this.data, 'downColor')

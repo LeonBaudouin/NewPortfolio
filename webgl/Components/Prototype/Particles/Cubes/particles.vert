@@ -5,6 +5,7 @@ uniform sampler2D uPreviousPosTexture;
 uniform sampler2D uVelocityTexture;
 uniform sampler2D uNormalTexture;
 uniform float uSize;
+uniform vec4 uSizeVariation;
 
 varying vec3 vViewPosition;
 varying vec3 vNormal;
@@ -38,7 +39,14 @@ void main() {
   vec4 velocityData = texture2D(uVelocityTexture, aPixelPosition);
   float speed = length(velocityData.xyz);
   vec3 offset = data.rgb;
-  float scale = cremap(speed, 0.1, 0.3, 0.8, 1.2) * uSize;
+  // float scale = cremap(speed, 0.05, 0.3, 0., 1.) * uSize;
+  float scale = cremap(
+    speed,
+    uSizeVariation.x,
+    uSizeVariation.y,
+    uSizeVariation.z,
+    uSizeVariation.w
+  ) * uSize;
 
   float diff = length(data.xyz - previousData.xyz);
   vec3 prevPos = diff == 0. ? data.xyz - attractorNormal : previousData.xyz ;

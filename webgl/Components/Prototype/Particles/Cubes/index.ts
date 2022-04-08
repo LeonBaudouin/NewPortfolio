@@ -11,7 +11,7 @@ export default class Cubes extends AbstractObject<
   THREE.InstancedMesh<THREE.BufferGeometry, THREE.ShaderMaterial>
 > {
   constructor(context: NeededContext, { size }: { size: THREE.Vector2 }) {
-    super(context)
+    super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Mesh' }) })
 
     const mat = new THREE.ShaderMaterial({
       vertexShader: particlesVertex,
@@ -23,16 +23,21 @@ export default class Cubes extends AbstractObject<
         uVelocityTexture: { value: null },
         uNormalTexture: { value: null },
         uMatcap: {
-          value: new THREE.TextureLoader().load(
-            './headset_light_2_256px.png',
-            (t) => (t.encoding = THREE.LinearEncoding)
-          ),
+          // value: new THREE.TextureLoader().load('./headset_2_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
+          value: new THREE.TextureLoader().load('./particle_matcap.png', (t) => (t.encoding = THREE.sRGBEncoding)),
+          // value: new THREE.TextureLoader().load('./particles_test.png', (t) => (t.encoding = THREE.sRGBEncoding)),
         },
         uSize: {
-          value: 0.1,
+          value: 0.5,
+        },
+        uSizeVariation: {
+          value: new THREE.Vector4(0.07, 0.28, 0, 1),
         },
       },
     })
+
+    this.context.tweakpane.addInput(mat.uniforms.uSize, 'value', { label: 'Size' })
+    this.context.tweakpane.addInput(mat.uniforms.uSizeVariation, 'value', { label: 'Size Variation' })
 
     const origGeometry = new THREE.BoxBufferGeometry()
     const geometry = new THREE.InstancedBufferGeometry()

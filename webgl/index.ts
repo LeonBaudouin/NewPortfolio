@@ -8,9 +8,11 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { Params } from '~~/plugins/params.client'
 import vertexShader from './index.vert?raw'
 import fragmentShader from './index.frag?raw'
+import TestScene from './Scenes/TestScene'
 
 type Scenes = {
   main: MainScene
+  test: TestScene
 }
 
 export default class WebGL extends LifeCycle {
@@ -74,9 +76,11 @@ export default class WebGL extends LifeCycle {
     const tabs = this.tweakpane.addTab({ pages: [{ title: 'MainScene' }] })
 
     const mainPage = tabs.pages[0]
+    const testPage = tabs.addPage({ title: 'Test' })
 
     this.scenes = {
       main: new MainScene(this.genContext(mainPage)),
+      test: new TestScene(this.genContext(testPage)),
     }
     this.toUnbind(this.scenes.main.destroy, tabs.dispose)
   }
@@ -85,7 +89,7 @@ export default class WebGL extends LifeCycle {
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
     })
-    this.renderer.outputEncoding = THREE.LinearEncoding
+    this.renderer.outputEncoding = THREE.sRGBEncoding
     this.renderer.debug.checkShaderErrors = true
     const resize = () => {
       this.renderer.setSize(window.innerWidth, window.innerHeight)
@@ -101,10 +105,10 @@ export default class WebGL extends LifeCycle {
     const currentScene = this.scenes[this.currentScene]
 
     currentScene.tick(elapsedTime, deltaTime)
-    // this.renderer.render(currentScene.scene, currentScene.camera)
-    this.renderPass.camera = currentScene.camera
-    this.renderPass.scene = currentScene.scene
-    this.postProcessing.render()
+    this.renderer.render(currentScene.scene, currentScene.camera)
+    // this.renderPass.camera = currentScene.camera
+    // this.renderPass.scene = currentScene.scene
+    // this.postProcessing.render()
     // console.log(this.shaderPass)
   }
 }

@@ -27,8 +27,8 @@ export default class ChessPiece extends AbstractObject<NeededContext> {
 
     const { geometry } = this.enableObject as THREE.Mesh
     const loader = new THREE.TextureLoader()
-    const texture = loader.load('./queen_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
-    const aoTex = loader.load('./Queen_ao.png', (t) => ((t.encoding = THREE.LinearEncoding), (t.flipY = false)))
+    const texture = loader.load('./queen_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
+    const aoTex = loader.load('./Queen_ao.png', (t) => ((t.encoding = THREE.sRGBEncoding), (t.flipY = false)))
 
     this.mesh = new THREE.Mesh(geometry, new THREE.MeshMatcapMaterial({ matcap: texture, map: aoTex }))
     this.object.add(this.mesh)

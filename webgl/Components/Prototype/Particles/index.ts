@@ -22,8 +22,8 @@ export default class Particles extends AbstractObject<NeededContext> {
   }
 
   constructor(context: NeededContext, { mesh }: { mesh: THREE.Mesh }) {
-    super(context)
-    this.context.tweakpane.addInput(this.params, 'run')
+    super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Particles' }) })
+    this.context.tweakpane.addInput(this.params, 'run', { label: 'Run simulation' })
     const size = new THREE.Vector2(128, 128)
     this.velocity = new Velocity(this.context, { size })
     this.position = new Position(this.context, { size })

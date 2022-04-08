@@ -1,5 +1,6 @@
 <template>
-  <Start />
+  <div></div>
+  <!-- <Start /> -->
 </template>
 
 <script setup lang="ts">

@@ -13,6 +13,7 @@ import HeadSet from '~~/webgl/Components/Prototype/FloatingPieces/HeadSet'
 import Exploding from '~~/webgl/Components/Prototype/Exploding'
 import Particles from '~~/webgl/Components/Prototype/Particles'
 import copyMatrix from '~~/utils/webgl/copyMatrix'
+import TestBackground from '~~/webgl/Components/Prototype/TestBackground'
 
 export type Section = 'projects' | 'about' | 'lab'
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
@@ -24,7 +25,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   private water: Water
 
   private sceneState = reactive<{ raycastPosition: THREE.Vector3; section: Section | null }>({
-    raycastPosition: new THREE.Vector3(),
+    raycastPosition: new THREE.Vector3(15, 3, -9),
     section: 'projects' as Section,
   })
 
@@ -36,13 +37,13 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     super(context)
     this.setScene()
 
-    this.debugCamera = new DebugCamera(this.genContext(), { defaultPosition: new THREE.Vector3(0, 3, 15) })
+    this.debugCamera = new DebugCamera(this.genContext(), { defaultPosition: new THREE.Vector3(40, 3, 0) })
     this.scene = new THREE.Scene()
     // this.scene.add(new THREE.AxesHelper())
     this.scene.add(this.debugCamera.object)
 
-    this.mainCamera = new SimpleCamera(this.genContext(), { defaultPosition: new THREE.Vector3(0, 3, 15) })
-
+    this.mainCamera = new SimpleCamera(this.genContext(), { defaultPosition: new THREE.Vector3(40, 3, 0) })
+    this.mainCamera.object.rotateY(Math.PI / 2)
     this.scene.add(this.debugCamera.object)
     this.scene.add(this.mainCamera.object)
     this.camera = this.params.debugCam ? this.debugCamera.object : this.mainCamera.object
@@ -61,7 +62,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       const mousePosition = pixelToScreenCoords(clientX, clientY)
       raycast.setFromCamera(mousePosition, this.camera)
       if (!this.raycastMesh) return
-
+      return
       const [intersection] = raycast.intersectObject(this.raycastMesh)
       if (!intersection) return
       this.sceneState.raycastPosition.copy(intersection.point)
@@ -86,7 +87,18 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
   private setObjects() {
     this.environment = new Environment(this.genContext())
+
+    // this.scene.add(new TestBackground(this.genContext()).object)
     this.scene.add(this.environment.object)
+
+    const name = new THREE.Mesh(
+      new THREE.PlaneGeometry(5, 1),
+      new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./leon_baudouin.png'), transparent: true })
+    )
+    name.position.set(10, 3, 4)
+    name.rotateY(Math.PI / 2)
+    name.scale.setScalar(3)
+    this.scene.add(name)
 
     this.toUnbind(() => {
       // this.scene.remove(this.particles.object)
@@ -106,14 +118,14 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
           ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
             matcap: new THREE.TextureLoader().load(
               './headset_leather_2_256px.png',
-              (t) => (t.encoding = THREE.LinearEncoding)
+              (t) => (t.encoding = THREE.sRGBEncoding)
             ),
           })
           o.visible = false
         }
         if (o.name.startsWith('Chess')) {
           ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-            matcap: new THREE.TextureLoader().load('./headset_2_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
+            matcap: new THREE.TextureLoader().load('./headset_2_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
           })
           o.visible = false
         }
@@ -133,7 +145,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       this.scene.add(this.raycastMesh)
       this.context.tweakpane.addInput(this.raycastMesh, 'visible', { label: 'Raycast Mesh' })
 
-      copyWorldMatrix(gltf.cameras[0], this.mainCamera.object)
+      // copyWorldMatrix(gltf.cameras[0], this.mainCamera.object)
       this.mainCamera.object.fov = (gltf.cameras[0] as THREE.PerspectiveCamera).fov
       // this.water = new Water(this.genContext())
       // this.scene.add(this.water.object)
