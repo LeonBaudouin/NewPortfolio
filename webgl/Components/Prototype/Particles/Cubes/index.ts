@@ -6,8 +6,6 @@ import { WebGLAppContext } from '~~/webgl'
 import reactiveUniforms, { CustomWatch } from '~~/utils/uniforms/reactiveUniforms'
 import absoluteUrl from '~~/utils/absoluteUrl'
 
-type NeededContext = WebGLAppContext & { sceneState: { raycastPosition: THREE.Vector3 } }
-
 export type CubesParams = {
   sizeVariation?: THREE.Vector4
   size?: number
@@ -18,7 +16,7 @@ export type CubesParams = {
 export type CubesData = Required<CubesParams>
 
 export default class Cubes extends AbstractObject<
-  NeededContext,
+  WebGLAppContext,
   THREE.InstancedMesh<THREE.BufferGeometry, THREE.ShaderMaterial>
 > {
   public data: CubesData
@@ -29,7 +27,7 @@ export default class Cubes extends AbstractObject<
     matcap: absoluteUrl('/particle_matcap.png'),
   })
 
-  constructor(context: NeededContext, params: CubesParams) {
+  constructor(context: WebGLAppContext, params: CubesParams) {
     super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Mesh' }) })
 
     Object.assign(params, { ...Cubes.DEFAULT_PARAMS, ...params })

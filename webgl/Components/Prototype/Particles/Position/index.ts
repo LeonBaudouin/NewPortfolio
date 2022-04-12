@@ -7,12 +7,10 @@ import { inSphere } from '~~/utils/math/inSphere'
 import { WebGLAppContext } from '~~/webgl'
 import AbstractComponent from '~~/webgl/abstract/AbstractComponent'
 
-type NeededContext = WebGLAppContext & { sceneState: { raycastPosition: THREE.Vector3 } }
-
-export default class Position extends AbstractComponent<NeededContext> {
+export default class Position extends AbstractComponent<WebGLAppContext> {
   private position: GPGPU
 
-  constructor(context: NeededContext, { size }: { size: THREE.Vector2 }) {
+  constructor(context: WebGLAppContext, { size }: { size: THREE.Vector2 }) {
     super(context)
 
     const positionArray = new Float32Array(new Array(size.x * size.y * 4))

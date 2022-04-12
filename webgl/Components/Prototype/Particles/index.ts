@@ -7,8 +7,6 @@ import Cubes, { CubesParams } from './Cubes'
 import { getPositionTextureFromMesh } from '~~/utils/buffer/positionTextureFromMesh'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 
-type NeededContext = WebGLAppContext & { sceneState: { raycastPosition: THREE.Vector3 } }
-
 export type ParticlesParams = {
   run?: boolean
   textureSize: THREE.Vector2
@@ -16,7 +14,7 @@ export type ParticlesParams = {
 
 export type ParticlesData = Required<ParticlesParams>
 
-export default class Particles extends AbstractObject<NeededContext> {
+export default class Particles extends AbstractObject<WebGLAppContext> {
   private velocity: Velocity
   private position: Position
   private cubes: Cubes
@@ -32,7 +30,7 @@ export default class Particles extends AbstractObject<NeededContext> {
   }
 
   constructor(
-    context: NeededContext,
+    context: WebGLAppContext,
     { mesh }: { mesh: THREE.Mesh },
     params: ParticlesParams & CubesParams & VelocityParams
   ) {

@@ -17,6 +17,7 @@ import TestBackground from '~~/webgl/Components/Prototype/TestBackground'
 import absoluteUrl from '~~/utils/absoluteUrl'
 
 export type Section = 'projects' | 'about' | 'lab'
+
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
   private raycastMesh: THREE.Object3D
   private particles: Particles
@@ -25,26 +26,60 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   private environment: Environment
   private water: Water
 
-  private sceneState = reactive<{ raycastPosition: THREE.Vector3; section: Section | null }>({
-    raycastPosition: new THREE.Vector3(15, 3, -9),
+  private sceneState = reactive<{ section: Section | null }>({
     section: 'projects' as Section,
+  })
+
+  // private particlesParams = reactive<ConstructorParameters<typeof Particles>[2]>({
+  //   textureSize: new THREE.Vector2(128, 128),
+  //   useTexture: false,
+  //   capForce: true,
+  //   rotateAround: true,
+  //   fixOnAttractor: false,
+  //   G: 10,
+  //   inertia: { min: 0, max: 0.4 },
+  //   rotationStrength: new THREE.Vector2(0.02, 0.025),
+  //   gravity: new THREE.Vector3(0, 0.001, 0.009),
+  //   rotationDirection: new THREE.Euler(0, 0, -2.03),
+  //   sizeVariation: new THREE.Vector4(0.07, 0.28, 0, 1),
+  //   size: 0.5,
+  //   matcap: absoluteUrl('/column_256px.png'),
+  //   attractor: new THREE.Vector3(0, 0, 0),
+  // })
+
+  private particlesParams = reactive<ConstructorParameters<typeof Particles>[2]>({
+    textureSize: new THREE.Vector2(128, 128),
+    useTexture: false,
+    capForce: true,
+    rotateAround: true,
+    fixOnAttractor: false,
+    G: 10,
+    inertia: { min: 0.2, max: 0.6 },
+    rotationStrength: new THREE.Vector2(0.01, 0.0125),
+    gravity: new THREE.Vector3(0, 0, 0),
+    rotationDirection: new THREE.Euler(0.85, 0.01, 0),
+    sizeVariation: new THREE.Vector4(0.07, 0.28, 0, 1),
+    size: 1,
+    matcap: 'https://makio135.com/matcaps/64/2EAC9E_61EBE3_4DDDD1_43D1C6-64px.png',
+    attractor: new THREE.Vector3(0, 0, 0),
   })
 
   private params = {
     debugCam: false,
+    raycastAttractor: false,
   }
 
   constructor(context: WebGLAppContext) {
     super(context)
     this.setScene()
 
-    this.debugCamera = new DebugCamera(this.genContext(), { defaultPosition: new THREE.Vector3(40, 3, 0) })
+    this.debugCamera = new DebugCamera(this.genContext(), { defaultPosition: new THREE.Vector3(0, 0, 25) })
     this.scene = new THREE.Scene()
     // this.scene.add(new THREE.AxesHelper())
     this.scene.add(this.debugCamera.object)
 
-    this.mainCamera = new SimpleCamera(this.genContext(), { defaultPosition: new THREE.Vector3(40, 3, 0) })
-    this.mainCamera.object.rotateY(Math.PI / 2)
+    this.mainCamera = new SimpleCamera(this.genContext(), { defaultPosition: new THREE.Vector3(0, 0, 25) })
+    // this.mainCamera.object.rotateY(-Math.PI / 2)
     this.scene.add(this.debugCamera.object)
     this.scene.add(this.mainCamera.object)
     this.camera = this.params.debugCam ? this.debugCamera.object : this.mainCamera.object
@@ -52,6 +87,8 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.context.tweakpane
       .addInput(this.params, 'debugCam')
       .on('change', ({ value }) => (this.camera = value ? this.debugCamera.object : this.mainCamera.object))
+
+    this.context.tweakpane.addInput(this.params, 'raycastAttractor', { label: 'Raycast Attractor' })
 
     this.setObjects()
 
@@ -62,10 +99,10 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     const onMouseMove = ({ clientX, clientY }: MouseEvent) => {
       const mousePosition = pixelToScreenCoords(clientX, clientY)
       raycast.setFromCamera(mousePosition, this.camera)
-      if (!this.raycastMesh) return
+      if (!this.raycastMesh || !this.params.raycastAttractor) return
       const [intersection] = raycast.intersectObject(this.raycastMesh)
       if (!intersection) return
-      this.sceneState.raycastPosition.copy(intersection.point)
+      this.particlesParams.attractor!.copy(intersection.point)
     }
 
     window.addEventListener('mousemove', onMouseMove)
@@ -99,14 +136,14 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     // this.scene.add(new TestBackground(this.genContext()).object)
     this.scene.add(this.environment.object)
 
-    const name = new THREE.Mesh(
-      new THREE.PlaneGeometry(5, 1),
-      new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./leon_baudouin.png'), transparent: true })
-    )
-    name.position.set(10, 3, 4)
-    name.rotateY(Math.PI / 2)
-    name.scale.setScalar(3)
-    this.scene.add(name)
+    // const name = new THREE.Mesh(
+    //   new THREE.PlaneGeometry(5, 1),
+    //   new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('./leon_baudouin.png'), transparent: true })
+    // )
+    // name.position.set(10, 3, 4)
+    // name.rotateY(Math.PI / 2)
+    // name.scale.setScalar(3)
+    // this.scene.add(name)
 
     this.toUnbind(() => {
       // this.scene.remove(this.particles.object)
@@ -116,7 +153,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
     const gltfLoader = new GLTFLoader()
     gltfLoader.loadAsync('./scene_4.glb').then((gltf) => {
-      // const plane = gltf.scene.getObjectByName('Plane001') as THREE.Mesh
       const queen = gltf.scene.getObjectByName('Chess') as THREE.Mesh
       queen.position.z += 3
       queen.position.y -= 1
@@ -124,31 +160,14 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       // queen.material = new THREE.MeshNormalMaterial()
       // this.scene.add(queen)
 
-      this.particles = new Particles(
-        this.genContext(),
-        { mesh: queen },
-        {
-          textureSize: new THREE.Vector2(1024, 1024),
-          useTexture: false,
-          capForce: true,
-          rotateAround: true,
-          fixOnAttractor: false,
-          G: 10,
-          inertia: { min: 0, max: 0.4 },
-          rotationStrength: new THREE.Vector2(0.02, 0.025),
-          gravity: new THREE.Vector3(0, 0.001, 0.009),
-          rotationDirection: new THREE.Euler(0, 0, -2.03),
-          sizeVariation: new THREE.Vector4(0.07, 0.28, 0, 1),
-          size: 0.5,
-          matcap: absoluteUrl('/column_256px.png'),
-        }
-      )
+      this.particles = new Particles(this.genContext(), { mesh: queen }, this.particlesParams)
       this.scene.add(this.particles.object)
 
-      // this.raycastMesh = new THREE.Mesh(plane.geometry, new THREE.MeshNormalMaterial({ wireframe: true }))
-      // this.raycastMesh.visible = false
-      // copyMatrix(plane, this.raycastMesh)
-      // this.scene.add(this.raycastMesh)
+      const plane = gltf.scene.getObjectByName('Plane001') as THREE.Mesh
+      this.raycastMesh = new THREE.Mesh(plane.geometry, new THREE.MeshNormalMaterial({ wireframe: true }))
+      this.raycastMesh.visible = false
+      copyMatrix(plane, this.raycastMesh)
+      this.scene.add(this.raycastMesh)
       // this.context.tweakpane.addInput(this.raycastMesh, 'visible', { label: 'Raycast Mesh' })
 
       // copyWorldMatrix(gltf.cameras[0], this.mainCamera.object)

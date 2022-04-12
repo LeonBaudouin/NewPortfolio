@@ -8,8 +8,6 @@ import { WebGLAppContext } from '~~/webgl'
 import AbstractComponent from '~~/webgl/abstract/AbstractComponent'
 import reactiveUniforms, { CustomWatch } from '~~/utils/uniforms/reactiveUniforms'
 
-type NeededContext = WebGLAppContext & { sceneState: { raycastPosition: THREE.Vector3 } }
-
 export type VelocityParams = {
   useTexture?: boolean
   capForce?: boolean
@@ -20,12 +18,13 @@ export type VelocityParams = {
   rotationStrength?: THREE.Vector2
   gravity?: THREE.Vector3
   rotationDirection?: THREE.Euler
+  attractor?: THREE.Vector3
   textureSize: THREE.Vector2
 }
 
 export type VelocityData = Required<VelocityParams>
 
-export default class Velocity extends AbstractComponent<NeededContext> {
+export default class Velocity extends AbstractComponent<WebGLAppContext> {
   private velocity: GPGPU
 
   public data: VelocityData
@@ -40,9 +39,10 @@ export default class Velocity extends AbstractComponent<NeededContext> {
     rotationStrength: new THREE.Vector2(0.02, 0.025),
     gravity: new THREE.Vector3(0, 0.001, 0.009),
     rotationDirection: new THREE.Euler(0, 0, -2.03),
+    attractor: new THREE.Vector3(15, 3, -9),
   })
 
-  constructor(context: NeededContext, params: VelocityParams) {
+  constructor(context: WebGLAppContext, params: VelocityParams) {
     super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Speed Simulation' }) })
 
     Object.assign(params, { ...Velocity.DEFAULT_PARAMS, ...params })
@@ -136,18 +136,9 @@ export default class Velocity extends AbstractComponent<NeededContext> {
       initTexture: velocityInitTexture,
     })
 
-    const unbindUniformsUpdate = watch(
-      () => this.context.sceneState.raycastPosition.x,
-      () => {
-        velocityShader.uniforms.uAttractor.value.copy(this.context.sceneState.raycastPosition)
-      },
-      { immediate: true }
-    )
-
     this.toUnbind(() => {
       this.velocity.dispose()
       velocityInitTexture.dispose()
-      unbindUniformsUpdate()
     })
   }
 
