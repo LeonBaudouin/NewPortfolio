@@ -2,20 +2,34 @@ import * as THREE from 'three'
 import { FolderApi } from 'tweakpane'
 import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import { SceneContext } from '~~/webgl/abstract/Context'
-import Background from '../Background'
+import Background, { BackgroundParams } from '../Background'
+
+export type EnvironmentParams = {
+  fogColor?: string
+  hasFog?: boolean
+  intensity?: number
+}
+
+export type EnvironmentData = Required<EnvironmentParams>
 
 export default class Environment extends AbstractObject<SceneContext> {
-  private data = reactive({
+  public data: EnvironmentData
+
+  public static DEFAULT_PARAMS: EnvironmentData = reactive({
     fogColor: '#131313',
     hasFog: true,
+    intensity: 0.01,
   })
 
-  constructor({ tweakpane: parentTP, ...context }: SceneContext) {
-    super({ tweakpane: parentTP.addFolder({ title: 'Environment', expanded: false }), ...context })
+  constructor(context: SceneContext, params: EnvironmentParams & BackgroundParams = {}) {
+    super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Environment', expanded: false }) })
 
-    const background = new Background(this.context)
+    Object.assign(params, { ...Environment.DEFAULT_PARAMS, ...params })
+    this.data = (isReactive(params) ? params : reactive(params)) as EnvironmentData
+
+    const background = new Background(this.context, params)
     this.object = background.object
-    const fog = new THREE.FogExp2(this.data.fogColor, 0.01)
+    const fog = new THREE.FogExp2(this.data.fogColor, params.intensity)
     const fogFolder = this.context.tweakpane.addFolder({ title: 'Fog' })
     const fogColor = fogFolder.addInput(this.data, 'fogColor', {
       label: 'Fog Color',
@@ -36,6 +50,7 @@ export default class Environment extends AbstractObject<SceneContext> {
       (this.context.tweakpane as FolderApi).dispose,
       background.destroy,
       watchEffect(() => fog.color.set(this.data.fogColor)),
+      watchEffect(() => (fog.density = this.data.intensity)),
       watchEffect(() => (this.context.scene.fog = this.data.hasFog ? fog : null))
     )
   }

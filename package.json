@@ -9,12 +9,14 @@
     "nuxt3": "latest"
   },
   "dependencies": {
+    "@0b5vr/tweakpane-plugin-rotation": "^0.1.1",
     "@tweakpane/core": "^1.0.8",
     "@tweakpane/plugin-essentials": "^0.1.4",
     "@types/three": "^0.137.0",
     "gsap": "^3.9.1",
     "sass": "^1.49.9",
     "three": "^0.138.2",
-    "tweakpane": "^3.0.7"
+    "tweakpane": "^3.0.7",
+    "tweakpane-image-plugin": "^1.1.3"
   }
 }

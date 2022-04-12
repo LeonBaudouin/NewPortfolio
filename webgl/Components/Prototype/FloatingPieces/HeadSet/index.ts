@@ -50,7 +50,6 @@ export default class HeadSet extends AbstractObject<MainSceneContext> {
     )
     const subfolder = this.context.tweakpane.addFolder({ title: 'HeadSeat' })
     subfolder.addInput(this.mesh.material.uniforms.uAoAmount, 'value', { label: 'ao amount', min: 0, max: 2 })
-    console.log(this.mesh.material)
 
     this.object.add(this.mesh)
 

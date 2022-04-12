@@ -131,9 +131,13 @@ export default class TestScene extends AbstractScene<WebGLAppContext, THREE.Pers
       // this.texts = new TestTexts(this.genContext(), gltf.cameras as THREE.PerspectiveCamera[])
 
       // this.scene.add(this.texts.object)
-      this.particles = new Particles(this.genContext(), {
-        mesh: gltf.scene.getObjectByName('Crystal_enable') as THREE.Mesh,
-      })
+      this.particles = new Particles(
+        this.genContext(),
+        {
+          mesh: gltf.scene.getObjectByName('Crystal_enable') as THREE.Mesh,
+        },
+        { textureSize: new THREE.Vector2(128, 128) }
+      )
       this.scene.add(this.particles.object)
 
       this.scene.add(this.columnsGLTF.object)

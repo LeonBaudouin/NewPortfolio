@@ -12,7 +12,6 @@ void main()
 	vec3 x = normalize( vec3( viewDir.z, 0.0, - viewDir.x ) );
 	vec3 y = cross( viewDir, x );
 	vec2 matcapUv = vec2( dot( x, normal ), dot( y, normal ) ) * 0.495 + 0.5;
-  matcapUv.y = 1. - matcapUv.y;
   // vec2 uv = vec2(gl_PointCoord.x, 1.0 - gl_PointCoord.y);
   // float alpha = step(length(uv - vec2(.5)), .5);
 

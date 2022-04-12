@@ -2,12 +2,17 @@ type Color = `#${number}${number}${number}${number}${number}${number}`
 type Vector = THREE.Vector2 | THREE.Vector3 | THREE.Vector4
 type Interval = { min: number; max: number }
 
-type ValueToUniform = number | boolean | Color | Vector | Interval
-type UniformType = 'number' | 'boolean' | 'Color' | 'Vector' | 'Interval'
+type ValueToUniform = number | boolean | Color | Vector | Interval | THREE.Euler
+export type CustomWatch<T extends ValueToUniform | any = ValueToUniform> = (
+  uniform: THREE.IUniform,
+  object: Record<string, T>,
+  key: string
+) => () => void
+type UniformType = 'number' | 'boolean' | 'Color' | 'Vector' | 'Interval' | 'Euler'
 
 import * as THREE from 'three'
 
-const DEBUG = true
+const DEBUG = false
 
 function findKey(key: string, uniforms: Record<string, THREE.IUniform>) {
   if (key in uniforms) return key
@@ -17,8 +22,6 @@ function findKey(key: string, uniforms: Record<string, THREE.IUniform>) {
 
   const keyWithT = `t${key[0].toUpperCase()}${key.slice(1)}`
   if (keyWithT in uniforms) return keyWithT
-
-  console.warn(`"${key}" was not found in uniforms`)
 }
 
 function parseType(value: ValueToUniform): UniformType | undefined {
@@ -26,6 +29,7 @@ function parseType(value: ValueToUniform): UniformType | undefined {
   if (typeof value === 'number') return 'number'
   if (typeof value === 'string' && value.startsWith('#')) return 'Color'
   if (typeof value === 'object' && 'addVectors' in value) return 'Vector'
+  if (typeof value === 'object' && 'isEuler' in value) return 'Euler'
   if (typeof value === 'object' && 'min' in value) return 'Interval'
 }
 
@@ -39,6 +43,16 @@ function buildWatch(uniform: THREE.IUniform, type: UniformType, object: Record<s
     case 'Interval':
       return watch(
         [() => (object[key] as Interval).min, () => (object[key] as Interval).max],
+        (values) => uniform.value.set(...values),
+        { immediate: true }
+      )
+    case 'Euler':
+      return watch(
+        [
+          () => (object[key] as THREE.Euler).x,
+          () => (object[key] as THREE.Euler).y,
+          () => (object[key] as THREE.Euler).z,
+        ],
         (values) => uniform.value.set(...values),
         { immediate: true }
       )
@@ -58,19 +72,26 @@ function buildWatch(uniform: THREE.IUniform, type: UniformType, object: Record<s
 
 export default function reactiveUniforms(
   uniforms: Record<string, THREE.IUniform>,
-  object: Record<string, ValueToUniform>,
+  object: Record<string, ValueToUniform | any>,
+  custom: Record<string, CustomWatch | any> = {},
   debug: boolean = DEBUG
 ) {
   const unbindArray: (() => void)[] = []
 
   for (const key of Object.keys(object)) {
     const uniformKey = findKey(key, uniforms)
-    const type = parseType(object[key])
-
     if (uniformKey == null) {
       if (debug) console.warn(`"${key}" was not found in uniforms`)
       continue
     }
+
+    if (key in custom) {
+      let unbind = custom[key](uniforms[uniformKey], object, key)
+      unbindArray.push(unbind)
+      continue
+    }
+
+    const type = parseType(object[key])
     if (type == null) {
       if (debug) console.warn(`"${key}" value could not be parsed`)
       continue

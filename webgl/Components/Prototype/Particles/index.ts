@@ -1,33 +1,52 @@
 import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import * as THREE from 'three'
 import { WebGLAppContext } from '~~/webgl'
-import Velocity from './Velocity'
+import Velocity, { VelocityParams } from './Velocity'
 import Position from './Position'
-import Cubes from './Cubes'
+import Cubes, { CubesParams } from './Cubes'
 import { getPositionTextureFromMesh } from '~~/utils/buffer/positionTextureFromMesh'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 
 type NeededContext = WebGLAppContext & { sceneState: { raycastPosition: THREE.Vector3 } }
 
+export type ParticlesParams = {
+  run?: boolean
+  textureSize: THREE.Vector2
+}
+
+export type ParticlesData = Required<ParticlesParams>
+
 export default class Particles extends AbstractObject<NeededContext> {
   private velocity: Velocity
   private position: Position
   private cubes: Cubes
-  private params = {
+
+  public data: ParticlesData
+
+  public static DEFAULT_PARAMS: Omit<ParticlesData, 'textureSize'> = reactive({
     run: true,
-  }
+  })
 
   private textures: {
     chess: { position: THREE.Texture; normal: THREE.Texture }
   }
 
-  constructor(context: NeededContext, { mesh }: { mesh: THREE.Mesh }) {
-    super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Particles' }) })
-    this.context.tweakpane.addInput(this.params, 'run', { label: 'Run simulation' })
-    const size = new THREE.Vector2(128, 128)
-    this.velocity = new Velocity(this.context, { size })
-    this.position = new Position(this.context, { size })
-    this.cubes = new Cubes(this.context, { size })
+  constructor(
+    context: NeededContext,
+    { mesh }: { mesh: THREE.Mesh },
+    params: ParticlesParams & CubesParams & VelocityParams
+  ) {
+    super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Particles', expanded: false }) })
+
+    Object.assign(params, { ...Particles.DEFAULT_PARAMS, ...params })
+    this.data = (isReactive(params) ? params : reactive(params)) as ParticlesData
+
+    this.context.tweakpane.addInput(this.data, 'run', { label: 'Run simulation' })
+    this.velocity = new Velocity(this.context, params)
+    this.position = new Position(this.context, { size: params.textureSize })
+
+    this.cubes = new Cubes(this.context, params)
+
     this.object = this.cubes.object
 
     mesh.updateMatrix()
@@ -37,7 +56,7 @@ export default class Particles extends AbstractObject<NeededContext> {
     const sampler = new MeshSurfaceSampler(newMesh)
     sampler.build()
     this.textures = {
-      chess: getPositionTextureFromMesh(sampler, size, size.x * size.y),
+      chess: getPositionTextureFromMesh(sampler, params.textureSize, params.textureSize.x * params.textureSize.y),
     }
 
     this.velocity.setAttractorTexture(this.textures.chess.position)
@@ -47,7 +66,7 @@ export default class Particles extends AbstractObject<NeededContext> {
   }
 
   public tick(time: number, delta: number): void {
-    if (this.params.run) {
+    if (this.data.run) {
       this.velocity.updateTexture(this.position.getTexture())
       this.velocity.tick(time, delta)
       this.position.updateTexture(this.velocity.getTexture())

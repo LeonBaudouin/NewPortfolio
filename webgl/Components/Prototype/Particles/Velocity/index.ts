@@ -6,39 +6,68 @@ import velocityFragment from './velocity.frag?raw'
 import { onSphere } from '~~/utils/math/onSphere'
 import { WebGLAppContext } from '~~/webgl'
 import AbstractComponent from '~~/webgl/abstract/AbstractComponent'
-import reactiveUniforms from '~~/utils/uniforms/reactiveUniforms'
+import reactiveUniforms, { CustomWatch } from '~~/utils/uniforms/reactiveUniforms'
 
 type NeededContext = WebGLAppContext & { sceneState: { raycastPosition: THREE.Vector3 } }
+
+export type VelocityParams = {
+  useTexture?: boolean
+  capForce?: boolean
+  rotateAround?: boolean
+  fixOnAttractor?: boolean
+  G?: number
+  inertia?: { min: number; max: number }
+  rotationStrength?: THREE.Vector2
+  gravity?: THREE.Vector3
+  rotationDirection?: THREE.Euler
+  textureSize: THREE.Vector2
+}
+
+export type VelocityData = Required<VelocityParams>
 
 export default class Velocity extends AbstractComponent<NeededContext> {
   private velocity: GPGPU
 
-  constructor(context: NeededContext, { size }: { size: THREE.Vector2 }) {
+  public data: VelocityData
+
+  public static DEFAULT_PARAMS: Omit<VelocityData, 'textureSize'> = reactive({
+    useTexture: false,
+    capForce: true,
+    rotateAround: true,
+    fixOnAttractor: false,
+    G: 10,
+    inertia: { min: 0, max: 0.4 },
+    rotationStrength: new THREE.Vector2(0.02, 0.025),
+    gravity: new THREE.Vector3(0, 0.001, 0.009),
+    rotationDirection: new THREE.Euler(0, 0, -2.03),
+  })
+
+  constructor(context: NeededContext, params: VelocityParams) {
     super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Speed Simulation' }) })
 
-    const params = reactive({
-      useTexture: false,
-      capForce: true,
-      rotateAround: true,
-      fixOnAttractor: false,
-      G: 10,
-      inertia: { min: 0, max: 0.4 },
-      rotationStrength: new THREE.Vector2(0.02, 0.025),
-      gravity: new THREE.Vector3(0, 0.001, 0.009),
-    })
+    Object.assign(params, { ...Velocity.DEFAULT_PARAMS, ...params })
+    this.data = (isReactive(params) ? params : reactive(params)) as VelocityData
 
     const velocityInitTexture = new THREE.DataTexture(
-      new Float32Array(new Array(size.x * size.y * 4).fill(0).map(() => (Math.random() - 0.5) * 0.01)),
-      size.x,
-      size.y,
+      new Float32Array(
+        new Array(params.textureSize.x * params.textureSize.y * 4).fill(0).map(() => (Math.random() - 0.5) * 0.01)
+      ),
+      params.textureSize.x,
+      params.textureSize.y,
       THREE.RGBAFormat,
       THREE.FloatType
     )
     velocityInitTexture.needsUpdate = true
 
-    const randomForce = new Float32Array(new Array(size.x * size.y * 4))
+    const randomForce = new Float32Array(new Array(params.textureSize.x * params.textureSize.y * 4))
     onSphere(randomForce, { center: [0, 0, 0], radius: 0.002 }, true)
-    const randomForceTex = new THREE.DataTexture(randomForce, size.x, size.y, THREE.RGBAFormat, THREE.FloatType)
+    const randomForceTex = new THREE.DataTexture(
+      randomForce,
+      params.textureSize.x,
+      params.textureSize.y,
+      THREE.RGBAFormat,
+      THREE.FloatType
+    )
     randomForceTex.needsUpdate = true
 
     velocityInitTexture.needsUpdate = true
@@ -55,36 +84,53 @@ export default class Velocity extends AbstractComponent<NeededContext> {
         uCapForce: { value: true },
         uRotateAround: { value: true },
         uFixOnAttractor: { value: false },
-        uG: { value: 10 },
-        uInertia: { value: new THREE.Vector2(0, 0.4) },
-        uRotationStrength: { value: new THREE.Vector2(0.005, 0.006) },
+        uG: { value: 1 },
+        uInertia: { value: new THREE.Vector2() },
+        uRotationStrength: { value: new THREE.Vector2() },
         uGravity: { value: new THREE.Vector3() },
+        uRotationDirection: { value: new THREE.Vector3() },
       },
     })
 
-    const unbindArray = reactiveUniforms(velocityShader.uniforms, params)
+    const customRotationDirection: CustomWatch<THREE.Euler> = (uniform, object, key) => {
+      let previousOnChange = object[key]._onChangeCallback
+      uniform.value.set(0, 1, 0).applyEuler(object[key])
+      object[key]._onChange(() => {
+        previousOnChange()
+        uniform.value.set(0, 1, 0).applyEuler(object[key])
+      })
+      return () => object[key]._onChange(previousOnChange)
+    }
+    const unbindArray = reactiveUniforms(velocityShader.uniforms, this.data, {
+      rotationDirection: customRotationDirection,
+    })
 
     this.toUnbind(...unbindArray)
 
-    this.context.tweakpane.addInput(params, 'capForce', { label: 'Cap Force' })
-    this.context.tweakpane.addInput(params, 'useTexture', { label: 'Follow Texture' })
-    this.context.tweakpane.addInput(params, 'rotateAround', { label: 'Rotate Around' })
-    this.context.tweakpane.addInput(params, 'fixOnAttractor', { label: 'Fix On Attractor' })
-    this.context.tweakpane.addInput(params, 'G', { label: 'G' })
-    this.context.tweakpane.addInput(params, 'inertia', { label: 'Inertia', min: 0, max: 1 })
-    this.context.tweakpane.addInput(params, 'gravity', {
+    this.context.tweakpane.addInput(this.data, 'capForce', { label: 'Cap Force' })
+    this.context.tweakpane.addInput(this.data, 'useTexture', { label: 'Follow Texture' })
+    this.context.tweakpane.addInput(this.data, 'rotateAround', { label: 'Rotate Around' })
+    this.context.tweakpane.addInput(this.data, 'fixOnAttractor', { label: 'Fix On Attractor' })
+    this.context.tweakpane.addInput(this.data, 'G', { label: 'G' })
+    this.context.tweakpane.addInput(this.data, 'inertia', { label: 'Inertia', min: 0, max: 1 })
+    this.context.tweakpane.addInput(this.data, 'gravity', {
       label: 'Gravity',
       x: { step: 0.001 },
       y: { step: 0.001 },
       z: { step: 0.001 },
     })
-    this.context.tweakpane.addInput(params, 'rotationStrength', {
+    this.context.tweakpane.addInput(this.data, 'rotationStrength', {
       label: 'Rotation Strength',
-      step: 0.001,
+      x: { step: 0.001 },
+      y: { step: 0.001 },
     })
-
+    this.context.tweakpane.addInput(this.data, 'rotationDirection', {
+      label: 'Rotation Direction',
+      view: 'rotation',
+      rotationMode: 'euler',
+    })
     this.velocity = new GPGPU({
-      size,
+      size: params.textureSize,
       renderer: this.context.renderer,
       shader: velocityShader,
       initTexture: velocityInitTexture,

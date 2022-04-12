@@ -11,6 +11,7 @@ uniform bool uFixOnAttractor;
 uniform float uG;
 uniform vec2 uInertia;
 uniform vec2 uRotationStrength;
+uniform vec3 uRotationDirection;
 uniform vec3 uGravity;
 
 float rand(vec2 co){
@@ -24,6 +25,14 @@ float remap(float value, float start1, float stop1, float start2, float stop2) {
 float cremap(float value, float start1, float stop1, float start2, float stop2) {
   float r = remap(value, start1, stop1, start2, stop2);
   return clamp(r, min(start2, stop2), max(start2, stop2));
+}
+
+mat3 rotateY(float theta) {
+  return mat3(
+    cos(theta), 0., sin(theta),
+    0., 1., 0.,
+    -sin(theta), 0., cos(theta)
+  );
 }
 
 void main() {
@@ -64,8 +73,10 @@ void main() {
   // ------ ROTATE AROUND
   if (rotateAround) {
     float side = sign(rand(vUv+10.) - 0.5);
+    vec3 rotateDir = rotateY(side * -0.3) * uRotationDirection;
     vec3 rotateVelocity = cross(
-      normalize(-vec3(1., side * -0.3, 0.5)),
+      normalize(-rotateDir),
+      // normalize(-vec3(1., side * -0.3, 0.5)),
       normalize(attractor - position)
     );
 

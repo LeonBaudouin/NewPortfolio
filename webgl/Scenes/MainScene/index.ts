@@ -14,6 +14,7 @@ import Exploding from '~~/webgl/Components/Prototype/Exploding'
 import Particles from '~~/webgl/Components/Prototype/Particles'
 import copyMatrix from '~~/utils/webgl/copyMatrix'
 import TestBackground from '~~/webgl/Components/Prototype/TestBackground'
+import absoluteUrl from '~~/utils/absoluteUrl'
 
 export type Section = 'projects' | 'about' | 'lab'
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
@@ -62,7 +63,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       const mousePosition = pixelToScreenCoords(clientX, clientY)
       raycast.setFromCamera(mousePosition, this.camera)
       if (!this.raycastMesh) return
-      return
       const [intersection] = raycast.intersectObject(this.raycastMesh)
       if (!intersection) return
       this.sceneState.raycastPosition.copy(intersection.point)
@@ -86,7 +86,15 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   private setScene() {}
 
   private setObjects() {
-    this.environment = new Environment(this.genContext())
+    this.environment = new Environment(this.genContext(), {
+      downColor: '#c2c2c2',
+      upColor: '#ffffff',
+      gradientStart: -0.35,
+      gradientEnd: 0.09,
+      fogColor: '#ffffff',
+      intensity: 0.01,
+      hasFog: true,
+    })
 
     // this.scene.add(new TestBackground(this.genContext()).object)
     this.scene.add(this.environment.object)
@@ -108,56 +116,44 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
     const gltfLoader = new GLTFLoader()
     gltfLoader.loadAsync('./scene_4.glb').then((gltf) => {
-      // const plane = gltf.scene.getObjectByName('Plane')!
-      // plane.visible = false
-      // const headSet = new HeadSet(this.genContext(), gltf.scene)
-      // this.scene.add(headSet.object)
-      this.scene.add(gltf.scene)
-      gltf.scene.traverse((o) => {
-        if (o.name.startsWith('Crystal')) {
-          ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-            matcap: new THREE.TextureLoader().load(
-              './headset_leather_2_256px.png',
-              (t) => (t.encoding = THREE.sRGBEncoding)
-            ),
-          })
-          o.visible = false
-        }
-        if (o.name.startsWith('Chess')) {
-          ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-            matcap: new THREE.TextureLoader().load('./headset_2_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
-          })
-          o.visible = false
-        }
-      })
-      // const columns = new ColumnsGLTF(this.genContext(), gltf.scene)
-      // this.scene.add(columns.object)
-
-      const plane = gltf.scene.getObjectByName('Plane001') as THREE.Mesh
+      // const plane = gltf.scene.getObjectByName('Plane001') as THREE.Mesh
       const queen = gltf.scene.getObjectByName('Chess') as THREE.Mesh
-      plane.visible = false
-      this.particles = new Particles(this.genContext(), { mesh: queen })
+      queen.position.z += 3
+      queen.position.y -= 1
+
+      // queen.material = new THREE.MeshNormalMaterial()
+      // this.scene.add(queen)
+
+      this.particles = new Particles(
+        this.genContext(),
+        { mesh: queen },
+        {
+          textureSize: new THREE.Vector2(1024, 1024),
+          useTexture: false,
+          capForce: true,
+          rotateAround: true,
+          fixOnAttractor: false,
+          G: 10,
+          inertia: { min: 0, max: 0.4 },
+          rotationStrength: new THREE.Vector2(0.02, 0.025),
+          gravity: new THREE.Vector3(0, 0.001, 0.009),
+          rotationDirection: new THREE.Euler(0, 0, -2.03),
+          sizeVariation: new THREE.Vector4(0.07, 0.28, 0, 1),
+          size: 0.5,
+          matcap: absoluteUrl('/column_256px.png'),
+        }
+      )
       this.scene.add(this.particles.object)
 
-      this.raycastMesh = new THREE.Mesh(plane.geometry, new THREE.MeshNormalMaterial({ wireframe: true }))
-      this.raycastMesh.visible = false
-      copyMatrix(plane, this.raycastMesh)
-      this.scene.add(this.raycastMesh)
-      this.context.tweakpane.addInput(this.raycastMesh, 'visible', { label: 'Raycast Mesh' })
+      // this.raycastMesh = new THREE.Mesh(plane.geometry, new THREE.MeshNormalMaterial({ wireframe: true }))
+      // this.raycastMesh.visible = false
+      // copyMatrix(plane, this.raycastMesh)
+      // this.scene.add(this.raycastMesh)
+      // this.context.tweakpane.addInput(this.raycastMesh, 'visible', { label: 'Raycast Mesh' })
 
       // copyWorldMatrix(gltf.cameras[0], this.mainCamera.object)
       this.mainCamera.object.fov = (gltf.cameras[0] as THREE.PerspectiveCamera).fov
-      // this.water = new Water(this.genContext())
-      // this.scene.add(this.water.object)
-      // const mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(1, 8), new THREE.MeshBasicMaterial({ color: 0xff3333 }))
-      // mesh.rotateY(Math.PI / 2)
-      // this.scene.add(mesh)
     })
-    // gltfLoader.loadAsync('./Blender/split_queen.gltf').then((gltf) => {
-    //   const exploding = new Exploding(this.genContext(), gltf)
-    //   this.scene.add(exploding.object)
-    //   exploding.object.position.y = 2.5
-    // })
   }
 
   public tick(time: number, delta: number): void {

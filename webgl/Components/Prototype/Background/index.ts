@@ -5,6 +5,15 @@ import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import { SceneContext } from '~~/webgl/abstract/Context'
 import { FolderApi } from 'tweakpane'
 
+export type BackgroundParams = {
+  downColor?: string
+  upColor?: string
+  gradientStart?: number
+  gradientEnd?: number
+}
+
+export type BackgroundData = Required<BackgroundParams>
+
 export default class Background extends AbstractObject<SceneContext> {
   // private data = reactive({
   //   downColor: '#090909',
@@ -12,7 +21,9 @@ export default class Background extends AbstractObject<SceneContext> {
   //   gradientStart: -0.4,
   //   gradientEnd: 0.3,
   // })
-  private data = reactive({
+  public data: BackgroundData
+
+  public static DEFAULT_PARAMS: BackgroundData = reactive({
     downColor: '#060606',
     upColor: '#1c1612',
     gradientStart: -0.35,
@@ -21,8 +32,12 @@ export default class Background extends AbstractObject<SceneContext> {
 
   private uniforms: Record<string, THREE.IUniform>
 
-  constructor({ tweakpane: parentTP, ...context }: SceneContext) {
-    super({ tweakpane: parentTP.addFolder({ title: 'Background' }), ...context })
+  constructor(context: SceneContext, params: BackgroundParams = {}) {
+    super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Background' }) })
+
+    Object.assign(params, { ...Background.DEFAULT_PARAMS, ...params })
+    this.data = (isReactive(params) ? params : reactive(params)) as BackgroundData
+
     this.setupMesh()
     this.toUnbind((this.context.tweakpane as FolderApi).dispose)
   }
