@@ -1,7 +1,7 @@
 import WebGL from '~~/webgl'
 
 export default defineNuxtPlugin((nuxtApp) => {
-  const webgl = new WebGL(nuxtApp.$tweakpane, nuxtApp.$params)
+  const webgl = new WebGL(nuxtApp)
   return {
     provide: {
       webgl,

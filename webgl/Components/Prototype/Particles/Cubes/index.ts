@@ -4,7 +4,6 @@ import particlesFragment from './particles.frag?raw'
 import particlesVertex from './particles.vert?raw'
 import { WebGLAppContext } from '~~/webgl'
 import reactiveUniforms, { CustomWatch } from '~~/utils/uniforms/reactiveUniforms'
-import absoluteUrl from '~~/utils/absoluteUrl'
 
 export type CubesParams = {
   sizeVariation?: THREE.Vector4
@@ -24,7 +23,7 @@ export default class Cubes extends AbstractObject<
   public static DEFAULT_PARAMS: Omit<CubesData, 'textureSize'> = reactive({
     sizeVariation: new THREE.Vector4(0.07, 0.28, 0, 1),
     size: 0.5,
-    matcap: absoluteUrl('/particle_matcap.png'),
+    matcap: '/particle_matcap.png',
   })
 
   constructor(context: WebGLAppContext, params: CubesParams) {
@@ -73,12 +72,12 @@ export default class Cubes extends AbstractObject<
 
     this.context.tweakpane.addInput(mat.uniforms.uSize, 'value', { label: 'Size' })
     this.context.tweakpane.addInput(mat.uniforms.uSizeVariation, 'value', { label: 'Size Variation' })
-    if (typeof this.data.matcap == 'string')
-      this.context.tweakpane.addInput(this.data, 'matcap', {
-        view: 'input-image',
-        imageFit: 'contain',
-        label: 'Matcap',
-      })
+    // if (typeof this.data.matcap == 'string')
+    //   this.context.tweakpane.addInput(this.data, 'matcap', {
+    //     view: 'input-image',
+    //     imageFit: 'contain',
+    //     label: 'Matcap',
+    //   })
 
     const origGeometry = new THREE.BoxBufferGeometry()
     const geometry = new THREE.InstancedBufferGeometry()

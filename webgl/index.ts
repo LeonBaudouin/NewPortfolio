@@ -14,7 +14,7 @@ type Scenes = {
   main: MainScene
   test: TestScene
 }
-
+type NuxtApp = ReturnType<typeof useNuxtApp>
 export default class WebGL extends LifeCycle {
   public renderer: THREE.WebGLRenderer
 
@@ -26,12 +26,14 @@ export default class WebGL extends LifeCycle {
   private renderPass: RenderPass
   private shaderPass: ShaderPass
   public state = reactive<{ introState: 'start' | 'endDrag' | 'complete' }>({ introState: 'start' })
+  private nuxtApp: NuxtApp
 
-  constructor($tweakpane: Pane, $params: Params) {
+  constructor(nuxtApp: any) {
     super()
-    this.tweakpane = $tweakpane
-    this.clock = new THREE.Clock(true)
+    this.nuxtApp = nuxtApp
 
+    this.tweakpane = this.nuxtApp.$tweakpane
+    this.clock = new THREE.Clock(true)
     this.setupRenderer()
     this.setupScenes()
     const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight)
@@ -51,7 +53,9 @@ export default class WebGL extends LifeCycle {
     this.postProcessing.addPass(this.shaderPass)
 
     this.currentScene =
-      Object.keys(this.scenes).indexOf($params.scene || '') > -1 ? ($params.scene as keyof Scenes) : 'main'
+      Object.keys(this.scenes).indexOf(this.nuxtApp.$params.scene || '') > -1
+        ? (this.nuxtApp.$params.scene as keyof Scenes)
+        : 'main'
 
     const sceneBlade = this.tweakpane.addBlade({
       view: 'list',

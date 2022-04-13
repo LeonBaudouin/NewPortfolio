@@ -34,7 +34,6 @@
 <script lang="ts" setup>
 import clamp from '~~/utils/math/clamp'
 import cremap from '~~/utils/math/cremap'
-
 const { $webgl } = useNuxtApp()
 
 const interactionArea = ref<HTMLElement>()

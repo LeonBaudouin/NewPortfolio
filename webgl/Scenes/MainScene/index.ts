@@ -35,7 +35,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   //   rotationDirection: new THREE.Euler(0, 0, -2.03),
   //   sizeVariation: new THREE.Vector4(0.07, 0.28, 0, 1),
   //   size: 0.5,
-  //   matcap: absoluteUrl('/column_256px.png'),
+  //   matcap: '/column_256px.png',
   //   attractor: new THREE.Vector3(0, 0, 0),
   // })
 
@@ -53,6 +53,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     sizeVariation: new THREE.Vector4(0.07, 0.28, 0, 0.25),
     size: 1,
     // matcap: 'https://makio135.com/matcaps/64/2EAC9E_61EBE3_4DDDD1_43D1C6-64px.png',
+    // matcap: '/particle_matcap.png',
     matcap: 'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
     attractor: new THREE.Vector3(0, 0, -3),
     run: true,
