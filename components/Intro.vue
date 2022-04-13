@@ -6,8 +6,8 @@
     @pointerleave="isGrabbing = false"
     @dragstart.prevent=""
   >
-    <div class="start__blend" :class="{ 'start__blend--complete': $webgl.state.introState === 'complete' }">
-      <h1 class="start__name" :class="{ 'start__name--complete': $webgl.state.introState === 'complete' }">
+    <div class="start__blend" :class="{ 'start__blend--complete': $webgl?.state?.introState === 'complete' }">
+      <h1 class="start__name" :class="{ 'start__name--complete': $webgl?.state?.introState === 'complete' }">
         Leon <br />
         Baudouin
       </h1>
