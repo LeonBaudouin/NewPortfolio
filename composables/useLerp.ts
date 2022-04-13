@@ -1,6 +1,5 @@
-import { lerp } from 'three/src/math/MathUtils'
 import { Ref } from 'vue-demi'
-import round from '~~/utils/math/round'
+import lerp from '~~/utils/math/lerp'
 
 export default function useLerp(target: Ref<number>, params: { amount: number }) {
   const output = ref(target.value)
