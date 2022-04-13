@@ -10,11 +10,14 @@ import AbstractComponent from '~~/webgl/abstract/AbstractComponent'
 export default class Position extends AbstractComponent<WebGLAppContext> {
   private position: GPGPU
 
-  constructor(context: WebGLAppContext, { size }: { size: THREE.Vector2 }) {
+  constructor(
+    context: WebGLAppContext,
+    { size, startPosition = new THREE.Vector3() }: { size: THREE.Vector2; startPosition?: THREE.Vector3 }
+  ) {
     super(context)
 
     const positionArray = new Float32Array(new Array(size.x * size.y * 4))
-    inSphere(positionArray, { radius: 0.5, center: [0, 0, 0] }, true)
+    inSphere(positionArray, { radius: 0.5, center: startPosition.toArray() }, true)
     const posInitTexture = new THREE.DataTexture(positionArray, size.x, size.y, THREE.RGBAFormat, THREE.FloatType)
     posInitTexture.needsUpdate = true
 

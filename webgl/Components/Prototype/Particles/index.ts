@@ -41,7 +41,7 @@ export default class Particles extends AbstractObject<WebGLAppContext> {
 
     this.context.tweakpane.addInput(this.data, 'run', { label: 'Run simulation' })
     this.velocity = new Velocity(this.context, params)
-    this.position = new Position(this.context, { size: params.textureSize })
+    this.position = new Position(this.context, { size: params.textureSize, startPosition: params.attractor })
 
     this.cubes = new Cubes(this.context, params)
 

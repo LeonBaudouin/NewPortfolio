@@ -5,16 +5,11 @@ import AbstractScene from '~~/webgl/abstract/AbstractScene'
 import DebugCamera from '~~/webgl/Components/Prototype/Camera/DebugCamera'
 import Environment from '~~/webgl/Components/Prototype/Environment'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import Water from '~~/webgl/Components/Prototype/Water'
 import SimpleCamera from '~~/webgl/Components/Prototype/Camera/SimpleCamera'
-import ColumnsGLTF from '~~/webgl/Components/Prototype/ColumnsGLTF'
-import copyWorldMatrix from '~~/utils/webgl/copyWorldMatrix'
-import HeadSet from '~~/webgl/Components/Prototype/FloatingPieces/HeadSet'
-import Exploding from '~~/webgl/Components/Prototype/Exploding'
 import Particles from '~~/webgl/Components/Prototype/Particles'
 import copyMatrix from '~~/utils/webgl/copyMatrix'
-import TestBackground from '~~/webgl/Components/Prototype/TestBackground'
-import absoluteUrl from '~~/utils/absoluteUrl'
+import particles_data from './particles_data'
+import pseudoDeepAssign from '~~/utils/pseudoDeepAssign'
 
 export type Section = 'projects' | 'about' | 'lab'
 
@@ -24,11 +19,8 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   private debugCamera: DebugCamera
   private mainCamera: SimpleCamera
   private environment: Environment
-  private water: Water
 
-  private sceneState = reactive<{ section: Section | null }>({
-    section: 'projects' as Section,
-  })
+  private sceneState = reactive({})
 
   // private particlesParams = reactive<ConstructorParameters<typeof Particles>[2]>({
   //   textureSize: new THREE.Vector2(128, 128),
@@ -47,21 +39,23 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   //   attractor: new THREE.Vector3(0, 0, 0),
   // })
 
-  private particlesParams = reactive<ConstructorParameters<typeof Particles>[2]>({
+  private particlesParams = reactive<Required<ConstructorParameters<typeof Particles>[2]>>({
     textureSize: new THREE.Vector2(128, 128),
     useTexture: false,
     capForce: true,
     rotateAround: true,
     fixOnAttractor: false,
     G: 10,
-    inertia: { min: 0.2, max: 0.6 },
+    inertia: { min: 0.2, max: 0.5 },
     rotationStrength: new THREE.Vector2(0.01, 0.0125),
     gravity: new THREE.Vector3(0, 0, 0),
     rotationDirection: new THREE.Euler(0.85, 0.01, 0),
-    sizeVariation: new THREE.Vector4(0.07, 0.28, 0, 1),
+    sizeVariation: new THREE.Vector4(0.07, 0.28, 0, 0.25),
     size: 1,
-    matcap: 'https://makio135.com/matcaps/64/2EAC9E_61EBE3_4DDDD1_43D1C6-64px.png',
-    attractor: new THREE.Vector3(0, 0, 0),
+    // matcap: 'https://makio135.com/matcaps/64/2EAC9E_61EBE3_4DDDD1_43D1C6-64px.png',
+    matcap: 'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
+    attractor: new THREE.Vector3(0, 0, -3),
+    run: true,
   })
 
   private params = {
@@ -111,6 +105,26 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       this.scene.remove(this.debugCamera.object)
       this.debugCamera.destroy()
     })
+
+    this.toUnbind(
+      watch(
+        () => this.context.state.introState,
+        () => {
+          switch (this.context.state.introState) {
+            case 'start':
+              pseudoDeepAssign(this.particlesParams, particles_data.start)
+              break
+            case 'endDrag':
+              pseudoDeepAssign(this.particlesParams, particles_data.endDrag)
+              break
+            case 'complete':
+              pseudoDeepAssign(this.particlesParams, particles_data.complete)
+              break
+          }
+        },
+        { immediate: true }
+      )
+    )
   }
 
   private genContext = () => ({
@@ -124,7 +138,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
   private setObjects() {
     this.environment = new Environment(this.genContext(), {
-      downColor: '#c2c2c2',
+      downColor: '#ffffff',
       upColor: '#ffffff',
       gradientStart: -0.35,
       gradientEnd: 0.09,
@@ -178,7 +192,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   public tick(time: number, delta: number): void {
     this.particles?.tick(time, delta)
     this.debugCamera.tick(time, delta)
-    this.water?.tick(time, delta)
   }
 }
 export type MainSceneContext = ReturnType<MainScene['genContext']>

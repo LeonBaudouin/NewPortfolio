@@ -1,22 +1,22 @@
 <template>
-  <div></div>
-  <!-- <Start /> -->
+  <!-- <div></div> -->
+  <Intro />
 </template>
 
 <script setup lang="ts">
 const { $webgl, $tweakpane } = useNuxtApp()
 
-const bool = ref(true)
-
 useCleanup(() => {
   let rafId: ReturnType<typeof requestAnimationFrame>
-  const input = $tweakpane.addInput(bool, 'value', { label: 'Active', index: 0 })
   const fpsGraph = $tweakpane.addBlade({
     view: 'fpsgraph',
     label: 'fpsgraph',
     lineCount: 2,
     index: 0,
   })
+
+  const refreshButton = $tweakpane.addButton({ title: 'Refresh', index: 1 })
+  refreshButton.on('click', () => $tweakpane.refresh())
 
   const raf = () => {
     ;(fpsGraph as any).begin()
@@ -31,7 +31,7 @@ useCleanup(() => {
   return () => {
     window.cancelAnimationFrame(rafId)
     fpsGraph.dispose()
-    input.dispose()
+    refreshButton.dispose()
   }
 })
 </script>
@@ -41,6 +41,7 @@ useCleanup(() => {
 
 body {
   overflow: hidden;
+  margin: 0;
 }
 body > canvas {
   position: absolute;

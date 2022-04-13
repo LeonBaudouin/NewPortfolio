@@ -18,14 +18,14 @@ type Scenes = {
 export default class WebGL extends LifeCycle {
   public renderer: THREE.WebGLRenderer
 
-  private scenes: Scenes
+  public scenes: Scenes
   private currentScene: keyof Scenes
   private clock: THREE.Clock
   private tweakpane: FolderApi
   private postProcessing: EffectComposer
   private renderPass: RenderPass
   private shaderPass: ShaderPass
-  public state = reactive({})
+  public state = reactive<{ introState: 'start' | 'endDrag' | 'complete' }>({ introState: 'start' })
 
   constructor($tweakpane: Pane, $params: Params) {
     super()

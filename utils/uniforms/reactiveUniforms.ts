@@ -62,7 +62,7 @@ function buildWatch(uniform: THREE.IUniform, type: UniformType, object: Record<s
           () => (object[key] as Vector).x,
           () => (object[key] as Vector).y,
           () => (object[key] as THREE.Vector3)?.z,
-          () => (object[key] as THREE.Vector4)?.y,
+          () => (object[key] as THREE.Vector4)?.w,
         ],
         (values) => uniform.value.set(...values),
         { immediate: true }
