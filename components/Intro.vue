@@ -22,8 +22,8 @@
       <div
         class="start__cube"
         :style="{
-          opacity: progress === 1 ? 0 : 1,
-          transform: `translate3d(${easeBoxProgress}px, 0, 0)`,
+          opacity: easeBarProgress < 0.02 ? 0 : 1,
+          transform: `translate3d(${easeBoxProgress}px, 0, 0) rotate3d(0, 0, 1, ${easeProgress * 360}deg)`,
         }"
         @pointerdown="isGrabbing = true"
       />
@@ -55,8 +55,8 @@ const mousemove = (e: MouseEvent) => {
   progress.value = clamp(newVal, 0, interactionWidth.value || 0) / interactionWidth.value
 }
 
-watch(progress, (p) => {
-  $webgl.state.introState = p === 1 ? 'endDrag' : 'start'
+watch(easeBarProgress, (p) => {
+  $webgl.state.introState = p == 0 ? 'endDrag' : 'start'
 })
 
 watch(
@@ -115,7 +115,7 @@ watch(
 
   &__stroke {
     transform-origin: right center;
-    height: 2px;
+    height: 1px;
     background-color: #ff8282;
   }
 
