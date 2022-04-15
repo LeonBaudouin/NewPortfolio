@@ -59,6 +59,10 @@ const mousemove = (e: MouseEvent) => {
   progress.value = clamp(newVal, 0, interactionWidth.value || 0) / interactionWidth.value
 }
 
+watchEffect(() => {
+  if (progress.value == 1) isGrabbing.value = false
+})
+
 watch([progress, isGrabbing, isHover, interactionRect], () => {
   const newValue =
     (isGrabbing.value || isHover.value) && interactionRect.value
