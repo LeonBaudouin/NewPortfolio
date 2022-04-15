@@ -26,6 +26,8 @@
           transform: `translate3d(${easeBoxProgress}px, 0, 0) rotate3d(0, 0, 1, ${easeProgress * 360}deg)`,
         }"
         @pointerdown="isGrabbing = true"
+        @mouseenter="isHover = true"
+        @mouseleave="isHover = false"
       />
     </div>
   </div>
@@ -41,6 +43,7 @@ const interactionArea = ref<HTMLElement>()
 const interactionRect = computed(() => interactionArea.value?.getBoundingClientRect())
 const interactionWidth = computed(() => interactionRect.value?.width || 0)
 const isGrabbing = ref(false)
+const isHover = ref(false)
 
 const normToPixel = (p: number) => p * interactionWidth.value
 
@@ -56,15 +59,15 @@ const mousemove = (e: MouseEvent) => {
   progress.value = clamp(newVal, 0, interactionWidth.value || 0) / interactionWidth.value
 }
 
-watch([progress, isGrabbing, interactionRect], () => {
+watch([progress, isGrabbing, isHover, interactionRect], () => {
   const newValue =
-    isGrabbing.value && interactionRect.value
+    (isGrabbing.value || isHover.value) && interactionRect.value
       ? {
           x: normToPixel(progress.value) + interactionRect.value.left,
           y: interactionRect.value.top + 1,
         }
       : null
-  CursorStore.positionOverride = newValue
+  CursorStore.state.positionOverride = newValue
 })
 
 watch(easeBarProgress, (p) => {

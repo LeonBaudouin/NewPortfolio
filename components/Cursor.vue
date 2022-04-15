@@ -1,10 +1,13 @@
 <template>
   <div class="cursor__wrapper">
-    <div class="cursor cursor--main" :style="{ '--size': mainSize, '--x': easeCoords.x, '--y': easeCoords.y }"></div>
+    <div
+      class="cursor cursor--main"
+      :style="{ '--size': isOverridden ? 0 : 1, '--x': easeCoords.x, '--y': easeCoords.y }"
+    />
     <div
       class="cursor cursor--secondary"
       :style="{ '--size': secondarySize, '--x': easierCoords.x, '--y': easierCoords.y }"
-    ></div>
+    />
   </div>
 </template>
 
@@ -15,46 +18,45 @@ const coords = reactive({ x: 0, y: 0 })
 const easeParams = { amount: 0.7 }
 const easeCoords = useLerp(coords, easeParams)
 const easierCoords = useLerp(coords, { amount: 0.1 })
-const mainSize = computed(() => (CursorStore.positionOverride ? 0 : 1))
-const secondarySize = computed(() => (CursorStore.positionOverride ? 2.5 : 2))
+const isOverridden = computed(() => !!CursorStore.state.positionOverride)
+const isClicking = ref(false)
+const secondarySize = computed(() => {
+  let base = isOverridden.value ? 2.7 : 2
+  base -= isClicking.value ? 0.5 : 0
+  return base
+})
 
-const cb = (e: MouseEvent) => {
-  if (CursorStore.positionOverride) return
+const mouseMoveCb = (e: MouseEvent) => {
+  if (isOverridden.value) return
   coords.x = e.clientX
   coords.y = e.clientY
 }
+const mouseDownCb = () => {
+  isClicking.value = true
+}
+const mouseUpCb = () => {
+  isClicking.value = false
+}
 
-const positionOverride = computed(() => CursorStore.positionOverride)
-watch(positionOverride, () => {
-  const rawCoord = coords
-  // const rawEaseCoord = toRaw(easeCoords)
-  // const rawEasierCoord = toRaw(easierCoords)
-  const posOverride = positionOverride.value
-  easeParams.amount = posOverride ? 0.1 : 0.7
-  if (posOverride == null) return
+watch(CursorStore.computed.coordOverride, (coordOverride) => {
+  easeParams.amount = coordOverride ? 0.1 : 0.7
 
-  let newCoords = { ...rawCoord }
+  if (coordOverride == null) return
 
-  if ('x' in posOverride) newCoords = { ...posOverride }
-  else {
-    const rect = posOverride.getBoundingClientRect()
-    newCoords = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
-  }
-
-  rawCoord.x = newCoords.x
-  rawCoord.y = newCoords.y
-  // rawEaseCoord.x = newCoords.x
-  // rawEaseCoord.y = newCoords.y
-  // rawEasierCoord.x = newCoords.x
-  // rawEasierCoord.y = newCoords.y
+  coords.x = coordOverride.x
+  coords.y = coordOverride.y
 })
 
 onMounted(() => {
-  window.addEventListener('mousemove', cb)
+  window.addEventListener('mousemove', mouseMoveCb)
+  window.addEventListener('mousedown', mouseDownCb)
+  window.addEventListener('mouseup', mouseUpCb)
 })
 
 onUnmounted(() => {
-  window.removeEventListener('mousemove', cb)
+  window.removeEventListener('mousemove', mouseMoveCb)
+  window.removeEventListener('mousedown', mouseDownCb)
+  window.removeEventListener('mouseup', mouseUpCb)
 })
 </script>
 
