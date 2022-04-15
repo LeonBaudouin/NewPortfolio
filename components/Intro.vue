@@ -32,6 +32,7 @@
 </template>
 
 <script lang="ts" setup>
+import CursorStore from '~~/stores/CursorStore'
 import clamp from '~~/utils/math/clamp'
 import cremap from '~~/utils/math/cremap'
 const { $webgl } = useNuxtApp()
@@ -54,6 +55,17 @@ const mousemove = (e: MouseEvent) => {
   const newVal = e.clientX - (interactionRect.value?.left || 0)
   progress.value = clamp(newVal, 0, interactionWidth.value || 0) / interactionWidth.value
 }
+
+watch([progress, isGrabbing, interactionRect], () => {
+  const newValue =
+    isGrabbing.value && interactionRect.value
+      ? {
+          x: normToPixel(progress.value) + interactionRect.value.left,
+          y: interactionRect.value.top + 1,
+        }
+      : null
+  CursorStore.positionOverride = newValue
+})
 
 watch(easeBarProgress, (p) => {
   $webgl.state.introState = p == 0 ? 'endDrag' : 'start'
@@ -123,7 +135,7 @@ watch(
     width: 1rem;
     height: 1rem;
     position: absolute;
-    background-color: rgb(212, 212, 212);
+    background-color: black;
     top: calc(-0.5rem + 1px);
     left: -0.5rem;
     transition: opacity 1s ease-out;

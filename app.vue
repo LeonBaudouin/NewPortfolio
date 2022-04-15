@@ -1,6 +1,7 @@
 <template>
   <!-- <div></div> -->
   <Intro />
+  <Cursor />
 </template>
 
 <script setup lang="ts">
@@ -42,11 +43,13 @@ useCleanup(() => {
 body {
   overflow: hidden;
   margin: 0;
+  cursor: none;
 }
 body > canvas {
   position: absolute;
   inset: 0;
   z-index: -1;
+  background-color: white;
 }
 .tp-fldv_c > .tp-cntv,
 .tp-tabv_c .tp-brkv > .tp-cntv {
