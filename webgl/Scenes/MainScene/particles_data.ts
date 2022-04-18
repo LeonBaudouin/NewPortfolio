@@ -13,7 +13,7 @@ const start = {
   sizeVariation: new THREE.Vector4(0.07, 0.28, 0, 0.25),
   size: 1,
   // matcap: 'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
-  attractor: new THREE.Vector3(-10, -3, -3),
+  attractor: new THREE.Vector3(-11, -3, -3),
 }
 const endDrag = {
   // useTexture: false,

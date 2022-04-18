@@ -53,10 +53,14 @@ void main() {
   // attractorNormal
 	mat4 localRotation = mat4( calcLookAtMatrix( data.xyz, prevPos.xyz, 0. ) );
   vec3 newPosition = (localRotation * vec4(position, 1.0)).xyz;
-  vec4 mvPosition = modelViewMatrix * vec4((newPosition * scale + offset), 1.0);
 
   vNormal = normalMatrix * (localRotation * vec4(normal, 0.)).rgb;
+  vec4 mvPosition = modelViewMatrix * vec4((newPosition * scale + offset), 1.0);
 	vViewPosition = - mvPosition.xyz;
+
+  float culling = dot(vViewPosition, vNormal) > 0. ? 1. : 0.;
+  mvPosition = modelViewMatrix * vec4((newPosition * scale * culling + offset), 1.0);
+
 
   gl_Position = projectionMatrix * mvPosition;
 
