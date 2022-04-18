@@ -22,8 +22,7 @@
       <div
         class="start__cube"
         :style="{
-          opacity: easeBarProgress < 0.02 ? 0 : 1,
-          transform: `translate3d(${easeBoxProgress}px, 0, 0) rotate3d(0, 0, 1, ${easeProgress * 360}deg)`,
+          transform: transform,
         }"
         @pointerdown="isGrabbing = true"
         @mouseenter="isHover = true"
@@ -53,6 +52,17 @@ const easeBoxProgress = computed(() => normToPixel(easeProgress.value))
 
 const barProgress = computed(() => cremap(progress.value, [0.5, 1], [1, 0]))
 const easeBarProgress = useLerp(barProgress, { amount: 0.05 })
+
+const scale = computed(() => (easeBarProgress.value < 0.02 ? 0 : 1))
+const animatedScale = useAnimateValue(scale, { ease: 'Power2.easeIn' })
+
+const transform = computed(() => {
+  const translate = easeBoxProgress.value
+  const rotation = easeProgress.value * 360
+  const scale = animatedScale.value
+  return `translate3d(${translate}px, 0, 0) rotate3d(0, 0, 1, ${rotation}deg) scale3d(${scale}, ${scale}, ${scale})`
+})
+
 const mousemove = (e: MouseEvent) => {
   if (!isGrabbing.value) return
   const newVal = e.clientX - (interactionRect.value?.left || 0)

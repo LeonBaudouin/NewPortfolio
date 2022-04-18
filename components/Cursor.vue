@@ -20,6 +20,7 @@ const easeCoords = useLerp(coords, easeParams)
 const easierCoords = useLerp(coords, { amount: 0.1 })
 const isOverridden = computed(() => !!CursorStore.state.positionOverride)
 const isClicking = ref(false)
+
 const secondarySize = computed(() => {
   let base = isOverridden.value ? 2.7 : 2
   base -= isClicking.value ? 0.5 : 0

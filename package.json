@@ -13,7 +13,7 @@
     "@tweakpane/core": "^1.0.8",
     "@tweakpane/plugin-essentials": "^0.1.4",
     "@types/three": "^0.137.0",
-    "gsap": "^3.9.1",
+    "gsap": "^3.10.3",
     "sass": "^1.49.9",
     "three": "^0.138.2",
     "tweakpane": "^3.0.7",

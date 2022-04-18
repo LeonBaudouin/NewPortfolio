@@ -11,7 +11,7 @@ function useSingleValueLerp(target: Ref<number>, params: { amount: number; preci
     output.value = round(rawOutput.value, params.precision || 3)
   })
 
-  return output
+  return readonly(output)
 }
 
 function useVectorLerp(target: { x: number; y: number; z?: number }, params: { amount: number; precision?: number }) {
@@ -25,7 +25,7 @@ function useVectorLerp(target: { x: number; y: number; z?: number }, params: { a
     output.y = round(rawOutput.y, params.precision || 3)
   })
 
-  return output
+  return readonly(output)
 }
 
 export default function useLerp<T extends ReturnType<typeof useSingleValueLerp | typeof useVectorLerp>>(
