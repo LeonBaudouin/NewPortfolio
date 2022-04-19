@@ -21,7 +21,7 @@ export type VelocityParams = {
   rotationDirection?: THREE.Euler
   attractor?: THREE.Vector3
   textureSize: THREE.Vector2
-  attractorTexture?: THREE.Texture | null
+  attractorsTexture?: THREE.Texture | null
 }
 
 export type VelocityData = Required<VelocityParams>
@@ -43,7 +43,7 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
     gravity: new THREE.Vector3(0, 0.001, 0.009),
     rotationDirection: new THREE.Euler(0, 0, -2.03),
     attractor: new THREE.Vector3(15, 3, -9),
-    attractorTexture: null,
+    attractorsTexture: null,
   })
 
   constructor(context: WebGLAppContext, params: VelocityParams) {

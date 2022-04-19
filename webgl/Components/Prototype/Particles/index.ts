@@ -14,6 +14,8 @@ export type ParticlesParams = {
 
 export type ParticlesData = Required<ParticlesParams>
 
+export type ParticleSystemParams = ParticlesParams & CubesParams & VelocityParams
+
 export default class Particles extends AbstractObject<WebGLAppContext> {
   private velocity: Velocity
   private position: Position
@@ -25,7 +27,7 @@ export default class Particles extends AbstractObject<WebGLAppContext> {
     run: true,
   })
 
-  constructor(context: WebGLAppContext, params: ParticlesParams & CubesParams & VelocityParams) {
+  constructor(context: WebGLAppContext, params: ParticleSystemParams) {
     super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Particles', expanded: false }) })
 
     Object.assign(params, { ...Particles.DEFAULT_PARAMS, ...params })

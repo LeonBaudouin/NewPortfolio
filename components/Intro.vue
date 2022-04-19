@@ -92,7 +92,7 @@ watch(
   () => $webgl.state.introState,
   (introState, _, onCleanup) => {
     if (introState !== 'endDrag') return
-    const timeout = setTimeout(() => ($webgl.state.introState = 'complete'), 3000)
+    const timeout = setTimeout(() => ($webgl.state.introState = 'complete'), 3500)
     onCleanup(() => clearTimeout(timeout))
   }
 )

@@ -57,7 +57,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.camera = this.params.debugCam ? this.debugCamera.object : this.mainCamera.object
 
     this.context.tweakpane
-      .addInput(this.params, 'debugCam')
+      .addInput(this.params, 'debugCam', { label: 'Debug Cam' })
       .on('change', ({ value }) => (this.camera = value ? this.debugCamera.object : this.mainCamera.object))
 
     this.context.tweakpane.addInput(this.params, 'raycastAttractor', { label: 'Raycast Attractor' })
@@ -82,26 +82,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       this.scene.remove(this.debugCamera.object)
       this.debugCamera.destroy()
     })
-
-    // this.toUnbind(
-    //   watch(
-    //     () => this.context.state.introState,
-    //     () => {
-    //       switch (this.context.state.introState) {
-    //         case 'start':
-    //           pseudoDeepAssign(this.particlesParams, particles_data.start)
-    //           break
-    //         case 'endDrag':
-    //           pseudoDeepAssign(this.particlesParams, particles_data.endDrag)
-    //           break
-    //         case 'complete':
-    //           pseudoDeepAssign(this.particlesParams, particles_data.complete)
-    //           break
-    //       }
-    //     },
-    //     { immediate: true }
-    //   )
-    // )
   }
 
   private genContext = () => ({
@@ -144,7 +124,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
     const gltfLoader = new GLTFLoader()
     gltfLoader.loadAsync('./display.glb').then((gltf) => {
-      console.log(gltf)
       const queen = gltf.scene.getObjectByName('Queen') as THREE.Mesh
 
       // queen.material = new THREE.MeshNormalMaterial()

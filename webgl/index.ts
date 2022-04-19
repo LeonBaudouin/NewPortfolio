@@ -25,7 +25,7 @@ export default class WebGL extends LifeCycle {
   private postProcessing: EffectComposer
   private renderPass: RenderPass
   private shaderPass: ShaderPass
-  public state = reactive<{ introState: 'start' | 'endDrag' | 'complete' }>({ introState: 'complete' })
+  public state = reactive<{ introState: 'start' | 'endDrag' | 'complete' }>({ introState: 'start' })
   private nuxtApp: NuxtApp
 
   constructor(nuxtApp: any) {

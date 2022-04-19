@@ -95,7 +95,7 @@ export default function reactiveUniforms(
     }
 
     const type = parseType(object[key])
-    if (type == 'Any' || type == null) {
+    if (type == null) {
       if (debug) console.warn(`"${key}" value could not be parsed`)
       continue
     }

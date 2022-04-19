@@ -1,19 +1,22 @@
 import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
 import * as THREE from 'three'
-import Particles from '../Particles'
+import Particles, { ParticleSystemParams } from '../Particles'
 import { getPositionTextureFromMesh } from '~~/utils/buffer/positionTextureFromMesh'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
-import particles_data from './particles_data'
-import pseudoDeepAssign from '~~/utils/pseudoDeepAssign'
-import pseudoDeepLerp from '~~/utils/pseudDeepLerp'
-import Easing from 'easing-functions'
+import AbstractBehaviour from './Behaviour/AbstractBehaviour'
+import Introduction from './Behaviour/Introduction'
+import TensionHold from './Behaviour/TensionHold'
+import Sandbox from './Behaviour/Sandbox'
+import Circle from './Behaviour/Circle'
 import gsap from 'gsap/all'
 
 export default class ParticleManager extends AbstractObject<MainSceneContext> {
   private particles: Particles
 
-  private particlesParams = reactive<Required<ConstructorParameters<typeof Particles>[1]>>({
+  private behaviour: AbstractBehaviour
+
+  private particlesParams = reactive<Required<ParticleSystemParams>>({
     textureSize: new THREE.Vector2(128, 128),
     useTexture: false,
     capForce: true,
@@ -33,21 +36,50 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
     // matcap: './queen_256px.png',
     attractor: new THREE.Vector3(0, 0, -3),
     run: true,
-    attractorTexture: null,
+    attractorsTexture: null,
     normalTexture: null,
   })
 
   constructor(context: MainSceneContext, { chess }: { chess: THREE.Mesh }) {
     super(context)
 
+    const behaviours = {
+      Introduction,
+      TensionHold,
+      Sandbox,
+      Circle,
+    }
+
+    const behaviourName = ref<keyof typeof behaviours>('Introduction')
+
+    this.context.tweakpane.addInput(behaviourName, 'value', {
+      label: 'Particles Behaviour',
+      options: Object.entries(behaviours).map(([key]) => ({ text: key, value: key })),
+    })
+    const button = this.context.tweakpane.addButton({ title: 'Log Params' })
+
+    button.on('click', () => {
+      console.log(JSON.parse(JSON.stringify(this.particlesParams)))
+    })
+
+    this.toUnbind(() => button.dispose())
+
+    watch(
+      behaviourName,
+      (b) => {
+        this.behaviour?.destroy()
+        this.behaviour = new behaviours[b]({ ...this.context, particleParams: this.particlesParams })
+      },
+      { immediate: true }
+    )
     // pseudoDeepAssign(this.particlesParams, particles_data.still)
-    pseudoDeepAssign(this.particlesParams, particles_data.still)
-    console.log(this.particlesParams.rotationStrength.x, particles_data.still.rotationStrength.x)
+
     this.particles = new Particles(this.context, this.particlesParams)
     this.object = this.particles.object
 
     chess.updateMatrix()
-    const sampleGeom = chess.geometry.clone()
+    const sampleGeom = new THREE.TorusGeometry(4, 0.1, 4, 30)
+    // const sampleGeom = chess.geometry.clone()
     sampleGeom.applyMatrix4(chess.matrix)
     const newMesh = new THREE.Mesh(sampleGeom, new THREE.MeshBasicMaterial())
     const sampler = new MeshSurfaceSampler(newMesh)
@@ -61,27 +93,7 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
     }
 
     this.particlesParams.normalTexture = textures.chess.normal
-    this.particlesParams.attractorTexture = textures.chess.position
-
-    const data = reactive({
-      factor: 0,
-    })
-
-    watch(data, () => {
-      pseudoDeepLerp(particles_data.still, particles_data.intense, this.particlesParams, data.factor)
-    })
-    let tween: GSAPTween | null
-    context.renderer.domElement.addEventListener('pointerdown', () => {
-      tween?.kill()
-      tween = gsap.to(data, { factor: 1, ease: Easing.Quadratic.Out, duration: 8 })
-    })
-    context.renderer.domElement.addEventListener('pointerup', () => {
-      tween?.kill()
-      tween = gsap.to(data, { factor: 0, ease: Easing.Quadratic.In, duration: 1 })
-    })
-
-    // this.velocity.setAttractorTexture(textures.chess.position)
-    // this.cubes.setAttractorTexture(textures.chess.normal)
+    this.particlesParams.attractorsTexture = textures.chess.position
   }
 
   public tick(time: number, delta: number): void {
