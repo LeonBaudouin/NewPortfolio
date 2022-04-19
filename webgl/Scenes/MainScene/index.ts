@@ -6,21 +6,18 @@ import DebugCamera from '~~/webgl/Components/Prototype/Camera/DebugCamera'
 import Environment from '~~/webgl/Components/Prototype/Environment'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import SimpleCamera from '~~/webgl/Components/Prototype/Camera/SimpleCamera'
-import Particles from '~~/webgl/Components/Prototype/Particles'
-import copyMatrix from '~~/utils/webgl/copyMatrix'
-import particles_data from './particles_data'
-import pseudoDeepAssign from '~~/utils/pseudoDeepAssign'
+import ParticleManager from '~~/webgl/Components/Prototype/ParticleManager'
 
 export type Section = 'projects' | 'about' | 'lab'
 
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
   private raycastMesh: THREE.Object3D
-  private particles: Particles
   private debugCamera: DebugCamera
   private mainCamera: SimpleCamera
   private environment: Environment
 
   private sceneState = reactive({})
+  private particleManager: ParticleManager
 
   // private particlesParams = reactive<ConstructorParameters<typeof Particles>[2]>({
   //   textureSize: new THREE.Vector2(128, 128),
@@ -38,26 +35,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   //   matcap: '/column_256px.png',
   //   attractor: new THREE.Vector3(0, 0, 0),
   // })
-
-  private particlesParams = reactive<Required<ConstructorParameters<typeof Particles>[2]>>({
-    textureSize: new THREE.Vector2(128, 128),
-    useTexture: false,
-    capForce: true,
-    rotateAround: true,
-    fixOnAttractor: false,
-    G: 10,
-    inertia: { min: 0.2, max: 0.5 },
-    rotationStrength: new THREE.Vector2(0.01, 0.0125),
-    gravity: new THREE.Vector3(0, 0, 0),
-    rotationDirection: new THREE.Euler(0.85, 0.01, 0),
-    sizeVariation: new THREE.Vector4(0.07, 0.28, 0, 0.25),
-    size: 1,
-    // matcap: 'https://makio135.com/matcaps/64/2EAC9E_61EBE3_4DDDD1_43D1C6-64px.png',
-    // matcap: '/particle_matcap.png',
-    matcap: 'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
-    attractor: new THREE.Vector3(0, 0, -3),
-    run: true,
-  })
 
   private params = {
     debugCam: false,
@@ -97,7 +74,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       if (!this.raycastMesh || !this.params.raycastAttractor) return
       const [intersection] = raycast.intersectObject(this.raycastMesh)
       if (!intersection) return
-      this.particlesParams.attractor!.copy(intersection.point)
     }
 
     window.addEventListener('mousemove', onMouseMove)
@@ -107,25 +83,25 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       this.debugCamera.destroy()
     })
 
-    this.toUnbind(
-      watch(
-        () => this.context.state.introState,
-        () => {
-          switch (this.context.state.introState) {
-            case 'start':
-              pseudoDeepAssign(this.particlesParams, particles_data.start)
-              break
-            case 'endDrag':
-              pseudoDeepAssign(this.particlesParams, particles_data.endDrag)
-              break
-            case 'complete':
-              pseudoDeepAssign(this.particlesParams, particles_data.complete)
-              break
-          }
-        },
-        { immediate: true }
-      )
-    )
+    // this.toUnbind(
+    //   watch(
+    //     () => this.context.state.introState,
+    //     () => {
+    //       switch (this.context.state.introState) {
+    //         case 'start':
+    //           pseudoDeepAssign(this.particlesParams, particles_data.start)
+    //           break
+    //         case 'endDrag':
+    //           pseudoDeepAssign(this.particlesParams, particles_data.endDrag)
+    //           break
+    //         case 'complete':
+    //           pseudoDeepAssign(this.particlesParams, particles_data.complete)
+    //           break
+    //       }
+    //     },
+    //     { immediate: true }
+    //   )
+    // )
   }
 
   private genContext = () => ({
@@ -167,22 +143,24 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     })
 
     const gltfLoader = new GLTFLoader()
-    gltfLoader.loadAsync('./scene_4.glb').then((gltf) => {
-      const queen = gltf.scene.getObjectByName('Chess') as THREE.Mesh
-      queen.position.z += 3
-      queen.position.y -= 1
+    gltfLoader.loadAsync('./display.glb').then((gltf) => {
+      console.log(gltf)
+      const queen = gltf.scene.getObjectByName('Queen') as THREE.Mesh
 
       // queen.material = new THREE.MeshNormalMaterial()
       // this.scene.add(queen)
+      // this.scene.add(gltf.scene)
+      // const column = gltf.scene.getObjectByName('Column') as THREE.Mesh
+      // column.material = new THREE.MeshMatcapMaterial({ matcap: new THREE.TextureLoader().load('./column2_256px.png') })
+      // this.scene.add(column)
 
-      this.particles = new Particles(this.genContext(), { mesh: queen }, this.particlesParams)
-      this.scene.add(this.particles.object)
-
-      const plane = gltf.scene.getObjectByName('Plane001') as THREE.Mesh
-      this.raycastMesh = new THREE.Mesh(plane.geometry, new THREE.MeshNormalMaterial({ wireframe: true }))
-      this.raycastMesh.visible = false
-      copyMatrix(plane, this.raycastMesh)
-      this.scene.add(this.raycastMesh)
+      this.particleManager = new ParticleManager(this.genContext(), { chess: queen })
+      this.scene.add(this.particleManager.object)
+      // const plane = gltf.scene.getObjectByName('Plane001') as THREE.Mesh
+      // this.raycastMesh = new THREE.Mesh(plane.geometry, new THREE.MeshNormalMaterial({ wireframe: true }))
+      // this.raycastMesh.visible = false
+      // copyMatrix(plane, this.raycastMesh)
+      // this.scene.add(this.raycastMesh)
       // this.context.tweakpane.addInput(this.raycastMesh, 'visible', { label: 'Raycast Mesh' })
 
       // copyWorldMatrix(gltf.cameras[0], this.mainCamera.object)
@@ -191,7 +169,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   }
 
   public tick(time: number, delta: number): void {
-    this.particles?.tick(time, delta)
+    this.particleManager?.tick(time, delta)
     this.debugCamera.tick(time, delta)
   }
 }

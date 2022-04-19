@@ -15,11 +15,13 @@ export type VelocityParams = {
   fixOnAttractor?: boolean
   G?: number
   inertia?: { min: number; max: number }
+  forceCap?: { min: number; max: number }
   rotationStrength?: THREE.Vector2
   gravity?: THREE.Vector3
   rotationDirection?: THREE.Euler
   attractor?: THREE.Vector3
   textureSize: THREE.Vector2
+  attractorTexture?: THREE.Texture | null
 }
 
 export type VelocityData = Required<VelocityParams>
@@ -29,17 +31,19 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
 
   public data: VelocityData
 
-  public static DEFAULT_PARAMS: Omit<VelocityData, 'textureSize'> = reactive({
+  public static DEFAULT_PARAMS: Omit<VelocityData, 'textureSize' | ''> = reactive({
     useTexture: false,
     capForce: true,
     rotateAround: true,
     fixOnAttractor: false,
     G: 10,
     inertia: { min: 0, max: 0.4 },
+    forceCap: { min: 0.07, max: 0.1 },
     rotationStrength: new THREE.Vector2(0.02, 0.025),
     gravity: new THREE.Vector3(0, 0.001, 0.009),
     rotationDirection: new THREE.Euler(0, 0, -2.03),
     attractor: new THREE.Vector3(15, 3, -9),
+    attractorTexture: null,
   })
 
   constructor(context: WebGLAppContext, params: VelocityParams) {
@@ -47,7 +51,6 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
 
     Object.assign(params, { ...Velocity.DEFAULT_PARAMS, ...params })
     this.data = (isReactive(params) ? params : reactive(params)) as VelocityData
-
     const velocityInitTexture = new THREE.DataTexture(
       new Float32Array(
         new Array(params.textureSize.x * params.textureSize.y * 4).fill(0).map(() => (Math.random() - 0.5) * 0.01)
@@ -86,6 +89,7 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
         uFixOnAttractor: { value: false },
         uG: { value: 1 },
         uInertia: { value: new THREE.Vector2() },
+        uForceCap: { value: new THREE.Vector2() },
         uRotationStrength: { value: new THREE.Vector2() },
         uGravity: { value: new THREE.Vector3() },
         uRotationDirection: { value: new THREE.Vector3() },
@@ -113,6 +117,7 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
     this.context.tweakpane.addInput(this.data, 'fixOnAttractor', { label: 'Fix On Attractor' })
     this.context.tweakpane.addInput(this.data, 'G', { label: 'G' })
     this.context.tweakpane.addInput(this.data, 'inertia', { label: 'Inertia', min: 0, max: 1 })
+    this.context.tweakpane.addInput(this.data, 'forceCap', { label: 'ForceCap', min: 0, max: 0.2 })
     this.context.tweakpane.addInput(this.data, 'gravity', {
       label: 'Gravity',
       x: { step: 0.001 },

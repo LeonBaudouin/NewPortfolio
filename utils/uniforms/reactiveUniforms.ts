@@ -8,7 +8,7 @@ export type CustomWatch<T extends ValueToUniform | any = ValueToUniform> = (
   object: Record<string, T>,
   key: string
 ) => () => void
-type UniformType = 'number' | 'boolean' | 'Color' | 'Vector' | 'Interval' | 'Euler'
+type UniformType = 'number' | 'boolean' | 'Color' | 'Vector' | 'Interval' | 'Euler' | 'Any'
 
 import * as THREE from 'three'
 
@@ -28,15 +28,18 @@ function parseType(value: ValueToUniform): UniformType | undefined {
   if (typeof value === 'boolean') return 'boolean'
   if (typeof value === 'number') return 'number'
   if (typeof value === 'string' && value.startsWith('#')) return 'Color'
+  if (value === null) return 'Any'
   if (typeof value === 'object' && 'addVectors' in value) return 'Vector'
   if (typeof value === 'object' && 'isEuler' in value) return 'Euler'
   if (typeof value === 'object' && 'min' in value) return 'Interval'
+  return 'Any'
 }
 
 function buildWatch(uniform: THREE.IUniform, type: UniformType, object: Record<string, ValueToUniform>, key: string) {
   switch (type) {
     case 'number':
     case 'boolean':
+    case 'Any':
       return watchEffect(() => (uniform.value = object[key]))
     case 'Color':
       return watchEffect(() => uniform.value.set(object[key]))
@@ -92,7 +95,7 @@ export default function reactiveUniforms(
     }
 
     const type = parseType(object[key])
-    if (type == null) {
+    if (type == 'Any' || type == null) {
       if (debug) console.warn(`"${key}" value could not be parsed`)
       continue
     }

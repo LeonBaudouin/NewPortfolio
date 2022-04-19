@@ -25,15 +25,7 @@ export default class Particles extends AbstractObject<WebGLAppContext> {
     run: true,
   })
 
-  private textures: {
-    chess: { position: THREE.Texture; normal: THREE.Texture }
-  }
-
-  constructor(
-    context: WebGLAppContext,
-    { mesh }: { mesh: THREE.Mesh },
-    params: ParticlesParams & CubesParams & VelocityParams
-  ) {
+  constructor(context: WebGLAppContext, params: ParticlesParams & CubesParams & VelocityParams) {
     super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Particles', expanded: false }) })
 
     Object.assign(params, { ...Particles.DEFAULT_PARAMS, ...params })
@@ -46,19 +38,6 @@ export default class Particles extends AbstractObject<WebGLAppContext> {
     this.cubes = new Cubes(this.context, params)
 
     this.object = this.cubes.object
-
-    mesh.updateMatrix()
-    const sampleGeom = mesh.geometry.clone()
-    sampleGeom.applyMatrix4(mesh.matrix)
-    const newMesh = new THREE.Mesh(sampleGeom, new THREE.MeshBasicMaterial())
-    const sampler = new MeshSurfaceSampler(newMesh)
-    sampler.build()
-    this.textures = {
-      chess: getPositionTextureFromMesh(sampler, params.textureSize, params.textureSize.x * params.textureSize.y),
-    }
-
-    this.velocity.setAttractorTexture(this.textures.chess.position)
-    this.cubes.setAttractorTexture(this.textures.chess.normal)
 
     this.toUnbind(this.velocity.destroy, this.position.destroy, this.cubes.destroy)
   }

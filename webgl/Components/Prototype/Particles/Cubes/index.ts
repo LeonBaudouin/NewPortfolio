@@ -10,6 +10,7 @@ export type CubesParams = {
   size?: number
   matcap?: string | THREE.Texture
   textureSize: THREE.Vector2
+  normalTexture?: null | THREE.Texture
 }
 
 export type CubesData = Required<CubesParams>
@@ -24,6 +25,7 @@ export default class Cubes extends AbstractObject<
     sizeVariation: new THREE.Vector4(0.07, 0.28, 0, 1),
     size: 0.5,
     matcap: '/particle_matcap.png',
+    normalTexture: null,
   })
 
   constructor(context: WebGLAppContext, params: CubesParams) {
@@ -37,6 +39,7 @@ export default class Cubes extends AbstractObject<
       vertexShader: particlesVertex,
       fragmentShader: particlesFragment,
       side: THREE.BackSide,
+      fog: true,
       uniforms: {
         uPosTexture: { value: null },
         uPreviousPosTexture: { value: null },
@@ -54,6 +57,7 @@ export default class Cubes extends AbstractObject<
         uSizeVariation: {
           value: new THREE.Vector4(),
         },
+        ...THREE.UniformsLib['fog'],
       },
     })
 

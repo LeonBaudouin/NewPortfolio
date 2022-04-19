@@ -13,6 +13,7 @@ uniform vec2 uInertia;
 uniform vec2 uRotationStrength;
 uniform vec3 uRotationDirection;
 uniform vec3 uGravity;
+uniform vec2 uForceCap;
 
 float rand(vec2 co){
   return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
@@ -61,7 +62,8 @@ void main() {
 
   float G = uG;
   float force = G * ((0.001 + rand(vUv) * 100.) / (dist * 0.01));
-  force = min(force, 0.01);
+  // force = min(force, 0.01);
+  force = min(force, uForceCap.y * 0.1);
 
   vec3 dir = normalize(attractor - position);
   inputData.xyz += force * dir;
@@ -91,9 +93,10 @@ void main() {
   vec3 velocity = normalize(inputData.xyz);
 
   bool capForce = uCapForce;
+  float forceCap = uForceCap.x;
   // ------ CAP FORCE
   float minForce = capForce
-    ? remap(rand(vUv+1.), 0., 1., 0.05, 0.09)
+    ? remap(rand(vUv+1.), 0., 1., forceCap - 0.02, forceCap + 0.02)
     : 0.;
   amount = max(amount * 0.98, minForce);
 

@@ -4,6 +4,8 @@ uniform sampler2D uMatcap;
 varying vec3 vViewPosition;
 varying vec3 vNormal;
 
+#include <fog_pars_fragment>
+
 void main()
 {
 	vec3 normal = normalize( vNormal );
@@ -17,6 +19,7 @@ void main()
 
   // if (alpha < 0.01) discard;
   gl_FragColor = vec4(texture2D(uMatcap, matcapUv).rgb, 1.);
+  #include <fog_fragment>
   gl_FragColor = linearToOutputTexel( gl_FragColor );
   // gl_FragColor = vec4((normal * 0.5) + 0.5, 1.);
 }

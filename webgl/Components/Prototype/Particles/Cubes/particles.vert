@@ -10,6 +10,8 @@ uniform vec4 uSizeVariation;
 varying vec3 vViewPosition;
 varying vec3 vNormal;
 
+#include <fog_pars_vertex>
+
 mat3 calcLookAtMatrix(vec3 origin, vec3 target, float roll) {
 	vec3 rr = vec3(sin(roll), cos(roll), 0.0);
 	vec3 ww = normalize(target - origin);
@@ -61,8 +63,9 @@ void main() {
   float culling = dot(vViewPosition, vNormal) > 0. ? 1. : 0.;
   mvPosition = modelViewMatrix * vec4((newPosition * scale * culling + offset), 1.0);
 
-
   gl_Position = projectionMatrix * mvPosition;
+
+	#include <fog_vertex>
 
   // Size attenuation
   // gl_PointSize = uSize;
