@@ -115,9 +115,10 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
     this.context.tweakpane.addInput(this.data, 'useTexture', { label: 'Follow Texture' })
     this.context.tweakpane.addInput(this.data, 'rotateAround', { label: 'Rotate Around' })
     this.context.tweakpane.addInput(this.data, 'fixOnAttractor', { label: 'Fix On Attractor' })
+    this.context.tweakpane.addInput(this.data, 'attractor', { label: 'Attractor' })
     this.context.tweakpane.addInput(this.data, 'G', { label: 'G' })
     this.context.tweakpane.addInput(this.data, 'inertia', { label: 'Inertia', min: 0, max: 1 })
-    this.context.tweakpane.addInput(this.data, 'forceCap', { label: 'ForceCap', min: 0, max: 0.2 })
+    this.context.tweakpane.addInput(this.data, 'forceCap', { label: 'ForceCap', min: 0, max: 0.5 })
     this.context.tweakpane.addInput(this.data, 'gravity', {
       label: 'Gravity',
       x: { step: 0.001 },

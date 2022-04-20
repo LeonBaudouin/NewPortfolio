@@ -32,7 +32,9 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
     size: 1,
     // matcap: 'https://makio135.com/matcaps/64/2EAC9E_61EBE3_4DDDD1_43D1C6-64px.png',
     // matcap: '/particle_matcap.png',
-    matcap: 'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
+    // matcap: 'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
+    // matcap: 'https://makio135.com/matcaps/64/3F3A2F_91D0A5_7D876A_94977B-64px.png',
+    matcap: 'https://makio135.com/matcaps/64/CCF6FA_9DD9EB_82C5D9_ACD4E4-64px.png',
     // matcap: './queen_256px.png',
     attractor: new THREE.Vector3(0, 0, -3),
     run: true,
@@ -50,7 +52,7 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
       Circle,
     }
 
-    const behaviourName = ref<keyof typeof behaviours>('Introduction')
+    const behaviourName = ref<keyof typeof behaviours>('Circle')
 
     this.context.tweakpane.addInput(behaviourName, 'value', {
       label: 'Particles Behaviour',
@@ -77,6 +79,9 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
     this.particles = new Particles(this.context, this.particlesParams)
     this.object = this.particles.object
 
+    // chess.rotateZ(0.3)
+    // chess.rotateX(0.3)
+
     chess.updateMatrix()
     const sampleGeom = new THREE.TorusGeometry(4, 0.1, 4, 30)
     // const sampleGeom = chess.geometry.clone()
@@ -91,6 +96,14 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
         this.particlesParams.textureSize.x * this.particlesParams.textureSize.y
       ),
     }
+
+    // chess.material = new THREE.MeshMatcapMaterial({
+    //   matcap: new THREE.TextureLoader().load(
+    //     'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
+    //     (t) => (t.encoding = THREE.sRGBEncoding)
+    //   ),
+    // })
+    // this.context.scene.add(chess)
 
     this.particlesParams.normalTexture = textures.chess.normal
     this.particlesParams.attractorsTexture = textures.chess.position

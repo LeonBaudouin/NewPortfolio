@@ -16,6 +16,7 @@ export default function pseudoDeepLerp<T extends Record<string, Lerpable>>(from:
       ;(target[key] as number) = lerp(from[key] as number, to[key] as number, factor)
       continue
     }
+    if (typeof value === 'boolean') (target[key] as boolean) = value
     if (typeof value !== 'object') continue
     if ('isEuler' in value) {
       const targetEuler = target[key] as THREE.Euler

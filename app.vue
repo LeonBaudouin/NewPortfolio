@@ -1,6 +1,6 @@
 <template>
   <!-- <div></div> -->
-  <Intro />
+  <!-- <Intro /> -->
   <Cursor />
 </template>
 

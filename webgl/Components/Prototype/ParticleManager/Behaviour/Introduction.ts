@@ -10,7 +10,6 @@ const particlesData = {
     forceCap: { min: 0.07, max: 0.1 },
     gravity: new THREE.Vector3(0, 0, 0),
     inertia: { min: 0.4, max: 0.7 },
-    matcap: 'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
     rotateAround: true,
     rotationDirection: new THREE.Euler(0.85, 0.01, 0),
     rotationStrength: new THREE.Vector2(0.01, 0.013),
