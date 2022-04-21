@@ -16,7 +16,6 @@ export default class Ripples extends AbstractComponent<SceneContext> {
   private lastTexture: THREE.Texture
   private raycastMesh: THREE.Object3D
   private shader: THREE.Shader
-  private shader2: THREE.Shader
 
   public get matrix(): THREE.Matrix4 {
     this.raycastMesh.updateMatrix()
@@ -81,6 +80,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     const mat = new THREE.MeshBasicMaterial({ wireframe: true })
     this.raycastMesh = new THREE.Mesh(geom, mat)
     this.raycastMesh.position.y = 0.1
+    this.raycastMesh.position.x = 12
     this.raycastMesh.visible = false
     this.raycastMesh.scale.setScalar(20)
     this.context.scene.add(this.raycastMesh)

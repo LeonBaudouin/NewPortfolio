@@ -8,11 +8,11 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { Params } from '~~/plugins/params.client'
 import vertexShader from './index.vert?raw'
 import fragmentShader from './index.frag?raw'
-import TestScene from './Scenes/TestScene'
+import ReflectionScene from './Scenes/ReflectionScene'
 
 type Scenes = {
   main: MainScene
-  test: TestScene
+  reflection: ReflectionScene
 }
 type NuxtApp = ReturnType<typeof useNuxtApp>
 export default class WebGL extends LifeCycle {
@@ -77,14 +77,14 @@ export default class WebGL extends LifeCycle {
   })
 
   private setupScenes() {
-    const tabs = this.tweakpane.addTab({ pages: [{ title: 'MainScene' }] })
+    const tabs = this.tweakpane.addTab({ pages: [{ title: 'Main' }] })
 
     const mainPage = tabs.pages[0]
-    const testPage = tabs.addPage({ title: 'Test' })
+    const testPage = tabs.addPage({ title: 'Reflection' })
 
     this.scenes = {
       main: new MainScene(this.genContext(mainPage)),
-      test: new TestScene(this.genContext(testPage)),
+      reflection: new ReflectionScene(this.genContext(testPage)),
     }
     this.toUnbind(this.scenes.main.destroy, tabs.dispose)
   }
@@ -93,7 +93,8 @@ export default class WebGL extends LifeCycle {
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
     })
-    this.renderer.outputEncoding = THREE.sRGBEncoding
+    this.renderer.outputEncoding = THREE.LinearEncoding
+    // this.renderer.outputEncoding = THREE.LinearEncoding
     this.renderer.debug.checkShaderErrors = true
     const resize = () => {
       this.renderer.setSize(window.innerWidth, window.innerHeight)

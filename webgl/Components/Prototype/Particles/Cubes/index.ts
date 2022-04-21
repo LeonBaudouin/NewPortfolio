@@ -47,9 +47,9 @@ export default class Cubes extends AbstractObject<
         uNormalTexture: { value: null },
         uMatcap: {
           value: null,
-          // value: new THREE.TextureLoader().load('./headset_2_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
-          // value: new THREE.TextureLoader().load('./particle_matcap.png', (t) => (t.encoding = THREE.sRGBEncoding)),
-          // value: new THREE.TextureLoader().load('./particles_test.png', (t) => (t.encoding = THREE.sRGBEncoding)),
+          // value: new THREE.TextureLoader().load('./headset_2_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
+          // value: new THREE.TextureLoader().load('./particle_matcap.png', (t) => (t.encoding = THREE.LinearEncoding)),
+          // value: new THREE.TextureLoader().load('./particles_test.png', (t) => (t.encoding = THREE.LinearEncoding)),
         },
         uSize: {
           value: 0,
@@ -65,10 +65,10 @@ export default class Cubes extends AbstractObject<
       watchEffect(() => {
         const value = object[key]
         if (typeof value == 'string')
-          uniform.value = textureLoader.load(value, (t) => (t.encoding = THREE.sRGBEncoding))
+          uniform.value = textureLoader.load(value, (t) => (t.encoding = THREE.LinearEncoding))
         if (typeof value == 'object' && 'isTexture' in value) uniform.value = value
         if (typeof value == 'object' && 'src' in value)
-          uniform.value = textureLoader.load(value.src, (t) => (t.encoding = THREE.sRGBEncoding))
+          uniform.value = textureLoader.load(value.src, (t) => (t.encoding = THREE.LinearEncoding))
       })
     reactiveUniforms(mat.uniforms, this.data, {
       matcap: textureWatch,

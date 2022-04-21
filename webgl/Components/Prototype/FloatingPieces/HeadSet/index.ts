@@ -26,10 +26,10 @@ export default class HeadSet extends AbstractObject<MainSceneContext> {
 
     const { geometry } = this.enableObject as THREE.Mesh
     const loader = new THREE.TextureLoader()
-    const headsetTexture = loader.load('./headset_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
-    const headsetLeatherTexture = loader.load('./headset_leather_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
-    const headsetLightTexture = loader.load('./headset_light_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
-    const aoTex = loader.load('./headset_ao.png', (t) => ((t.encoding = THREE.sRGBEncoding), (t.flipY = false)))
+    const headsetTexture = loader.load('./headset_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
+    const headsetLeatherTexture = loader.load('./headset_leather_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
+    const headsetLightTexture = loader.load('./headset_light_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
+    const aoTex = loader.load('./headset_ao.png', (t) => ((t.encoding = THREE.LinearEncoding), (t.flipY = false)))
 
     this.mesh = new THREE.Mesh(
       geometry,

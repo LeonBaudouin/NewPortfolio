@@ -26,7 +26,7 @@ export default class Crystal extends AbstractObject<NeededContext> {
     this.disableObject.visible = false
 
     const { geometry } = this.enableObject as THREE.Mesh
-    const texture = new THREE.TextureLoader().load('./crystal_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
+    const texture = new THREE.TextureLoader().load('./crystal_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
 
     this.mesh = new THREE.Mesh(geometry, new THREE.MeshMatcapMaterial({ matcap: texture }))
     this.object.add(this.mesh)

@@ -120,9 +120,9 @@ float isNorm(vec2 _st) {
 vec3 getDisplacedPosition(vec2 _position, vec2 basePosition) {
   vec2 uv = _position * vec2(1., -1.) + .5;
   vec3 defaultPosition = vec3(_position, 0.);
-  vec3 ripplePosition =  vec3(_position, texture2D(tRipples, uv).r);
+  vec3 ripplePosition =  vec3(_position, texture2D(tRipples, uv).r) * 0.5;
   ripplePosition =  mix(defaultPosition, ripplePosition, cremap(distToEdge(uv), 0., .5, 1., 0.));
-  ripplePosition.z += snoise(vec3(basePosition * .5, uTime * 0.1) + vec3(uTime, 0., 0.)) * .4;
+  ripplePosition.z += snoise(vec3(basePosition * 10., uTime * 0.1) + vec3(uTime, 0., 0.)) * 0.002;
   return ripplePosition;
 }
 
@@ -154,7 +154,8 @@ void main() {
   float light = cremap(dot(lightDir, my_normal), 0.5, 1., 0., .1);
 
   vec4 mirrorCoord = vUv;
-  mirrorCoord.xz += my_normal.xy * 0.1;
+
+  mirrorCoord.xy += my_normal.xy * 0.1;
   vec4 base = texture2DProj( tDiffuse, mirrorCoord );
   // base = linearToOutputTexel(base);
   vec3 c = blendOverlay( base.rgb, color ) + light;

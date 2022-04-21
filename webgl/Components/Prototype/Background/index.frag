@@ -34,7 +34,7 @@ void main() {
 	vec2 uv = gl_FragCoord.xy / uScreenResolution;
   float mixValue = dist + (random(uv * 100.) - .5) / 5.;
   vec3 color = mix(uDownColor, uUpColor, mixValue);
-  fragColor = vec4(color, 1.);
+  fragColor = linearToOutputTexel(vec4(color, 1.));
   // fragColor = vec4(vec3(height), 1.);
   // fragColor = vec4(eyeDirection, 1.);
 }

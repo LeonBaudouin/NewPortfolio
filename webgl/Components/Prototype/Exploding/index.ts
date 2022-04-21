@@ -12,8 +12,8 @@ export default class Exploding extends AbstractObject<
   constructor(context: WebGLAppContext, gltf: GLTF) {
     super(context)
     const loader = new THREE.TextureLoader()
-    const matcap = loader.load('./headset_light_2_256px.png', (t) => (t.encoding = THREE.sRGBEncoding))
-    const aoTex = loader.load('./Queen_ao.png', (t) => ((t.encoding = THREE.sRGBEncoding), (t.flipY = false)))
+    const matcap = loader.load('./headset_light_2_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
+    const aoTex = loader.load('./Queen_ao.png', (t) => ((t.encoding = THREE.LinearEncoding), (t.flipY = false)))
     const geom = (gltf.scene.children[0] as THREE.Mesh).geometry
 
     this.object = new THREE.Mesh(

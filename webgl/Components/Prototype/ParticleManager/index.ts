@@ -11,6 +11,12 @@ import Sandbox from './Behaviour/Sandbox'
 import Circle from './Behaviour/Circle'
 import gsap from 'gsap/all'
 
+const behaviours = {
+  Introduction,
+  TensionHold,
+  Sandbox,
+  Circle,
+}
 export default class ParticleManager extends AbstractObject<MainSceneContext> {
   private particles: Particles
 
@@ -34,7 +40,8 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
     // matcap: '/particle_matcap.png',
     // matcap: 'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
     // matcap: 'https://makio135.com/matcaps/64/3F3A2F_91D0A5_7D876A_94977B-64px.png',
-    matcap: 'https://makio135.com/matcaps/64/CCF6FA_9DD9EB_82C5D9_ACD4E4-64px.png',
+    // matcap: 'https://makio135.com/matcaps/64/CCF6FA_9DD9EB_82C5D9_ACD4E4-64px.png',
+    matcap: 'https://makio135.com/matcaps/64/EAEAEA_B5B5B5_CCCCCC_D4D4D4-64px.png',
     // matcap: './queen_256px.png',
     attractor: new THREE.Vector3(0, 0, -3),
     run: true,
@@ -42,17 +49,13 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
     normalTexture: null,
   })
 
-  constructor(context: MainSceneContext, { chess }: { chess: THREE.Mesh }) {
+  constructor(
+    context: MainSceneContext,
+    { chess, behaviour = 'Circle' }: { chess: THREE.Mesh; behaviour?: keyof typeof behaviours }
+  ) {
     super(context)
 
-    const behaviours = {
-      Introduction,
-      TensionHold,
-      Sandbox,
-      Circle,
-    }
-
-    const behaviourName = ref<keyof typeof behaviours>('Circle')
+    const behaviourName = ref<keyof typeof behaviours>(behaviour)
 
     this.context.tweakpane.addInput(behaviourName, 'value', {
       label: 'Particles Behaviour',
@@ -83,8 +86,8 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
     // chess.rotateX(0.3)
 
     chess.updateMatrix()
-    const sampleGeom = new THREE.TorusGeometry(4, 0.1, 4, 30)
-    // const sampleGeom = chess.geometry.clone()
+    // const sampleGeom = new THREE.TorusGeometry(4, 0.1, 4, 30)
+    const sampleGeom = chess.geometry.clone()
     sampleGeom.applyMatrix4(chess.matrix)
     const newMesh = new THREE.Mesh(sampleGeom, new THREE.MeshBasicMaterial())
     const sampler = new MeshSurfaceSampler(newMesh)

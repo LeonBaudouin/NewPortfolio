@@ -43,7 +43,7 @@ const particlesData = {
 
   still: {
     G: 10,
-    attractor: new THREE.Vector3(0, -1, 0),
+    attractor: new THREE.Vector3(0, 2, 0),
     capForce: true,
     fixOnAttractor: false,
     forceCap: { min: 0.07, max: 0.2 },
@@ -70,7 +70,7 @@ const particlesData = {
     sizeVariation: new THREE.Vector4(0.11, 0.14, 1, 0),
     size: 0.4,
     // matcap: 'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
-    attractor: new THREE.Vector3(0, -1, 0),
+    attractor: new THREE.Vector3(0, 2, 0),
   },
 }
 

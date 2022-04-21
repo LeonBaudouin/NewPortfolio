@@ -34,33 +34,33 @@ export default class ColumnsGLTF extends AbstractObject<MainSceneContext> {
     scene.traverse((o) => {
       // if (o.name.startsWith('Crystal')) {
       //   ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-      //     matcap: new THREE.TextureLoader().load('./crystal_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
+      //     matcap: new THREE.TextureLoader().load('./crystal_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
       //   })
       // }
       if (o.name.startsWith('Queen')) {
         ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-          matcap: new THREE.TextureLoader().load('./queen_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
+          matcap: new THREE.TextureLoader().load('./queen_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
         })
       }
       if (o.name.startsWith('Column')) {
         ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-          matcap: new THREE.TextureLoader().load('./column_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
+          matcap: new THREE.TextureLoader().load('./column_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
         })
       }
       if (o.name.startsWith('Rock')) {
         ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-          matcap: new THREE.TextureLoader().load('./rock_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
+          matcap: new THREE.TextureLoader().load('./rock_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
         })
         // ;(o as THREE.Mesh).material = new THREE.MeshBasicMaterial({
         //   map: new THREE.TextureLoader().load(
         //     './rockShadow.png',
-        //     (t) => ((t.flipY = false), (t.encoding = THREE.sRGBEncoding))
+        //     (t) => ((t.flipY = false), (t.encoding = THREE.LinearEncoding))
         //   ),
         // })
       }
       if (o.name.startsWith('Sand')) {
         ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-          matcap: new THREE.TextureLoader().load('./sand_256px.png', (t) => (t.encoding = THREE.sRGBEncoding)),
+          matcap: new THREE.TextureLoader().load('./sand_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
         })
       }
       if (o.name.startsWith('Raycast')) {

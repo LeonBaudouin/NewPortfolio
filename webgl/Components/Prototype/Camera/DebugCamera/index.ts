@@ -8,7 +8,7 @@ export default class DebugCamera extends AbstractObject<WebGLAppContext, THREE.P
 
   constructor(context: WebGLAppContext, { defaultPosition }: { defaultPosition: THREE.Vector3 }) {
     super(context)
-    this.object = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100)
+    this.object = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
     this.object.position.copy(defaultPosition)
 
     this.controls = new OrbitControls(this.object, this.context.renderer.domElement)

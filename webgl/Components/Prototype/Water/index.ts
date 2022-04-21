@@ -12,7 +12,7 @@ export default class Water extends AbstractObject<MainSceneContext> {
   private ripples: Ripples
   private material: THREE.ShaderMaterial
   private params = {
-    color: '#404040',
+    color: '#535151',
   }
   constructor({ tweakpane: parentTP, ...context }: MainSceneContext) {
     super({ tweakpane: parentTP.addFolder({ title: 'Water' }), ...context })

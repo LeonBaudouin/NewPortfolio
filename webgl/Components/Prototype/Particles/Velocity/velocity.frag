@@ -3,6 +3,7 @@ uniform sampler2D uFbo;
 uniform sampler2D uPositionFbo;
 uniform sampler2D uRandomForces;
 uniform sampler2D uAttractorsTexture;
+uniform sampler2D uAttractorsNormalTexture;
 uniform vec3 uAttractor;
 uniform bool uUseTexture;
 uniform bool uRotateAround;
@@ -71,7 +72,7 @@ void main() {
   inputData.xyz += uGravity;
 
 
-  bool rotateAround = uRotateAround;
+  bool rotateAround = uRotateAround && !uFixOnAttractor;
   // ------ ROTATE AROUND
   if (rotateAround) {
     float side = sign(rand(vUv+10.) - 0.5);
@@ -92,28 +93,31 @@ void main() {
   float amount = length(inputData.xyz);
   vec3 velocity = normalize(inputData.xyz);
 
-  bool capForce = uCapForce;
   float forceCap = uForceCap.x;
   // ------ CAP FORCE
-  float minForce = capForce
-    ? remap(rand(vUv+1.), 0., 1., forceCap - 0.02, forceCap + 0.02)
-    : 0.;
+  float minForce = uFixOnAttractor ? 0. : remap(rand(vUv+1.), 0., 1., forceCap - 0.02, forceCap + 0.02);
   amount = max(amount * 0.98, minForce);
 
 
   bool fixOnAttractor = uFixOnAttractor;
-  // ------ FIX ON ATTRACTOR
   if (fixOnAttractor) {
-    if (amount < 0.05 && length(positionData.xyz - attractor.xyz) < 0.05) {
-      amount = 0.001;
-      velocity = dir;
-    }
-    if (amount < 0.01 && length(positionData.xyz - attractor.xyz) < 0.01) {
-      amount = 0.;
-    }
+    velocity = mix(velocity, dir, cremap(dist, 0., 5., 1., 0.05));
+    amount = min(amount, dist);
   }
+  // ------ FIX ON ATTRACTOR
+  // if (fixOnAttractor) {
+  //   vec3 normal = texture2D(uAttractorsNormalTexture, vUv).xyz;
+  //   velocity = mix(dir, normal, 0.5);
+  //   float dist = length(positionData.xyz - attractor.xyz);
+  //   amount = min(dist, 0.2);
+  //   if (dist < 0.01) {
+  //     amount = 0.0001;
+  //   }
+  // }
 
   inputData.xyz = velocity * amount;
 
-	gl_FragColor = mix(inputData, baseData, remap(rand(vUv + 10.), 0., 1., uInertia.x, uInertia.y));
+  float inertia = uFixOnAttractor ? 0. : remap(rand(vUv + 10.), 0., 1., uInertia.x, uInertia.y);
+
+	gl_FragColor = mix(inputData, baseData, inertia);
 }
