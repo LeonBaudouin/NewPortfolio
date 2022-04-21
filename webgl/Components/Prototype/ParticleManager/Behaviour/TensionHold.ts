@@ -44,7 +44,6 @@ const particlesData = {
   still: {
     G: 10,
     attractor: new THREE.Vector3(0, 2, 0),
-    capForce: true,
     fixOnAttractor: false,
     forceCap: { min: 0.07, max: 0.2 },
     gravity: new THREE.Vector3(0, 0.004, 0),
@@ -58,7 +57,6 @@ const particlesData = {
   },
   intense: {
     // useTexture: false,
-    capForce: true,
     // rotateAround: true,
     // fixOnAttractor: false,
     // G: 10,

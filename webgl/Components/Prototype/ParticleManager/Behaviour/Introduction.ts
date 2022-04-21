@@ -5,7 +5,6 @@ import pseudoDeepAssign from '~~/utils/pseudoDeepAssign'
 const particlesData = {
   start: {
     attractor: new THREE.Vector3(-16, -1, -20),
-    capForce: false,
     fixOnAttractor: false,
     forceCap: { min: 0.07, max: 0.1 },
     gravity: new THREE.Vector3(0, 0, 0),
@@ -20,7 +19,6 @@ const particlesData = {
   },
   endDrag: {
     // useTexture: false,
-    capForce: true,
     // rotateAround: true,
     // fixOnAttractor: false,
     // G: 10,
@@ -37,7 +35,6 @@ const particlesData = {
 
   complete: {
     // useTexture: false,
-    capForce: true,
     // rotateAround: true,
     // fixOnAttractor: false,
     // G: 10,

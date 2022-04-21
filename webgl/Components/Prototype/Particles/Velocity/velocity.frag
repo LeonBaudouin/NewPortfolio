@@ -7,7 +7,6 @@ uniform sampler2D uAttractorsNormalTexture;
 uniform vec3 uAttractor;
 uniform bool uUseTexture;
 uniform bool uRotateAround;
-uniform bool uCapForce;
 uniform bool uFixOnAttractor;
 uniform float uG;
 uniform vec2 uInertia;

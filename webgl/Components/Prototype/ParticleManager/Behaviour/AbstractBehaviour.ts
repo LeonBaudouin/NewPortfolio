@@ -14,7 +14,6 @@ export default abstract class AbstractBehaviour extends AbstractComponent<Behavi
   private dummyParams = {
     G: 10,
     attractor: new THREE.Vector3(0, 0, -3),
-    capForce: true,
     fixOnAttractor: false,
     forceCap: { min: 0, max: 0 },
     gravity: new THREE.Vector3(0.003, 0.003, 0),

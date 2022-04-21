@@ -10,7 +10,6 @@ import reactiveUniforms, { CustomWatch } from '~~/utils/uniforms/reactiveUniform
 
 export type VelocityParams = {
   useTexture?: boolean
-  capForce?: boolean
   rotateAround?: boolean
   fixOnAttractor?: boolean
   G?: number
@@ -33,7 +32,6 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
 
   public static DEFAULT_PARAMS: Omit<VelocityData, 'textureSize' | ''> = reactive({
     useTexture: false,
-    capForce: true,
     rotateAround: true,
     fixOnAttractor: false,
     G: 10,
@@ -84,7 +82,6 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
         uAttractor: { value: new THREE.Vector3() },
         uRandomForces: { value: randomForceTex },
         uUseTexture: { value: false },
-        uCapForce: { value: true },
         uRotateAround: { value: true },
         uFixOnAttractor: { value: false },
         uG: { value: 1 },
@@ -111,7 +108,6 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
 
     this.toUnbind(...unbindArray)
 
-    this.context.tweakpane.addInput(this.data, 'capForce', { label: 'Cap Force' })
     this.context.tweakpane.addInput(this.data, 'useTexture', { label: 'Follow Texture' })
     this.context.tweakpane.addInput(this.data, 'rotateAround', { label: 'Rotate Around' })
     this.context.tweakpane.addInput(this.data, 'fixOnAttractor', { label: 'Fix On Attractor' })

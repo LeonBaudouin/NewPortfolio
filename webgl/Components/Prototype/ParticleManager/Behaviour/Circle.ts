@@ -5,7 +5,6 @@ import * as THREE from 'three'
 const particleParams = {
   G: 10,
   attractor: new THREE.Vector3(0, 0, -3),
-  capForce: true,
   fixOnAttractor: false,
   forceCap: { min: 0.029032258064516134, max: 0.10967741935483871 },
   gravity: new THREE.Vector3(0.003, 0.003, 0),

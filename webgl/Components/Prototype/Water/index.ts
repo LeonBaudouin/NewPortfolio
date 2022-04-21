@@ -15,7 +15,7 @@ export default class Water extends AbstractObject<MainSceneContext> {
     color: '#535151',
   }
   constructor({ tweakpane: parentTP, ...context }: MainSceneContext) {
-    super({ tweakpane: parentTP.addFolder({ title: 'Water' }), ...context })
+    super({ tweakpane: parentTP.addFolder({ title: 'Water', expanded: false }), ...context })
 
     this.ripples = new Ripples(this.context)
     const plane = new Reflector(new THREE.PlaneGeometry(200, 200), {

@@ -5,7 +5,6 @@ import pseudoDeepAssign from '~~/utils/pseudoDeepAssign'
 const particlesData = {
   textureSize: new THREE.Vector2(128, 128),
   useTexture: false,
-  capForce: true,
   rotateAround: true,
   fixOnAttractor: false,
   G: 10,

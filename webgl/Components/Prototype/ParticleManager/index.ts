@@ -25,7 +25,6 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
   private particlesParams = reactive<Required<ParticleSystemParams>>({
     textureSize: new THREE.Vector2(128, 128),
     useTexture: false,
-    capForce: true,
     rotateAround: true,
     fixOnAttractor: false,
     G: 10,
@@ -53,7 +52,7 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
     context: MainSceneContext,
     { chess, behaviour = 'Circle' }: { chess: THREE.Mesh; behaviour?: keyof typeof behaviours }
   ) {
-    super(context)
+    super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Particle Manager' }) })
 
     const behaviourName = ref<keyof typeof behaviours>(behaviour)
 
