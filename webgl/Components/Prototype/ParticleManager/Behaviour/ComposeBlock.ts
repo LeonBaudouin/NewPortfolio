@@ -69,7 +69,7 @@ export default class ComposeBlock extends AbstractBehaviour {
   constructor(context: BehaviourContext) {
     super(context)
 
-    const paramName = ref<keyof typeof params>('away')
+    const paramName = ref<keyof typeof params>('block')
     pseudoDeepAssign(this.context.particleParams, params[paramName.value])
 
     this.context.tweakpane.addInput(paramName, 'value', {

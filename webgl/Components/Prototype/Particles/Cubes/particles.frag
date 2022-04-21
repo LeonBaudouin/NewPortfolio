@@ -1,13 +1,21 @@
-uniform sampler2D uPosTexture;
+uniform sampler2D uTexture;
 uniform sampler2D uMatcap;
 
 varying vec3 vViewPosition;
 varying vec3 vNormal;
+varying vec2 vUv;
+varying vec2 vImageUv;
+varying float vImageAlpha;
 
 #include <fog_pars_fragment>
 
-void main()
-{
+float isNorm(vec2 _st) {
+  if (_st.x > 1. || _st.y > 1. || _st.x < 0. || _st.y < 0.)
+    return 0.;
+  return 1.;
+}
+
+void main() {
 	vec3 normal = normalize( vNormal );
 
 	vec3 viewDir = normalize( vViewPosition );
@@ -18,7 +26,14 @@ void main()
   // float alpha = step(length(uv - vec2(.5)), .5);
 
   // if (alpha < 0.01) discard;
-  gl_FragColor = vec4(texture2D(uMatcap, matcapUv).rgb, 1.);
+
+
+
+  vec3 color = texture2D(uMatcap, matcapUv).rgb;
+  color = mix(color, texture2D(uTexture, vImageUv).rgb, isNorm(vUv) * vImageAlpha);
+
+  gl_FragColor = vec4(color, 1.);
+
   #include <fog_fragment>
   gl_FragColor = linearToOutputTexel( gl_FragColor );
   // gl_FragColor = vec4((normal * 0.5) + 0.5, 1.);

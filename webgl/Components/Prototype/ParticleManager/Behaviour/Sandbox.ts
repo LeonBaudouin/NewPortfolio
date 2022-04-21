@@ -3,7 +3,6 @@ import * as THREE from 'three'
 import pseudoDeepAssign from '~~/utils/pseudoDeepAssign'
 
 const particlesData = {
-  textureSize: new THREE.Vector2(128, 128),
   useTexture: false,
   rotateAround: true,
   fixOnAttractor: false,

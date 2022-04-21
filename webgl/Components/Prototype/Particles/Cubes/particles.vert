@@ -6,11 +6,36 @@ uniform sampler2D uVelocityTexture;
 uniform sampler2D uNormalTexture;
 uniform float uSize;
 uniform vec4 uSizeVariation;
+uniform vec4 uTextureEdges;
+uniform float uTextureAlpha;
 
 varying vec3 vViewPosition;
 varying vec3 vNormal;
+varying vec2 vUv;
+varying vec2 vImageUv;
+varying float vImageAlpha;
 
 #include <fog_pars_vertex>
+
+vec2 adjustUvToImage(vec2 _st, vec2 center, float texRatio, float quadRatio, bool fit) {
+  float correctedRatio = quadRatio / texRatio;
+  vec2 imageUv = _st - center;
+  imageUv *= vec2(correctedRatio, 1.);
+  if (fit)
+    imageUv /= mix(1. / correctedRatio, correctedRatio, step(correctedRatio, 1.));
+  imageUv /= mix(correctedRatio, 1., step(correctedRatio, 1.));
+  imageUv += center;
+  return imageUv;
+}
+
+vec3 getTriPlanarBlend(vec3 _wNorm){
+	// in wNorm is the world-space normal of the fragment
+	vec3 blending = abs( _wNorm );
+	blending = normalize(max(blending, 0.00001)); // Force weights to sum to 1.0
+	float b = (blending.x + blending.y + blending.z);
+	blending /= vec3(b, b, b);
+	return blending;
+}
 
 mat3 calcLookAtMatrix(vec3 origin, vec3 target, float roll) {
 	vec3 rr = vec3(sin(roll), cos(roll), 0.0);
@@ -60,11 +85,21 @@ void main() {
   vec3 newPosition = (localRotation * vec4(position, 1.0)).xyz;
 
   vNormal = normalMatrix * (localRotation * vec4(normal, 0.)).rgb;
+
   vec4 mvPosition = modelViewMatrix * vec4((newPosition * scale + offset), 1.0);
+
+
 	vViewPosition = - mvPosition.xyz;
 
-  float culling = dot(vViewPosition, vNormal) > 0. ? 1. : 0.;
-  mvPosition = modelViewMatrix * vec4((newPosition * scale * culling + offset), 1.0);
+  vec3 worldPos = (modelMatrix * vec4((newPosition * scale + offset), 1.0)).xyz;
+
+  float triplanarFactor = getTriPlanarBlend((localRotation * vec4(normal, 0.)).rgb).x;
+  vImageAlpha = triplanarFactor * cremap(diff, 0., 0.2, 1., 0.) * cremap(speed, 0., 0.1, 1., 0.) * uTextureAlpha;
+  vUv.x = remap(worldPos.z, uTextureEdges.y, uTextureEdges.w, 0., 1.);
+  vUv.y = remap(worldPos.y, uTextureEdges.x, uTextureEdges.z, 0., 1.);
+  float quadRatio = abs(uTextureEdges.y - uTextureEdges.w) / abs(uTextureEdges.x - uTextureEdges.z);
+  float texRatio = 16./9.;
+  vImageUv = adjustUvToImage(vUv, vec2(0.58, 0.5), texRatio, quadRatio, false);
 
   gl_Position = projectionMatrix * mvPosition;
 
