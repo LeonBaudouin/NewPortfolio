@@ -40,42 +40,34 @@ const particlesData = {
   //   // matcap: 'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
   //   attractor: new THREE.Vector3(0, -1, 0),
   // },
-
-  still: {
+  default: {
     G: 10,
     attractor: new THREE.Vector3(0, 2, 0),
     fixOnAttractor: false,
-    forceCap: { min: 0.07, max: 0.2 },
     gravity: new THREE.Vector3(0, 0.004, 0),
-    inertia: { min: 0, max: 0.6 },
     rotateAround: true,
     rotationDirection: new THREE.Euler(-2.35, -0.03, 0.01),
     rotationStrength: new THREE.Vector2(0.01, 0.0125),
     size: 0.4,
-    sizeVariation: new THREE.Vector4(0.08, 0.11, 1, 0),
     useTexture: false,
   },
+  still: {
+    inertia: { min: 0, max: 0.6 },
+    forceCap: { min: 0.07, max: 0.2 },
+    sizeVariation: new THREE.Vector4(0.08, 0.11, 1, 0),
+  },
   intense: {
-    // useTexture: false,
-    // rotateAround: true,
-    // fixOnAttractor: false,
-    // G: 10,
     inertia: { min: 0.5, max: 1 },
     forceCap: { min: 0.14, max: 0.2 },
-    rotationStrength: new THREE.Vector2(0.01, 0.0125),
-    gravity: new THREE.Vector3(0, 0.004, 0),
-    rotationDirection: new THREE.Euler(-2.35, -0.03, 0.01),
     sizeVariation: new THREE.Vector4(0.11, 0.14, 1, 0),
-    size: 0.4,
     // matcap: 'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
-    attractor: new THREE.Vector3(0, 2, 0),
   },
 }
 
 export default class TensionHold extends AbstractBehaviour {
   constructor(context: BehaviourContext) {
     super(context)
-    this.transition(particlesData.still)
+    this.transition({ ...particlesData.still, ...particlesData.default })
 
     const data = reactive({
       factor: 0,

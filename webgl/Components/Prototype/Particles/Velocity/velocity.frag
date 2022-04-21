@@ -58,10 +58,10 @@ void main() {
   // ------ ATTRACTION
   if (length(position - attractor) == 0.) attractor.x += 0.1;
   float dist = length(position - attractor);
-  dist = max(dist - 0.1, 0.);
+  float gDist = max(dist - 0.1, 0.);
 
   float G = uG;
-  float force = G * ((0.001 + rand(vUv) * 100.) / (dist * 0.01));
+  float force = G * ((0.001 + rand(vUv) * 100.) / (gDist * 0.01));
   // force = min(force, 0.01);
   force = min(force, uForceCap.y * 0.1);
 
@@ -100,8 +100,10 @@ void main() {
 
   bool fixOnAttractor = uFixOnAttractor;
   if (fixOnAttractor) {
-    velocity = mix(velocity, dir, cremap(dist, 0., 5., 1., 0.05));
+    // velocity = mix(velocity, dir, cremap(dist, 0., 5., 1., 0.1));
+    velocity = dir;
     amount = min(amount, dist);
+    if (dist < 0.01) amount = 0.;
   }
   // ------ FIX ON ATTRACTOR
   // if (fixOnAttractor) {

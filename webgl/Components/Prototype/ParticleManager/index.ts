@@ -10,12 +10,14 @@ import TensionHold from './Behaviour/TensionHold'
 import Sandbox from './Behaviour/Sandbox'
 import Circle from './Behaviour/Circle'
 import gsap from 'gsap/all'
+import ComposeBlock from './Behaviour/ComposeBlock'
 
 const behaviours = {
   Introduction,
   TensionHold,
   Sandbox,
   Circle,
+  ComposeBlock,
 }
 export default class ParticleManager extends AbstractObject<MainSceneContext> {
   private particles: Particles

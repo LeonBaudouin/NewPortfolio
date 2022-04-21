@@ -33,13 +33,21 @@ export default abstract class AbstractBehaviour extends AbstractComponent<Behavi
     return this.progress.value === 1
   }
 
+  private tween: gsap.core.Tween
+
   protected transition(newParams: Omit<ParticleSystemParams, 'textureSize'>) {
     pseudoDeepAssign(this.dummyParams, this.context.particleParams as any)
 
-    gsap.to(this.progress, { value: 1 })
-
-    watch(this.progress, (p) => {
-      pseudoDeepLerp(this.dummyParams, newParams as any, this.context.particleParams, p.value)
-    })
+    this.tween?.kill()
+    this.tween = gsap.fromTo(
+      this.progress,
+      { value: 0 },
+      {
+        value: 1,
+        onUpdate: () => {
+          pseudoDeepLerp(this.dummyParams, newParams as any, this.context.particleParams, this.progress.value)
+        },
+      }
+    )
   }
 }

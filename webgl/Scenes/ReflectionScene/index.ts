@@ -181,7 +181,7 @@ export default class ReflectionScene extends AbstractScene<WebGLAppContext, THRE
       monolith.position.y = 2.25
       // this.scene.add(monolith)
 
-      this.particles = new ParticleManager(this.genContext(), { chess: monolith, behaviour: 'Sandbox' })
+      this.particles = new ParticleManager(this.genContext(), { chess: monolith, behaviour: 'ComposeBlock' })
       this.scene.add(this.particles.object)
 
       // this.scene.add(gltf.scene)
