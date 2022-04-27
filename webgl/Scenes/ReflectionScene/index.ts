@@ -106,86 +106,108 @@ export default class ReflectionScene extends AbstractScene<WebGLAppContext, THRE
     })
 
     const gltfLoader = new GLTFLoader()
-    gltfLoader.loadAsync('./scene_3.glb').then((gltf) => {
-      // gltf.scene.traverse((o) => {
-      //   if (o.name.startsWith('Column')) {
-      //     ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-      //       matcap: new THREE.TextureLoader().load('./column_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
-      //     })
-      //   }
-      // })
-      const headset = gltf.scene.getObjectByName('HeadSet')! as THREE.Mesh
-      // const loader = new THREE.TextureLoader()
-      // const headsetTexture = loader.load('./headset_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
-      // const headsetLeatherTexture = loader.load(
-      //   './headset_leather_256px.png',
-      //   (t) => (t.encoding = THREE.LinearEncoding)
-      // )
-      // const headsetLightTexture = loader.load('./headset_light_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
-      // const aoTex = loader.load('./headset_ao.png', (t) => ((t.encoding = THREE.LinearEncoding), (t.flipY = false)))
+    Promise.all([gltfLoader.loadAsync('./scene_3.glb'), gltfLoader.loadAsync('./paper.glb')]).then(
+      ([camGltf, paperGltf]) => {
+        // gltf.scene.traverse((o) => {
+        //   if (o.name.startsWith('Column')) {
+        //     ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
+        //       matcap: new THREE.TextureLoader().load('./column_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
+        //     })
+        //   }
+        // })
+        // const headset = gltf.scene.getObjectByName('HeadSet')! as THREE.Mesh
+        // const loader = new THREE.TextureLoader()
+        // const headsetTexture = loader.load('./headset_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
+        // const headsetLeatherTexture = loader.load(
+        //   './headset_leather_256px.png',
+        //   (t) => (t.encoding = THREE.LinearEncoding)
+        // )
+        // const headsetLightTexture = loader.load('./headset_light_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
+        // const aoTex = loader.load('./headset_ao.png', (t) => ((t.encoding = THREE.LinearEncoding), (t.flipY = false)))
 
-      // headset.material = new THREE.ShaderMaterial({
-      //   fragmentShader: fragment,
-      //   vertexShader: vertex,
-      //   vertexColors: true,
-      //   fog: true,
-      //   uniforms: {
-      //     uHeadsetMatcap: { value: headsetTexture },
-      //     uLeatherMatcap: { value: headsetLeatherTexture },
-      //     uLightMatcap: { value: headsetLightTexture },
-      //     uAoMap: { value: aoTex },
-      //     uAoAmount: { value: 1 },
-      //     ...THREE.UniformsLib['fog'],
-      //   },
-      // })
+        // headset.material = new THREE.ShaderMaterial({
+        //   fragmentShader: fragment,
+        //   vertexShader: vertex,
+        //   vertexColors: true,
+        //   fog: true,
+        //   uniforms: {
+        //     uHeadsetMatcap: { value: headsetTexture },
+        //     uLeatherMatcap: { value: headsetLeatherTexture },
+        //     uLightMatcap: { value: headsetLightTexture },
+        //     uAoMap: { value: aoTex },
+        //     uAoAmount: { value: 1 },
+        //     ...THREE.UniformsLib['fog'],
+        //   },
+        // })
 
-      const plane = gltf.scene.getObjectByName('Plane')!
-      plane.visible = false
-      copyWorldMatrix(gltf.cameras[0], this.mainCamera.object)
-      // this.mainCamera.object.fov = (gltf.cameras[0] as THREE.PerspectiveCamera).fov
-      this.water = new Water(this.genContext())
-      this.scene.add(this.water.object)
+        const plane = camGltf.scene.getObjectByName('Plane')!
+        plane.visible = false
+        copyWorldMatrix(camGltf.cameras[0], this.mainCamera.object)
+        // this.mainCamera.object.fov = (gltf.cameras[0] as THREE.PerspectiveCamera).fov
+        this.water = new Water(this.genContext())
+        this.scene.add(this.water.object)
 
-      const cloud1 = new THREE.Mesh(
-        new THREE.PlaneGeometry(2.43, 1),
-        new THREE.MeshBasicMaterial({
-          map: new THREE.TextureLoader().load('cloud2.png'),
-          transparent: true,
-          fog: false,
+        const cloud1 = new THREE.Mesh(
+          new THREE.PlaneGeometry(2.43, 1),
+          new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('cloud2.png'),
+            transparent: true,
+            fog: false,
+          })
+        )
+        this.scene.add(cloud1)
+        cloud1.position.x = -100
+        cloud1.position.y = 9
+        cloud1.position.z = 30
+        cloud1.scale.multiplyScalar(20)
+        cloud1.rotateY(Math.PI / 2)
+
+        const cloud2 = new THREE.Mesh(
+          new THREE.PlaneGeometry(2.43, 1),
+          new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('cloud3.webp'),
+            transparent: true,
+            fog: false,
+          })
+        )
+        this.scene.add(cloud2)
+        cloud2.position.x = -100
+        cloud2.position.y = 9
+        cloud2.position.z = -30
+        cloud2.scale.multiplyScalar(20)
+        cloud2.rotateY(Math.PI / 2)
+
+        const monolith = new THREE.Mesh(
+          new THREE.PlaneGeometry(1.3, 4.8),
+          new THREE.MeshBasicMaterial({ color: '#eee' })
+        )
+        monolith.rotateY(Math.PI / 2)
+        monolith.position.y = 2.25
+        // this.scene.add(monolith)
+
+        const monolith2 = new THREE.Mesh(
+          new THREE.BoxGeometry(1.3, 4.8, 1.3),
+          // new THREE.MeshBasicMaterial({ color: '#eee' })
+          new THREE.MeshMatcapMaterial({
+            matcap: new THREE.TextureLoader().load(
+              'https://makio135.com/matcaps/64/EAEAEA_B5B5B5_CCCCCC_D4D4D4-64px.png'
+            ),
+          })
+        )
+        monolith2.rotateY(Math.PI / 4)
+        monolith2.position.y = 2.25
+        // this.scene.add(monolith2)
+
+        this.particles = new ParticleManager(this.genContext(), {
+          chess: monolith,
+          behaviour: 'Sandbox',
+          geometry: (paperGltf.scene.getObjectByName('Plane') as THREE.Mesh).geometry,
         })
-      )
-      this.scene.add(cloud1)
-      cloud1.position.x = -100
-      cloud1.position.y = 9
-      cloud1.position.z = 30
-      cloud1.scale.multiplyScalar(20)
-      cloud1.rotateY(Math.PI / 2)
+        this.scene.add(this.particles.object)
 
-      const cloud2 = new THREE.Mesh(
-        new THREE.PlaneGeometry(2.43, 1),
-        new THREE.MeshBasicMaterial({
-          map: new THREE.TextureLoader().load('cloud3.webp'),
-          transparent: true,
-          fog: false,
-        })
-      )
-      this.scene.add(cloud2)
-      cloud2.position.x = -100
-      cloud2.position.y = 9
-      cloud2.position.z = -30
-      cloud2.scale.multiplyScalar(20)
-      cloud2.rotateY(Math.PI / 2)
-
-      const monolith = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 4.8), new THREE.MeshBasicMaterial({ color: '#eee' }))
-      monolith.rotateY(Math.PI / 2)
-      monolith.position.y = 2.25
-      // this.scene.add(monolith)
-
-      this.particles = new ParticleManager(this.genContext(), { chess: monolith, behaviour: 'ComposeBlock' })
-      this.scene.add(this.particles.object)
-
-      // this.scene.add(gltf.scene)
-    })
+        // this.scene.add(gltf.scene)
+      }
+    )
     // gltfLoader.loadAsync('./Blender/split_queen.gltf').then((gltf) => {
     //   const exploding = new Exploding(this.genContext(), gltf)
     //   this.scene.add(exploding.object)

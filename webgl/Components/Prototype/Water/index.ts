@@ -20,8 +20,8 @@ export default class Water extends AbstractObject<MainSceneContext> {
     this.ripples = new Ripples(this.context)
     const plane = new Reflector(new THREE.PlaneGeometry(200, 200), {
       clipBias: 0.003,
-      textureWidth: window.innerWidth * window.devicePixelRatio,
-      textureHeight: window.innerHeight * window.devicePixelRatio,
+      textureWidth: window.innerWidth /* * window.devicePixelRatio*/,
+      textureHeight: window.innerHeight /* * window.devicePixelRatio*/,
       shader: {
         uniforms: {
           color: { value: null },
@@ -59,7 +59,7 @@ export default class Water extends AbstractObject<MainSceneContext> {
   }
 
   public tick(time: number, delta: number): void {
-    this.ripples.tick(time, delta)
+    // this.ripples.tick(time, delta)
     this.ripples.texture.wrapS = THREE.RepeatWrapping
     this.ripples.texture.wrapT = THREE.RepeatWrapping
     this.material.uniforms.tRipples.value = this.ripples.texture

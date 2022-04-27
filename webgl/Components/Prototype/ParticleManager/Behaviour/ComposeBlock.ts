@@ -15,7 +15,8 @@ const params = {
     rotationDirection: new THREE.Euler(2.43, -1.27, -0.54),
     rotationStrength: new THREE.Vector2(0.01, 0.013),
     size: 1,
-    sizeVariation: new THREE.Vector4(0.05, 0.15, 0.0, 0.11),
+    // sizeVariation: new THREE.Vector4(0.05, 0.15, 0.0, 0.11),
+    sizeVariation: new THREE.Vector4(0.05, 0.15, 1, 0.11),
     useTexture: false,
   },
   rotate: {
@@ -30,7 +31,8 @@ const params = {
     rotationDirection: new THREE.Euler(2.43, -1.27, -0.54),
     rotationStrength: new THREE.Vector2(0.01, 0.013),
     size: 1,
-    sizeVariation: new THREE.Vector4(0.05, 0.15, 0, 0.11),
+    // sizeVariation: new THREE.Vector4(0.05, 0.15, 0, 0.11),
+    sizeVariation: new THREE.Vector4(0.05, 0.15, 1, 1),
     useTexture: false,
   },
   moveAway: {
@@ -45,7 +47,8 @@ const params = {
     rotationDirection: new THREE.Euler(2.43, -1.27, -0.54),
     rotationStrength: new THREE.Vector2(0.01, 0.013),
     size: 1,
-    sizeVariation: new THREE.Vector4(0.05, 0.15, 0, 0.11),
+    // sizeVariation: new THREE.Vector4(0.05, 0.15, 0, 0.11),
+    sizeVariation: new THREE.Vector4(0.05, 0.15, 1, 1),
     useTexture: true,
   },
   block: {
@@ -60,7 +63,8 @@ const params = {
     rotationDirection: new THREE.Euler(2.43, -1.27, -0.54),
     rotationStrength: new THREE.Vector2(0.01, 0.013),
     size: 1,
-    sizeVariation: new THREE.Vector4(0.05, 0.15, 0.1, 0.11),
+    // sizeVariation: new THREE.Vector4(0.05, 0.15, 0.1, 0.11),
+    sizeVariation: new THREE.Vector4(0.05, 0.15, 1, 1),
     useTexture: true,
   },
 }

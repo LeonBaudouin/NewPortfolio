@@ -11,6 +11,7 @@ export type CubesParams = {
   matcap?: string | THREE.Texture
   textureSize: THREE.Vector2
   normalTexture?: null | THREE.Texture
+  geometry?: null | THREE.BufferGeometry
 }
 
 export type CubesData = Required<CubesParams>
@@ -26,6 +27,7 @@ export default class Cubes extends AbstractObject<
     size: 0.5,
     matcap: '/particle_matcap.png',
     normalTexture: null,
+    geometry: null,
   })
 
   constructor(context: WebGLAppContext, params: CubesParams) {
@@ -38,7 +40,8 @@ export default class Cubes extends AbstractObject<
     const mat = new THREE.ShaderMaterial({
       vertexShader: particlesVertex,
       fragmentShader: particlesFragment,
-      side: THREE.BackSide,
+      // side: THREE.BackSide,
+      side: THREE.DoubleSide,
       fog: true,
       uniforms: {
         uPosTexture: { value: null },
@@ -86,7 +89,7 @@ export default class Cubes extends AbstractObject<
     //     label: 'Matcap',
     //   })
 
-    const origGeometry = new THREE.BoxBufferGeometry()
+    const origGeometry: THREE.BufferGeometry = this.data.geometry || new THREE.BoxBufferGeometry()
     const geometry = new THREE.InstancedBufferGeometry()
 
     geometry.instanceCount = params.textureSize.x * params.textureSize.y

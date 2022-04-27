@@ -25,18 +25,18 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
   private behaviour: AbstractBehaviour
 
   private particlesParams = reactive<Required<ParticleSystemParams>>({
-    textureSize: new THREE.Vector2(128, 128),
+    textureSize: new THREE.Vector2(16, 16),
     useTexture: false,
     rotateAround: true,
     fixOnAttractor: false,
     G: 10,
-    inertia: { min: 0.2, max: 0.5 },
+    inertia: { min: 0.74, max: 0.95 },
     forceCap: { min: 0.07, max: 0.1 },
     rotationStrength: new THREE.Vector2(0.01, 0.0125),
     gravity: new THREE.Vector3(0, 0, 0),
     rotationDirection: new THREE.Euler(0.85, 0.01, 0),
     sizeVariation: new THREE.Vector4(0.07, 0.28, 0, 0.25),
-    size: 1,
+    size: 0.5,
     // matcap: 'https://makio135.com/matcaps/64/2EAC9E_61EBE3_4DDDD1_43D1C6-64px.png',
     // matcap: '/particle_matcap.png',
     // matcap: 'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
@@ -48,13 +48,20 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
     run: true,
     attractorsTexture: null,
     normalTexture: null,
+    geometry: null,
   })
 
   constructor(
     context: MainSceneContext,
-    { chess, behaviour = 'Circle' }: { chess: THREE.Mesh; behaviour?: keyof typeof behaviours }
+    {
+      chess,
+      behaviour = 'Circle',
+      geometry,
+    }: { chess: THREE.Mesh; behaviour?: keyof typeof behaviours; geometry?: THREE.BufferGeometry }
   ) {
     super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Particle Manager' }) })
+
+    if (geometry) this.particlesParams.geometry = geometry
 
     const behaviourName = ref<keyof typeof behaviours>(behaviour)
 
