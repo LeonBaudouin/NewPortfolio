@@ -17,7 +17,7 @@ export default class Position extends AbstractComponent<WebGLAppContext> {
     super(context)
 
     const positionArray = new Float32Array(new Array(size.x * size.y * 4))
-    inSphere(positionArray, { radius: 50, center: startPosition.toArray() }, true)
+    inSphere(positionArray, { radius: 2, center: startPosition.toArray() }, true)
     const posInitTexture = new THREE.DataTexture(positionArray, size.x, size.y, THREE.RGBAFormat, THREE.FloatType)
     posInitTexture.needsUpdate = true
 

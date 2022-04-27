@@ -186,7 +186,7 @@ export default class ReflectionScene extends AbstractScene<WebGLAppContext, THRE
         // this.scene.add(monolith)
 
         const monolith2 = new THREE.Mesh(
-          new THREE.BoxGeometry(1.3, 4.8, 1.3),
+          new THREE.BoxGeometry(0.8, 4.8, 0.8),
           // new THREE.MeshBasicMaterial({ color: '#eee' })
           new THREE.MeshMatcapMaterial({
             matcap: new THREE.TextureLoader().load(
@@ -196,7 +196,7 @@ export default class ReflectionScene extends AbstractScene<WebGLAppContext, THRE
         )
         monolith2.rotateY(Math.PI / 4)
         monolith2.position.y = 2.25
-        // this.scene.add(monolith2)
+        this.scene.add(monolith2)
 
         this.particles = new ParticleManager(this.genContext(), {
           chess: monolith,

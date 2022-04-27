@@ -119,17 +119,15 @@ float isNorm(vec2 _st) {
 
 vec3 getDisplacedPosition(vec2 _position, vec2 basePosition) {
   vec2 uv = _position * vec2(1., -1.) + .5;
-  vec3 defaultPosition = vec3(_position, 0.);
-  vec3 ripplePosition =  vec3(_position, texture2D(tRipples, uv).r) * 0.5;
-  ripplePosition =  mix(defaultPosition, ripplePosition, cremap(distToEdge(uv), 0., .5, 1., 0.));
-  ripplePosition.z += snoise(vec3(basePosition * 10., uTime * 0.1) + vec3(uTime, 0., 0.)) * 0.002;
-  return ripplePosition;
+  float height = texture2D(tRipples, uv).r * 0.5;
+  height *= cremap(distToEdge(uv), 0., .5, 1., 0.);
+  height += snoise(vec3(basePosition * 10., uTime * 0.1) + vec3(uTime, 0., 0.)) * 0.002;
+  return vec3(_position, height);
 }
 
 void main() {
   #include <logdepthbuf_fragment>
 
-  float M_PI = 1.57079632679;
   float distanceA = 1. / 512.;
   float distanceB = 1. / 512.;
 
