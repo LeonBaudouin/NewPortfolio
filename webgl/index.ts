@@ -8,11 +8,11 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { Params } from '~~/plugins/params.client'
 import vertexShader from './index.vert?raw'
 import fragmentShader from './index.frag?raw'
-import ReflectionScene from './Scenes/ReflectionScene'
+import ParticlesScene from './Scenes/ParticlesScene'
 
 type Scenes = {
   main: MainScene
-  reflection: ReflectionScene
+  particles: ParticlesScene
 }
 type NuxtApp = ReturnType<typeof useNuxtApp>
 export default class WebGL extends LifeCycle {
@@ -84,11 +84,11 @@ export default class WebGL extends LifeCycle {
     const tabs = this.tweakpane.addTab({ pages: [{ title: 'Main' }] })
 
     const mainPage = tabs.pages[0]
-    const testPage = tabs.addPage({ title: 'Reflection' })
+    const testPage = tabs.addPage({ title: 'Particles' })
 
     this.scenes = {
       main: new MainScene(this.genContext(mainPage)),
-      reflection: new ReflectionScene(this.genContext(testPage)),
+      particles: new ParticlesScene(this.genContext(testPage)),
     }
     this.toUnbind(this.scenes.main.destroy, tabs.dispose)
   }
