@@ -159,7 +159,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
         const plane = camGltf.scene.getObjectByName('Plane')!
         plane.visible = false
-        this.mainCamera.object.rotation.set(1.57, 1.56, -1.57)
+        this.mainCamera.object.rotation.set(0, 1.56, 0)
         this.mainCamera.object.position.set(11, 0.12, 0)
         this.mainCamera.object.fov = 52
         this.mainCamera.object.updateProjectionMatrix()

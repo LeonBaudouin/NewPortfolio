@@ -31,5 +31,7 @@ export default class Monolith extends AbstractObject {
     )
     this.object.rotateY(-0.3)
     this.object.position.y = 2.25
+
+    this.context.tweakpane.addInput(this.object.rotation, 'y', { label: 'Monolith Rotation', index: 0 })
   }
 }

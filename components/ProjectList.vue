@@ -33,7 +33,7 @@ const projects = [
   },
   {
     name: 'Portfolio V1',
-    subtitle: 'First Portfolio',
+    subtitle: 'Personal Website',
   },
   {
     name: 'Xperience Métier',
