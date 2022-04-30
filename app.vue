@@ -1,7 +1,11 @@
 <template>
+  <div class="content">
+    <MainTitle />
+    <List />
+  </div>
   <!-- <div></div> -->
   <!-- <Intro /> -->
-  <Cursor />
+  <!-- <Cursor /> -->
 </template>
 
 <script setup lang="ts">
@@ -38,13 +42,27 @@ useCleanup(() => {
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Spartan:wght@100;400;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  --main-color: #ffffff;
+  --x-page-margin: 5vw;
+  --y-page-margin: 5vh;
+}
 
 body {
   overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+  color: var(--main-color);
   margin: 0;
-  cursor: none;
 }
+
 body > canvas {
   position: absolute;
   inset: 0;
