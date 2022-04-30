@@ -64,6 +64,7 @@ export default class Cubes extends AbstractObject<
           value: new THREE.Vector4(),
         },
         ...THREE.UniformsLib['fog'],
+        ...this.context.globalUniforms,
       },
     })
 

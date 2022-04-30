@@ -48,6 +48,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
         uFbo: { value: null },
         uDelta: { value: new THREE.Vector2(1 / 512, 1 / 512) },
         uCenter: { value: new THREE.Vector2(-100, -100) },
+        uPlaneScale: { value: 20 },
         uPosition: { value: new THREE.Vector3() },
       },
     })
@@ -57,6 +58,10 @@ export default class Ripples extends AbstractComponent<SceneContext> {
       renderer: this.context.renderer,
       shader: simulationShader,
       initTexture,
+      renderTargetParams: {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearMipmapLinearFilter,
+      },
     })
 
     const addDropShader = new THREE.ShaderMaterial({
@@ -80,9 +85,9 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     const mat = new THREE.MeshBasicMaterial({ wireframe: true })
     this.raycastMesh = new THREE.Mesh(geom, mat)
     this.raycastMesh.position.y = 0.01
-    this.raycastMesh.position.x = 15
+    this.raycastMesh.position.x = 6.8
     this.raycastMesh.visible = false
-    this.raycastMesh.scale.setScalar(20)
+    this.raycastMesh.scale.setScalar(10)
     this.context.scene.add(this.raycastMesh)
 
     const mouseMove = (e: MouseEvent) => {
@@ -122,6 +127,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
       if (temp1.length() == 0) temp1.copy(this.raycastMesh.position)
     }
 
+    this.shader.uniforms.uPlaneScale.value = this.raycastMesh.scale.x
     temp1.sub(this.raycastMesh.position)
     // console.log(temp1)
     this.shader.uniforms.uPosition.value.copy(temp1)

@@ -1,6 +1,7 @@
 uniform sampler2D uFbo;
 uniform vec2 uDelta;
 uniform vec3 uPosition;
+uniform float uPlaneScale;
 varying vec2 vUv;
 
 
@@ -16,7 +17,7 @@ vec4 sampleFbo(vec2 coord) {
 
 void main() {
   /* get vertex info */
-  vec2 uv = vUv + ((-uPosition.xz * vec2(1., -1.)) / 20.);
+  vec2 uv = vUv + ((-uPosition.xz * vec2(1., -1.)) / uPlaneScale);
   // vec2 uv = vUv;
 
   vec4 baseInfo = sampleFbo(uv);
@@ -36,7 +37,7 @@ void main() {
   info.g += (average - info.r) * 2.0;
 
   /* attenuate the velocity a little so waves do not last forever */
-  info.g *= 0.95;
+  info.g *= 0.99;
 
   /* move the vertex along the velocity */
   info.r += info.g;

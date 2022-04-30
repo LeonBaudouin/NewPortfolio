@@ -13,9 +13,13 @@ import HeadSet from '~~/webgl/Components/Prototype/FloatingPieces/HeadSet'
 import fragment from '/webgl/Components/Prototype/FloatingPieces/HeadSet/index.frag?raw'
 import vertex from '/webgl/Components/Prototype/FloatingPieces/HeadSet/index.vert?raw'
 import ParticleManager from '~~/webgl/Components/Prototype/ParticleManager'
+import { FolderApi } from 'tweakpane'
+import Monolith from '~~/webgl/Components/Prototype/Monolith'
 
 export type Section = 'projects' | 'about' | 'lab'
 export default class ReflectionScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
+  private cameraFolder: FolderApi
+  private cameraHelper: THREE.CameraHelper
   private raycastMesh: THREE.Object3D
   private particles: ParticleManager
   private debugCamera: DebugCamera
@@ -44,12 +48,19 @@ export default class ReflectionScene extends AbstractScene<WebGLAppContext, THRE
     this.mainCamera = new SimpleCamera(this.genContext(), { defaultPosition: new THREE.Vector3(0, 3, 15) })
 
     this.scene.add(this.debugCamera.object)
+    this.cameraHelper = new THREE.CameraHelper(this.mainCamera.object)
+    this.cameraHelper.visible = false
+    this.scene.add(this.debugCamera.object)
     this.scene.add(this.mainCamera.object)
+    this.scene.add(this.cameraHelper)
     this.camera = this.params.debugCam ? this.debugCamera.object : this.mainCamera.object
 
     this.context.tweakpane
       .addInput(this.params, 'debugCam', { label: 'Debug Cam' })
       .on('change', ({ value }) => (this.camera = value ? this.debugCamera.object : this.mainCamera.object))
+
+    this.cameraFolder = this.context.tweakpane.addFolder({ title: 'Main Camera', expanded: false })
+    this.cameraFolder.addInput(this.cameraHelper, 'visible', { label: 'Camera Helper' })
 
     this.setObjects()
 
@@ -75,21 +86,27 @@ export default class ReflectionScene extends AbstractScene<WebGLAppContext, THRE
     })
   }
 
-  private genContext = () => ({
-    ...this.context,
-    camera: this.camera,
-    scene: this.scene,
-    sceneState: this.sceneState,
-  })
+  private genContext = () => {
+    const ctx = this
+    return {
+      ...this.context,
+      get camera() {
+        console.log(ctx.camera.uuid)
+        return ctx.camera
+      },
+      scene: this.scene,
+      sceneState: this.sceneState,
+    }
+  }
 
   private setScene() {}
 
   private setObjects() {
     this.environment = new Environment(this.genContext(), {
-      downColor: '#98c2cf',
-      upColor: '#4d7fbf',
-      gradientStart: 0.02,
-      gradientEnd: 0.2,
+      downColor: '#569ed5',
+      upColor: '#1f5792',
+      gradientStart: -0.04,
+      gradientEnd: 0.24,
       fogColor: '#98c2cf',
       intensity: 0.01,
       hasFog: true,
@@ -142,7 +159,23 @@ export default class ReflectionScene extends AbstractScene<WebGLAppContext, THRE
 
         const plane = camGltf.scene.getObjectByName('Plane')!
         plane.visible = false
-        copyWorldMatrix(camGltf.cameras[0], this.mainCamera.object)
+        this.mainCamera.object.rotation.set(1.57, 1.56, -1.57)
+        this.mainCamera.object.position.set(11, 0.12, 0)
+        this.mainCamera.object.fov = 52
+        this.mainCamera.object.updateProjectionMatrix()
+        this.cameraHelper.update()
+        // copyWorldMatrix(camGltf.cameras[0], this.mainCamera.object)
+
+        this.cameraFolder.addInput(this.mainCamera.object, 'rotation', {
+          label: 'Camera Rotation',
+          x: { step: 0.01 },
+          y: { step: 0.01 },
+          z: { step: 0.01 },
+        })
+        this.cameraFolder.addInput(this.mainCamera.object, 'position', { label: 'Camera Position' })
+        this.cameraFolder
+          .addInput(this.mainCamera.object, 'fov', { label: 'Camera Fov' })
+          .on('change', () => this.mainCamera.object.updateProjectionMatrix())
         // this.mainCamera.object.fov = (gltf.cameras[0] as THREE.PerspectiveCamera).fov
         this.water = new Water(this.genContext())
         this.scene.add(this.water.object)
@@ -177,29 +210,10 @@ export default class ReflectionScene extends AbstractScene<WebGLAppContext, THRE
         cloud2.scale.multiplyScalar(20)
         cloud2.rotateY(Math.PI / 2)
 
-        const monolith = new THREE.Mesh(
-          new THREE.PlaneGeometry(1.3, 4.8),
-          new THREE.MeshBasicMaterial({ color: '#eee' })
-        )
-        monolith.rotateY(Math.PI / 2)
-        monolith.position.y = 2.25
-        // this.scene.add(monolith)
-
-        const monolith2 = new THREE.Mesh(
-          new THREE.BoxGeometry(0.8, 4.8, 0.8),
-          // new THREE.MeshBasicMaterial({ color: '#eee' })
-          new THREE.MeshMatcapMaterial({
-            matcap: new THREE.TextureLoader().load(
-              'https://makio135.com/matcaps/64/EAEAEA_B5B5B5_CCCCCC_D4D4D4-64px.png'
-            ),
-          })
-        )
-        monolith2.rotateY(Math.PI / 4)
-        monolith2.position.y = 2.25
-        this.scene.add(monolith2)
+        this.scene.add(new Monolith(this.genContext()).object)
 
         this.particles = new ParticleManager(this.genContext(), {
-          chess: monolith,
+          chess: cloud1,
           behaviour: 'Sandbox',
           geometry: (paperGltf.scene.getObjectByName('Plane') as THREE.Mesh).geometry,
         })

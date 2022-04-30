@@ -4,6 +4,9 @@ uniform sampler2D tRipples;
 uniform mat4 uRipplesMatrix;
 uniform int uDebug;
 uniform float uTime;
+uniform float uNoiseIntensity; // * 0.002
+uniform float uNoiseScale; // * 10.
+uniform float uRipplesIntensity; // * 0.5
 
 varying vec4 vUv;
 varying vec3 vPosition;
@@ -116,20 +119,30 @@ float isNorm(vec2 _st) {
     return 0.;
   return 1.;
 }
+float smin1(float a, float b, float k)
+{
+  return pow((0.5 * (pow(a, -k) + pow(b, -k))), (-1.0 / k));
+}
+float smax0(float a, float b, float k)
+{
+  return smin1(a, b, -k);
+}
+
 
 vec3 getDisplacedPosition(vec2 _position, vec2 basePosition) {
   vec2 uv = _position * vec2(1., -1.) + .5;
-  float height = texture2D(tRipples, uv).r * 0.5;
-  height *= cremap(distToEdge(uv), 0., .5, 1., 0.);
-  height += snoise(vec3(basePosition * 10., uTime * 0.1) + vec3(uTime, 0., 0.)) * 0.002;
+  float height = texture2D(tRipples, uv).r * uRipplesIntensity;
+  // height *= cremap(distToEdge(uv), 0., .5, 1., 0.);
+  float noise = (1. + snoise(vec3(basePosition * uNoiseScale, uTime * 0.1) + vec3(uTime, 0., 0.))) * uNoiseIntensity * 0.5;
+  height = smax0(noise, height, 4.);
   return vec3(_position, height);
 }
 
 void main() {
   #include <logdepthbuf_fragment>
 
-  float distanceA = 1. / 512.;
-  float distanceB = 1. / 512.;
+  float distanceA = 1. / (512.);
+  float distanceB = 1. / (512.);
 
   vec2 position = (uRipplesMatrix * vec4(vPosition.x, 0., -vPosition.y, 1.)).xz;
   vec2 basePosition = vPosition.xy;
@@ -159,9 +172,8 @@ void main() {
   vec3 c = blendOverlay( base.rgb, color ) + light;
   gl_FragColor = vec4(c, 1.);
 
-  vec2 uv = position * vec2(1., -1.) + .5;
 
   if (uDebug == 1) gl_FragColor = vec4(my_normal, 1.);
   if (uDebug == 2) gl_FragColor = vec4(position.x + 0.5, position.y + 0.5, 1., 1.);
-  if (uDebug == 3) gl_FragColor = vec4(texture2D(tRipples, uv).rgb, 1.);
+  if (uDebug == 3) gl_FragColor = vec4(vec3(displacedPosition.z * 100.), 1.);
 }

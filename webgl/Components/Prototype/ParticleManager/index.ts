@@ -25,7 +25,7 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
   private behaviour: AbstractBehaviour
 
   private particlesParams = reactive<Required<ParticleSystemParams>>({
-    textureSize: new THREE.Vector2(16, 16),
+    textureSize: new THREE.Vector2(32, 32),
     useTexture: false,
     rotateAround: true,
     fixOnAttractor: false,

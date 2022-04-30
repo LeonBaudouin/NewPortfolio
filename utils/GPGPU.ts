@@ -31,11 +31,13 @@ export default class GPGPU {
     renderer,
     shader,
     initTexture,
+    renderTargetParams = {},
   }: {
     size: THREE.Vector2
     renderer: THREE.WebGLRenderer
     shader: THREE.RawShaderMaterial
     initTexture?: THREE.Texture
+    renderTargetParams?: Partial<ConstructorParameters<typeof THREE.WebGLRenderTarget>[2]>
   }) {
     this.size = size
     this.renderer = renderer
@@ -63,6 +65,7 @@ export default class GPGPU {
       magFilter: THREE.NearestFilter,
       type: THREE.FloatType,
       stencilBuffer: false,
+      ...renderTargetParams,
     })
     this.targetB = this.targetA.clone()
 

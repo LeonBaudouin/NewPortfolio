@@ -27,6 +27,9 @@ export default class WebGL extends LifeCycle {
   private shaderPass: ShaderPass
   public state = reactive<{ introState: 'start' | 'endDrag' | 'complete' }>({ introState: 'start' })
   private nuxtApp: NuxtApp
+  private globalUniforms = {
+    uInReflection: { value: false },
+  }
 
   constructor(nuxtApp: any) {
     super()
@@ -74,6 +77,7 @@ export default class WebGL extends LifeCycle {
     renderer: this.renderer,
     state: this.state,
     tweakpane: tweakpane || (this.tweakpane as FolderApi | TabPageApi),
+    globalUniforms: this.globalUniforms,
   })
 
   private setupScenes() {
