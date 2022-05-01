@@ -212,12 +212,12 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
         this.scene.add(new Monolith(this.genContext()).object)
 
-        this.particles = new ParticleManager(this.genContext(), {
-          chess: cloud1,
-          behaviour: 'Sandbox',
-          geometry: (paperGltf.scene.getObjectByName('Plane') as THREE.Mesh).geometry,
-        })
-        this.scene.add(this.particles.object)
+        // this.particles = new ParticleManager(this.genContext(), {
+        //   chess: cloud1,
+        //   behaviour: 'Sandbox',
+        //   geometry: (paperGltf.scene.getObjectByName('Plane') as THREE.Mesh).geometry,
+        // })
+        // this.scene.add(this.particles.object)
 
         // this.scene.add(gltf.scene)
       }
