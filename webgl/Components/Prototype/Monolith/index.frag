@@ -1,5 +1,8 @@
 uniform sampler2D uMatcap;
 uniform bool uInReflection;
+uniform vec4 uShadowRemap;
+uniform float uShadowDilate;
+uniform vec2 uShadowOffset;
 uniform vec4 uBoxes[4];
 
 varying vec3 vViewPosition;
@@ -42,8 +45,9 @@ void main() {
   float v = 1.;
   for (int i = 0; i < 4; i++) {
     vec4 box = uBoxes[i];
-    float d = sdBox(vCoords.xy - box.xy, box.zw * 0.5);
-    d = cremap(d, 0., .0001, 0., 1.);
+    float d = sdBox(vCoords.xy - box.xy + uShadowOffset, box.zw * 0.5 + uShadowDilate);
+    // d = cremap(d, -0.2, 0.05, 0., 1.);
+    d = cremap(d, uShadowRemap.x, uShadowRemap.y, uShadowRemap.z, uShadowRemap.w);
     v = min(d, v);
   }
   vec3 color = texture2D(uMatcap, matcapUv).rgb * v;

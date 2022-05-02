@@ -16,7 +16,7 @@ void main() {
   uv.y = 1. - uv.y;
   vec3 color = texture2D(uTexture, uv).rgb;
 
-  gl_FragColor = vec4(color, 0.7);
+  gl_FragColor = vec4(color, 1.);
   // gl_FragColor = vec4(vec3(isNorm(vTextureCoords.xy)), 0.5);
 
   #include <fog_fragment>

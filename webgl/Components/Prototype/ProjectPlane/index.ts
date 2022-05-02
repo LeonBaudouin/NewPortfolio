@@ -37,6 +37,7 @@ export default class ProjectPlane extends AbstractObject<
       })
     )
 
+    this.object.position.z = 0.5
     this.object.scale.set(0.6, 1, 1)
 
     this.context.tweakpane.addInput(this.object, 'scale')
