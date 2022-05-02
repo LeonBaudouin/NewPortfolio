@@ -35,8 +35,8 @@ export default class Water extends AbstractObject<MainSceneContext> {
           uRipplesMatrix: { value: null },
           uDebug: { value: 0 },
           uTime: { value: 0 },
-          uNoiseIntensity: { value: 0.004 },
-          uNoiseScale: { value: 10 },
+          uNoiseIntensity: { value: 0.0003 },
+          uNoiseScale: { value: 44.0 },
           uRipplesIntensity: { value: 0.5 },
         },
         fragmentShader,
@@ -72,7 +72,12 @@ export default class Water extends AbstractObject<MainSceneContext> {
     })
     this.context.tweakpane.addInput(this.params, 'color', { label: 'Color' })
     this.context.tweakpane.addInput(this.params, 'ripplesIntensity', { label: 'Ripples Intensity', min: 0, max: 0.1 })
-    this.context.tweakpane.addInput(this.params, 'noiseIntensity', { label: 'Noise Intensity', min: 0, max: 0.1 })
+    this.context.tweakpane.addInput(this.params, 'noiseIntensity', {
+      label: 'Noise Intensity',
+      min: 0,
+      max: 0.01,
+      step: 0.0001,
+    })
     this.context.tweakpane.addInput(this.params, 'noiseScale', { label: 'Noise Scale' })
 
     plane.rotation.x = -Math.PI / 2
