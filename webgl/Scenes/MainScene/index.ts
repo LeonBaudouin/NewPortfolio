@@ -26,6 +26,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   private mainCamera: SimpleCamera
   private environment: Environment
   private water: Water
+  private monolith: Monolith
 
   private sceneState = reactive<{ raycastPosition: THREE.Vector3; section: Section | null }>({
     raycastPosition: new THREE.Vector3(),
@@ -160,7 +161,8 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
         const plane = camGltf.scene.getObjectByName('Plane')!
         plane.visible = false
         this.mainCamera.object.rotation.set(0, 1.56, 0)
-        this.mainCamera.object.position.set(11, 0.12, 0)
+        // this.mainCamera.object.position.set(11, 0.12, 0)
+        this.mainCamera.object.position.set(6, 2.3, 0)
         this.mainCamera.object.fov = 52
         this.mainCamera.object.updateProjectionMatrix()
         this.cameraHelper.update()
@@ -210,7 +212,8 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
         cloud2.scale.multiplyScalar(20)
         cloud2.rotateY(Math.PI / 2)
 
-        this.scene.add(new Monolith(this.genContext()).object)
+        this.monolith = new Monolith(this.genContext())
+        this.scene.add(this.monolith.object)
 
         this.particles = new ParticleManager(this.genContext(), {
           chess: cloud1,
@@ -232,6 +235,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.debugCamera.tick(time, delta)
     this.particles?.tick(time, delta)
     this.water?.tick(time, delta)
+    this.monolith?.tick(time, delta)
   }
 }
 export type MainSceneContext = ReturnType<MainScene['genContext']>
