@@ -18,6 +18,7 @@ export default class ProjectPlane extends AbstractObject<
 > {
   public bounds = new THREE.Vector4()
   private prog = reactive({ value: -1 })
+  private tween: gsap.core.Tween
 
   constructor(
     context: WebGLAppContext,
@@ -77,12 +78,14 @@ export default class ProjectPlane extends AbstractObject<
 
   public show() {
     if (this.prog.value === 1) this.prog.value = -1
-    gsap.to(this.prog, { value: 0, ease: 'Power1.easeOut', duration: 0.5 })
+    this.tween?.kill()
+    this.tween = gsap.to(this.prog, { value: 0, ease: 'Power1.easeOut', duration: 0.5 })
   }
 
   public hide() {
     if (this.prog.value === -1) return
-    gsap.to(this.prog, { value: 1, ease: 'Power1.easeIn', duration: 0.3 })
+    this.tween?.kill()
+    this.tween = gsap.to(this.prog, { value: 1, ease: 'Power1.easeIn', duration: 0.3 })
   }
 
   public updatePlaneMatrix(mat: THREE.Matrix4) {
