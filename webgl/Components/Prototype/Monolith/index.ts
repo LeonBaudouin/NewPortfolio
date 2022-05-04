@@ -12,7 +12,9 @@ export default class Monolith extends AbstractObject<
   THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
 > {
   private refPlane: THREE.Mesh
-  private planesGroups: Record<string, ProjectPlaneGroup>
+  private planesGroups: ProjectPlaneGroup[]
+  private currentIndex: number | null = 0
+  private textures: Record<string, THREE.Texture> = {}
 
   constructor({ tweakpane, ...context }: WebGLAppContext) {
     super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Monolith', expanded: false }) })
@@ -74,36 +76,53 @@ export default class Monolith extends AbstractObject<
     this.refPlane.visible = false
     this.object.add(this.refPlane)
 
-    this.planesGroups = {
-      SafePlace: new ProjectPlaneGroup(
-        { ...this.context, tweakpane: this.context.tweakpane.addFolder({ title: 'SafePlace Plane Group' }) },
-        GROUPS_DATA[0],
-        '/safeplace.png'
+    this.planesGroups = [
+      new ProjectPlaneGroup(
+        { ...this.context, tweakpane: this.context.tweakpane.addFolder({ title: '1st Plane Group' }) },
+        GROUPS_DATA[0]
       ),
-    }
-    this.object.add(this.planesGroups.SafePlace.object)
+      new ProjectPlaneGroup(
+        { ...this.context, tweakpane: this.context.tweakpane.addFolder({ title: '2nd Plane Group' }) },
+        GROUPS_DATA[1]
+      ),
+    ]
+    this.object.add(...this.planesGroups.map((p) => p.object))
 
     this.toUnbind(
       watch(
         () => ProjectStore.state.hoveredProject,
-        (newValue, lastValue) => {
-          if (lastValue) this.planesGroups[lastValue]?.hide()
-          if (newValue && this.planesGroups[newValue]) {
-            this.object.material.uniforms.uBoxes.value = this.planesGroups[newValue].getBounds()
-            this.planesGroups[newValue].show()
-          }
-        },
-        { immediate: true }
+        (newValue) => {
+          if (this.currentIndex !== null) this.planesGroups[this.currentIndex].hide()
+          if (!newValue) return
+          const newArray = this.planesGroups.map((_, i) => i).filter((v) => v !== this.currentIndex)
+          const newIndex = Math.floor(Math.random() * (this.planesGroups.length - 2))
+          // console.log(newArray, newIndex)
+          this.currentIndex = newArray[newIndex]
+
+          this.planesGroups[this.currentIndex].show()
+          this.planesGroups[this.currentIndex].setTexture(this.getTexture(newValue))
+          this.object.material.uniforms.uBoxes.value = this.planesGroups[this.currentIndex].getBounds()
+          // if (lastValue) this.planesGroups[lastValue]?.hide()
+          // if (newValue && this.planesGroups[newValue]) {
+          //   this.object.material.uniforms.uBoxes.value = this.planesGroups[newValue].getBounds()
+          //   this.planesGroups[newValue].show()
+          // }
+        }
       )
     )
 
     window.requestAnimationFrame(() => {
       this.refPlane.updateMatrixWorld()
-      this.planesGroups.SafePlace.updatePlanesMatrix(this.refPlane.matrixWorld)
+      for (const p of this.planesGroups) p.updatePlanesMatrix(this.refPlane.matrixWorld)
     })
   }
 
+  private getTexture(imageUrl: string) {
+    if (!(imageUrl in this.textures)) this.textures[imageUrl] = new THREE.TextureLoader().load(imageUrl)
+    return this.textures[imageUrl]
+  }
+
   public tick(time: number, delta: number): void {
-    this.planesGroups.SafePlace.tick(time, delta)
+    for (const p of this.planesGroups) p.tick(time, delta)
   }
 }

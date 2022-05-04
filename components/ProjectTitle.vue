@@ -11,11 +11,11 @@ import ProjectStore from '~~/stores/ProjectStore'
 const props = defineProps({
   name: { required: true, type: String },
   subtitle: { required: true, type: String },
-  storeKey: { required: true, type: String },
+  imageUrl: { required: true, type: String },
 })
 
 const mouseEnter = () => {
-  ProjectStore.state.hoveredProject = props.storeKey
+  ProjectStore.state.hoveredProject = props.imageUrl
 }
 
 const mouseLeave = () => {

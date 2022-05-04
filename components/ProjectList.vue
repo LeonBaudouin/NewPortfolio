@@ -3,7 +3,7 @@
     <Title text="Projects" />
     <li class="projectList">
       <ul v-for="project in projects" class="projectList__item">
-        <ProjectTitle :name="project.name" :subtitle="project.subtitle" :storeKey="project.storeKey" />
+        <ProjectTitle :name="project.name" :subtitle="project.subtitle" :imageUrl="project.imageUrl" />
       </ul>
     </li>
   </div>
@@ -14,37 +14,37 @@ const projects = [
   {
     name: "Figure d'artiste",
     subtitle: 'Gobelins x Louvre',
-    storeKey: 'SafePlace',
+    imageUrl: '/louvre.png',
   },
   {
     name: 'Safe Place',
     subtitle: 'Immersive Website',
-    storeKey: 'SafePlace',
+    imageUrl: '/safeplace.png',
   },
   {
     name: 'Mamie Danger',
     subtitle: 'Mobile Game',
-    storeKey: 'SafePlace',
+    imageUrl: '/louvre.png',
   },
   {
     name: 'Abyss',
     subtitle: 'Data Visualization',
-    storeKey: 'SafePlace',
+    imageUrl: '/safeplace.png',
   },
   {
     name: 'Belle Epoque',
     subtitle: 'Agency Website',
-    storeKey: 'SafePlace',
+    imageUrl: '/louvre.png',
   },
   {
     name: 'Portfolio V1',
     subtitle: 'Personal Website',
-    storeKey: 'SafePlace',
+    imageUrl: '/safeplace.png',
   },
   {
     name: 'Xperience Métier',
     subtitle: 'Digital Escape Game',
-    storeKey: 'SafePlace',
+    imageUrl: '/louvre.png',
   },
 ]
 </script>

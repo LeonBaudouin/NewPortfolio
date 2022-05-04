@@ -21,12 +21,7 @@ export default class ProjectPlane extends AbstractObject<
 
   constructor(
     context: WebGLAppContext,
-    {
-      scale,
-      position,
-      direction,
-      uniforms,
-    }: { scale: THREE.Vector3; position: THREE.Vector3; direction: Direction; uniforms: Record<string, THREE.IUniform> }
+    { scale, position, direction }: { scale: THREE.Vector3; position: THREE.Vector3; direction: Direction }
   ) {
     super(context)
 
@@ -38,7 +33,7 @@ export default class ProjectPlane extends AbstractObject<
         uniforms: {
           uPlaneMatrix: { value: new THREE.Matrix4() },
           uPlaneRatio: { value: 1 },
-          ...uniforms,
+          uTexture: { value: null },
         },
         transparent: true,
       })
@@ -56,6 +51,10 @@ export default class ProjectPlane extends AbstractObject<
     const endScale = scale.clone()
     endScale[axe] = 0
 
+    // watchEffect(() => {
+    //   console.log(this.prog.value)
+    // })
+
     this.toUnbind(
       watchEffect(() => {
         const v = Easing.Quadratic.InOut(Math.abs(this.prog.value))
@@ -68,17 +67,22 @@ export default class ProjectPlane extends AbstractObject<
           this.object.position.lerpVectors(position, endPosition, v)
           this.object.scale.lerpVectors(scale, endScale, v)
         }
-        if (this.prog.value === 1) this.prog.value = -1
       })
     )
   }
 
+  public setTexture(texture: THREE.Texture) {
+    this.object.material.uniforms.uTexture.value = texture
+  }
+
   public show() {
-    gsap.to(this.prog, { value: 0 })
+    if (this.prog.value === 1) this.prog.value = -1
+    gsap.to(this.prog, { value: 0, ease: 'Power1.easeOut', duration: 0.5 })
   }
 
   public hide() {
-    gsap.to(this.prog, { value: 1 })
+    if (this.prog.value === -1) return
+    gsap.to(this.prog, { value: 1, ease: 'Power1.easeIn', duration: 0.3 })
   }
 
   public updatePlaneMatrix(mat: THREE.Matrix4) {

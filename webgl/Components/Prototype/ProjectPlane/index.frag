@@ -1,7 +1,5 @@
 varying vec3 vTextureCoords;
 uniform sampler2D uTexture;
-uniform float uTextureRatio;
-uniform float uPlaneRatio;
 
 float isNorm(vec2 _st) {
   if (_st.x > 1. || _st.y > 1. || _st.x < 0. || _st.y < 0.)

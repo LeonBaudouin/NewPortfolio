@@ -1,7 +1,7 @@
 varying vec3 vTextureCoords;
 uniform mat4 uPlaneMatrix;
-uniform float uTextureRatio;
 uniform float uPlaneRatio;
+uniform sampler2D uTexture;
 
 #include <fog_pars_vertex>
 
@@ -18,7 +18,11 @@ vec2 adjustUvToImage(vec2 _st, vec2 center, float texRatio, float quadRatio, boo
 
 void main() {
   vTextureCoords = 0.5 - (uPlaneMatrix * modelMatrix * vec4(position, 1.0)).xyz;
-  vTextureCoords.xy = adjustUvToImage(vTextureCoords.xy, vec2(0.5), uTextureRatio, uPlaneRatio, false);
+  ivec2 t = textureSize(uTexture, 1);
+  float tRatio = float(t.x) / float(t.y);
+  vTextureCoords.xy = adjustUvToImage(vTextureCoords.xy, vec2(0.5), tRatio, uPlaneRatio, false);
+
+
   vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
 
   gl_Position = projectionMatrix * mvPosition;
