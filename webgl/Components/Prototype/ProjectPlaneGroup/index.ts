@@ -20,13 +20,6 @@ export default class ProjectPlaneGroup extends AbstractObject {
       this.planes.push(projectPlane)
     }
 
-    this.context.tweakpane.addMonitor(this.planes[0].prog, 'value', {
-      view: 'graph',
-      min: -1,
-      max: +1,
-      interval: 8,
-    })
-
     this.context.tweakpane.addButton({ title: 'Show' }).on('click', () => this.show())
     this.context.tweakpane.addButton({ title: 'Hide' }).on('click', () => this.hide())
   }
