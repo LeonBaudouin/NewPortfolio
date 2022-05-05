@@ -125,8 +125,10 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
     const gltfLoader = new GLTFLoader()
     gltfLoader.loadAsync('./paper.glb').then((paperGltf) => {
-      this.mainCamera.object.rotation.set(1.57, 1.57, -1.57)
-      this.mainCamera.object.position.set(21, 0.2, 0)
+      // this.mainCamera.object.rotation.set(1.57, 1.57, -1.57)
+      // this.mainCamera.object.position.set(21, 0.2, 0)
+      this.mainCamera.object.rotation.set(1.57, 1.6, -1.57)
+      this.mainCamera.object.position.set(21.48, 0.7, 0)
       // this.mainCamera.object.position.set(6, 2.3, 0)
       this.mainCamera.object.fov = 30
       this.mainCamera.object.updateProjectionMatrix()

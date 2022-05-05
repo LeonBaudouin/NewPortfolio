@@ -7,9 +7,15 @@ uniform float uTime;
 uniform float uNoiseIntensity; // * 0.002
 uniform float uNoiseScale; // * 10.
 uniform float uRipplesIntensity; // * 0.5
+uniform float uFresnelPower;
+uniform vec2 uFresnelRemap;
+uniform vec4 uBlendRemap;
+uniform vec3 uBlendColor;
+uniform vec4 uRampRemap;
 
 varying vec4 vUv;
 varying vec3 vPosition;
+varying vec3 vViewDirection;
 
 #include <common>
 #include <logdepthbuf_pars_fragment>
@@ -133,9 +139,20 @@ vec3 getDisplacedPosition(vec2 _position, vec2 basePosition) {
   vec2 uv = _position * vec2(1., -1.) + .5;
   float height = texture2D(tRipples, uv).r * uRipplesIntensity;
   // height *= cremap(distToEdge(uv), 0., .5, 1., 0.);
-  float noise = (1. + snoise(vec3(basePosition * uNoiseScale, uTime * 0.1) + vec3(uTime, 0., 0.))) * uNoiseIntensity * 0.5;
+  float noise = (1. + snoise(vec3(basePosition * uNoiseScale, uTime * 1.5) + vec3(uTime * 1.5, 0., 0.))) * uNoiseIntensity * 0.5;
   height = smax0(noise, height, 4.);
   return vec3(_position, height);
+}
+
+vec3 rgb2hsv(vec3 c)
+{
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
 }
 
 void main() {
@@ -161,16 +178,35 @@ void main() {
   my_normal = normalize(my_normal);
 
 
-  vec3 lightDir = normalize(vec3(30., 20., 1.));
-  float light = cremap(dot(lightDir, my_normal), 0.5, 1., 0., .1);
+  // vec3 lightDir = normalize(vec3(30., 20., 1.));
+  // float light = cremap(dot(lightDir, my_normal), 0.5, 1., 0., .1);
+
+
+  float fresnelFactor = abs(dot(vViewDirection, my_normal.rbg));
+  float inversefresnelFactor = 1.0 - fresnelFactor;
+  // Shaping function
+  fresnelFactor = pow(fresnelFactor, uFresnelPower);
+  inversefresnelFactor = pow(inversefresnelFactor, uFresnelPower);
+  float f = cremap(fresnelFactor, uFresnelRemap.x, uFresnelRemap.y, 0., 1.);
 
   vec4 mirrorCoord = vUv;
 
   mirrorCoord.xy += my_normal.xy * 0.1;
   vec4 base = texture2DProj( tDiffuse, mirrorCoord );
   // base = linearToOutputTexel(base);
-  vec3 c = blendOverlay( base.rgb, color ) + light;
-  gl_FragColor = vec4(c, 1.);
+  float sat = 1. - rgb2hsv(base.rgb).y;
+  // sat = remap(sat, 0.1, 1., 0., 1.);
+  // gl_FragColor = vec4(c + f, 1.);
+  sat = remap(sat, uBlendRemap.x, uBlendRemap.y, uBlendRemap.z, uBlendRemap.w);
+  vec3 c = mix(base.rgb, uBlendColor, sat);
+  float deepnessBlend = cremap(vUv.y, uRampRemap.x, uRampRemap.y, uRampRemap.z, uRampRemap.w);
+  // c = blendOverlay( c, color );
+  c = blendOverlay( c, vec3(deepnessBlend) );
+
+  // gl_FragColor = vec4(vec3(sat), 1.);
+  gl_FragColor = vec4(c + f, 1.);
+  // gl_FragColor = vec4(vec3(deepnessBlend), 1.);
+
 
 
   if (uDebug == 1) gl_FragColor = vec4(my_normal, 1.);

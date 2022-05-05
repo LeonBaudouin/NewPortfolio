@@ -70,8 +70,8 @@ export default class Ripples extends AbstractComponent<SceneContext> {
       uniforms: {
         uFbo: { value: null },
         uCenter: { value: new THREE.Vector2(-100, -100) },
-        uStrength: { value: 0.01 },
-        uRadius: { value: 0.03 },
+        uStrength: { value: 0.02 },
+        uRadius: { value: 0.01 },
       },
     })
     this.dropSimulation = new GPGPU({
@@ -85,9 +85,9 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     const mat = new THREE.MeshBasicMaterial({ wireframe: true })
     this.raycastMesh = new THREE.Mesh(geom, mat)
     this.raycastMesh.position.y = 0.01
-    this.raycastMesh.position.x = 6.8
+    this.raycastMesh.position.x = 10
     this.raycastMesh.visible = false
-    this.raycastMesh.scale.setScalar(10)
+    this.raycastMesh.scale.setScalar(20)
     this.context.scene.add(this.raycastMesh)
 
     const mouseMove = (e: MouseEvent) => {

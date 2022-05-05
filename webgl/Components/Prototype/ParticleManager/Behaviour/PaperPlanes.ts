@@ -37,7 +37,7 @@ const states = {
     // inertia: { min: 0.6, max: 0.65 },
     // rotationStrength: new THREE.Vector2(0.12, 0.24),
     // forceCap: { min: 0.07, max: 0.09 },
-    attractor: new THREE.Vector3(0, 6, 0),
+    attractor: new THREE.Vector3(0, 4.5, 0),
     inertia: { min: 0.6, max: 0.65 },
     rotationStrength: new THREE.Vector2(0.06, 0.1),
     forceCap: { min: 0.07, max: 0.09 },
@@ -133,10 +133,10 @@ export default class PaperPlanes extends AbstractBehaviour {
 
   public tick(time: number, delta: number): void {
     if (this.state !== 'rest') return
-    this.context.particleParams.attractor.y = remap(
-      Math.sin(time * this.params.oscillation.freq),
-      [-1, 1],
-      [this.params.oscillation.amplitude.min, this.params.oscillation.amplitude.max]
-    )
+    // this.context.particleParams.attractor.y = remap(
+    //   Math.sin(time * this.params.oscillation.freq),
+    //   [-1, 1],
+    //   [this.params.oscillation.amplitude.min, this.params.oscillation.amplitude.max]
+    // )
   }
 }
