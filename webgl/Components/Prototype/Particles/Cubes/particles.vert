@@ -76,10 +76,10 @@ void main() {
   ) * uSize;
 
   float diff = length(data.xyz - previousData.xyz);
-  vec3 normalPrevPos = data.xyz - attractorNormal;
-  float factor = cremap(diff, 0., 1., 0.1, 0.);
-  vec3 prevPos = mix(previousData.xyz, normalPrevPos, factor);
-  // vec3 prevPos = previousData.xyz ;
+  // vec3 normalPrevPos = data.xyz - attractorNormal;
+  // float factor = cremap(diff, 0., 1., 0.1, 0.);
+  // vec3 prevPos = mix(previousData.xyz, normalPrevPos, factor);
+  vec3 prevPos = previousData.xyz ;
 	mat4 localRotation = mat4( calcLookAtMatrix( data.xyz, prevPos.xyz, 0. ) );
   vec3 newPosition = (localRotation * vec4(position, 1.0)).xyz;
 

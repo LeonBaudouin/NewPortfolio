@@ -7,6 +7,7 @@ import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 import AbstractBehaviour from './Behaviour/AbstractBehaviour'
 import Introduction from './Behaviour/Introduction'
 import TensionHold from './Behaviour/TensionHold'
+import PaperPlanes from './Behaviour/PaperPlanes'
 import Sandbox from './Behaviour/Sandbox'
 import Circle from './Behaviour/Circle'
 import gsap from 'gsap/all'
@@ -18,14 +19,16 @@ const behaviours = {
   Sandbox,
   Circle,
   ComposeBlock,
+  PaperPlanes,
 }
+
 export default class ParticleManager extends AbstractObject<MainSceneContext> {
   private particles: Particles
 
   private behaviour: AbstractBehaviour
 
   private particlesParams = reactive<Required<ParticleSystemParams>>({
-    textureSize: new THREE.Vector2(32, 32),
+    textureSize: new THREE.Vector2(64, 64),
     useTexture: false,
     rotateAround: true,
     fixOnAttractor: false,
@@ -121,6 +124,7 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
   }
 
   public tick(time: number, delta: number): void {
+    this.behaviour?.tick(time, delta)
     this.particles.tick(time, delta)
   }
 }

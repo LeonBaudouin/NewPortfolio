@@ -53,6 +53,7 @@ export default class Monolith extends AbstractObject<
     )
     this.object.rotateY(Math.PI / 2 - 0.3)
     this.object.position.y = 2.25
+    // this.object.visible = false
     this.context.tweakpane.addInput(this.object.rotation, 'y', { label: 'Monolith Rotation' })
     this.context.tweakpane.addInput(this.object.material.uniforms.uShadowRemap, 'value', {
       label: 'Shadow Remap',

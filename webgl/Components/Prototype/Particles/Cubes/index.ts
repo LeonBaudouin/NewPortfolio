@@ -116,7 +116,14 @@ export default class Cubes extends AbstractObject<
     // const positions = new THREE.BufferAttribute(new Float32Array(numPoints * 3).fill(0), 3)
     // geometry.setAttribute('position', positions)
 
-    this.object = new THREE.InstancedMesh(geometry, mat, params.textureSize.x * params.textureSize.y)
+    this.object = new THREE.InstancedMesh(geometry, mat, 512 || params.textureSize.x * params.textureSize.y)
+
+    this.context.tweakpane.addInput(this.object, 'count', {
+      label: 'Amount',
+      min: 0,
+      max: params.textureSize.x * params.textureSize.y,
+      step: 1,
+    })
 
     this.toUnbind(() => {
       geometry.dispose()

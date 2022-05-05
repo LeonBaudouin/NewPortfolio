@@ -36,6 +36,28 @@ mat3 rotateY(float theta) {
   );
 }
 
+float sdVerticalCapsule( vec3 p, float h, float r )
+{
+  p.y -= clamp( p.y, 0.0, h );
+  return length( p ) - r;
+}
+
+float sdScene(vec3 pos) {
+  return sdVerticalCapsule(pos - vec3(0., 0., 0.), 4.8, 1.);
+}
+
+vec3 calcSceneNormal(vec3 p, float e) {
+  const vec3 v1 = vec3( 1.0,-1.0,-1.0);
+  const vec3 v2 = vec3(-1.0,-1.0, 1.0);
+  const vec3 v3 = vec3(-1.0, 1.0,-1.0);
+  const vec3 v4 = vec3( 1.0, 1.0, 1.0);
+
+  return normalize( v1 * sdScene(p + v1 * e) +
+                    v2 * sdScene(p + v2 * e) +
+                    v3 * sdScene(p + v3 * e) +
+                    v4 * sdScene(p + v4 * e) );
+}
+
 void main() {
   vec4 positionData = texture2D(uPositionFbo, vUv);
   vec4 inputData = texture2D(uFbo, vUv);
@@ -88,6 +110,15 @@ void main() {
       * remap(side, -1., 1., .5, .4); // Split strength between the two groups
   }
 
+  // ------ ENV REPULSION
+  float riseFactor = cremap(positionData.y, -0.5, 0.5, 0.03, 0.);
+  inputData.xyz = mix(inputData.xyz, vec3(0., 1., 0.), riseFactor);
+
+  float sdf = sdScene(positionData.xyz);
+  float e = 0.001;
+  vec3 sdNormal = calcSceneNormal(positionData.xyz, e);
+  float sdFactor = cremap(sdf, -0.2, 1.2, 0.04, 0.);
+  inputData.xyz = mix(inputData.xyz, sdNormal, sdFactor);
 
   float amount = length(inputData.xyz);
   vec3 velocity = normalize(inputData.xyz);

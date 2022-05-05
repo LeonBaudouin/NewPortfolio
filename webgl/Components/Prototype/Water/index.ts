@@ -14,8 +14,10 @@ export default class Water extends AbstractObject<MainSceneContext> {
   private material: THREE.ShaderMaterial
   private params = reactive({
     color: '#535151',
-    noiseIntensity: 0.004,
-    noiseScale: 10,
+    // noiseIntensity: 0.004,
+    // noiseScale: 10,
+    noiseIntensity: 0.0003,
+    noiseScale: 80,
     ripplesIntensity: 0.08,
   })
   constructor({ tweakpane: parentTP, ...context }: MainSceneContext) {

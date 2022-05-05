@@ -124,111 +124,68 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     })
 
     const gltfLoader = new GLTFLoader()
-    Promise.all([gltfLoader.loadAsync('./scene_3.glb'), gltfLoader.loadAsync('./paper.glb')]).then(
-      ([camGltf, paperGltf]) => {
-        // gltf.scene.traverse((o) => {
-        //   if (o.name.startsWith('Column')) {
-        //     ;(o as THREE.Mesh).material = new THREE.MeshMatcapMaterial({
-        //       matcap: new THREE.TextureLoader().load('./column_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
-        //     })
-        //   }
-        // })
-        // const headset = gltf.scene.getObjectByName('HeadSet')! as THREE.Mesh
-        // const loader = new THREE.TextureLoader()
-        // const headsetTexture = loader.load('./headset_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
-        // const headsetLeatherTexture = loader.load(
-        //   './headset_leather_256px.png',
-        //   (t) => (t.encoding = THREE.LinearEncoding)
-        // )
-        // const headsetLightTexture = loader.load('./headset_light_256px.png', (t) => (t.encoding = THREE.LinearEncoding))
-        // const aoTex = loader.load('./headset_ao.png', (t) => ((t.encoding = THREE.LinearEncoding), (t.flipY = false)))
+    gltfLoader.loadAsync('./paper.glb').then((paperGltf) => {
+      this.mainCamera.object.rotation.set(1.57, 1.57, -1.57)
+      this.mainCamera.object.position.set(21, 0.2, 0)
+      // this.mainCamera.object.position.set(6, 2.3, 0)
+      this.mainCamera.object.fov = 30
+      this.mainCamera.object.updateProjectionMatrix()
+      this.cameraHelper.update()
 
-        // headset.material = new THREE.ShaderMaterial({
-        //   fragmentShader: fragment,
-        //   vertexShader: vertex,
-        //   vertexColors: true,
-        //   fog: true,
-        //   uniforms: {
-        //     uHeadsetMatcap: { value: headsetTexture },
-        //     uLeatherMatcap: { value: headsetLeatherTexture },
-        //     uLightMatcap: { value: headsetLightTexture },
-        //     uAoMap: { value: aoTex },
-        //     uAoAmount: { value: 1 },
-        //     ...THREE.UniformsLib['fog'],
-        //   },
-        // })
+      this.cameraFolder.addInput(this.mainCamera.object, 'rotation', {
+        label: 'Camera Rotation',
+        x: { step: 0.01 },
+        y: { step: 0.01 },
+        z: { step: 0.01 },
+      })
+      this.cameraFolder.addInput(this.mainCamera.object, 'position', { label: 'Camera Position' })
+      this.cameraFolder
+        .addInput(this.mainCamera.object, 'fov', { label: 'Camera Fov' })
+        .on('change', () => this.mainCamera.object.updateProjectionMatrix())
 
-        const plane = camGltf.scene.getObjectByName('Plane')!
-        plane.visible = false
-        this.mainCamera.object.rotation.set(1.57, 1.57, -1.57)
-        this.mainCamera.object.position.set(21, 0.2, 0)
-        // this.mainCamera.object.position.set(6, 2.3, 0)
-        this.mainCamera.object.fov = 30
-        this.mainCamera.object.updateProjectionMatrix()
-        this.cameraHelper.update()
-        // copyWorldMatrix(camGltf.cameras[0], this.mainCamera.object)
+      this.water = new Water(this.genContext())
+      this.scene.add(this.water.object)
 
-        this.cameraFolder.addInput(this.mainCamera.object, 'rotation', {
-          label: 'Camera Rotation',
-          x: { step: 0.01 },
-          y: { step: 0.01 },
-          z: { step: 0.01 },
+      const cloud1 = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.43, 1),
+        new THREE.MeshBasicMaterial({
+          map: new THREE.TextureLoader().load('cloud2.png'),
+          transparent: true,
+          fog: false,
         })
-        this.cameraFolder.addInput(this.mainCamera.object, 'position', { label: 'Camera Position' })
-        this.cameraFolder
-          .addInput(this.mainCamera.object, 'fov', { label: 'Camera Fov' })
-          .on('change', () => this.mainCamera.object.updateProjectionMatrix())
-        // this.mainCamera.object.fov = (gltf.cameras[0] as THREE.PerspectiveCamera).fov
-        this.water = new Water(this.genContext())
-        this.scene.add(this.water.object)
+      )
+      this.scene.add(cloud1)
+      cloud1.position.x = -100
+      cloud1.position.y = 9
+      cloud1.position.z = 30
+      cloud1.scale.multiplyScalar(20)
+      cloud1.rotateY(Math.PI / 2)
 
-        const cloud1 = new THREE.Mesh(
-          new THREE.PlaneGeometry(2.43, 1),
-          new THREE.MeshBasicMaterial({
-            map: new THREE.TextureLoader().load('cloud2.png'),
-            transparent: true,
-            fog: false,
-          })
-        )
-        this.scene.add(cloud1)
-        cloud1.position.x = -100
-        cloud1.position.y = 9
-        cloud1.position.z = 30
-        cloud1.scale.multiplyScalar(20)
-        cloud1.rotateY(Math.PI / 2)
-
-        const cloud2 = new THREE.Mesh(
-          new THREE.PlaneGeometry(2.43, 1),
-          new THREE.MeshBasicMaterial({
-            map: new THREE.TextureLoader().load('cloud3.webp'),
-            transparent: true,
-            fog: false,
-          })
-        )
-        this.scene.add(cloud2)
-        cloud2.position.x = -100
-        cloud2.position.y = 9
-        cloud2.position.z = -30
-        cloud2.scale.multiplyScalar(20)
-        cloud2.rotateY(Math.PI / 2)
-
-        this.monolith = new Monolith(this.genContext())
-        this.scene.add(this.monolith.object)
-
-        this.particles = new ParticleManager(this.genContext(), {
-          chess: cloud1,
-          behaviour: 'Sandbox',
-          geometry: (paperGltf.scene.getObjectByName('Plane') as THREE.Mesh).geometry,
+      const cloud2 = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.43, 1),
+        new THREE.MeshBasicMaterial({
+          map: new THREE.TextureLoader().load('cloud3.webp'),
+          transparent: true,
+          fog: false,
         })
-        this.scene.add(this.particles.object)
+      )
+      this.scene.add(cloud2)
+      cloud2.position.x = -100
+      cloud2.position.y = 9
+      cloud2.position.z = -30
+      cloud2.scale.multiplyScalar(20)
+      cloud2.rotateY(Math.PI / 2)
 
-        // this.scene.add(gltf.scene)
-      }
-    )
-    // gltfLoader.loadAsync('./Blender/split_queen.gltf').then((gltf) => {
-    //   const exploding = new Exploding(this.genContext(), gltf)
-    //   this.scene.add(exploding.object)
-    // })
+      this.monolith = new Monolith(this.genContext())
+      this.scene.add(this.monolith.object)
+
+      this.particles = new ParticleManager(this.genContext(), {
+        chess: cloud1,
+        behaviour: 'PaperPlanes',
+        geometry: (paperGltf.scene.getObjectByName('Plane') as THREE.Mesh).geometry,
+      })
+      this.scene.add(this.particles.object)
+    })
   }
 
   public tick(time: number, delta: number): void {
