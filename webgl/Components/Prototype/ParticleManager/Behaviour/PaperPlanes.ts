@@ -133,10 +133,10 @@ export default class PaperPlanes extends AbstractBehaviour {
 
   public tick(time: number, delta: number): void {
     if (this.state !== 'rest') return
-    // this.context.particleParams.attractor.y = remap(
-    //   Math.sin(time * this.params.oscillation.freq),
-    //   [-1, 1],
-    //   [this.params.oscillation.amplitude.min, this.params.oscillation.amplitude.max]
-    // )
+    this.context.particleParams.attractor.y = remap(
+      Math.sin(time * this.params.oscillation.freq),
+      [-1, 1],
+      [this.params.oscillation.amplitude.min, this.params.oscillation.amplitude.max]
+    )
   }
 }
