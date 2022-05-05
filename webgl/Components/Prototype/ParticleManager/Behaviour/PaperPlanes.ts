@@ -33,9 +33,13 @@ const states = {
     forceCap: { min: 0.1, max: 0.1 },
   },
   hover: {
-    attractor: new THREE.Vector3(0, 4, 0),
+    // attractor: new THREE.Vector3(0, 4, 0),
+    // inertia: { min: 0.6, max: 0.65 },
+    // rotationStrength: new THREE.Vector2(0.12, 0.24),
+    // forceCap: { min: 0.07, max: 0.09 },
+    attractor: new THREE.Vector3(0, 6, 0),
     inertia: { min: 0.6, max: 0.65 },
-    rotationStrength: new THREE.Vector2(0.12, 0.24),
+    rotationStrength: new THREE.Vector2(0.06, 0.1),
     forceCap: { min: 0.07, max: 0.09 },
   },
 }
