@@ -56,13 +56,9 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
 
   constructor(
     context: MainSceneContext,
-    {
-      chess,
-      behaviour = 'Circle',
-      geometry,
-    }: { chess: THREE.Mesh; behaviour?: keyof typeof behaviours; geometry?: THREE.BufferGeometry }
+    { behaviour = 'Circle', geometry }: { behaviour?: keyof typeof behaviours; geometry?: THREE.BufferGeometry }
   ) {
-    super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Particle Manager' }) })
+    super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Particle Manager', expanded: false }) })
 
     if (geometry) this.particlesParams.geometry = geometry
 
@@ -96,31 +92,31 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
     // chess.rotateZ(0.3)
     // chess.rotateX(0.3)
 
-    chess.updateMatrix()
-    // const sampleGeom = new THREE.TorusGeometry(4, 0.1, 4, 30)
-    const sampleGeom = chess.geometry.clone()
-    sampleGeom.applyMatrix4(chess.matrix)
-    const newMesh = new THREE.Mesh(sampleGeom, new THREE.MeshBasicMaterial())
-    const sampler = new MeshSurfaceSampler(newMesh)
-    sampler.build()
-    const textures = {
-      chess: getPositionTextureFromMesh(
-        sampler,
-        this.particlesParams.textureSize,
-        this.particlesParams.textureSize.x * this.particlesParams.textureSize.y
-      ),
-    }
-
-    // chess.material = new THREE.MeshMatcapMaterial({
-    //   matcap: new THREE.TextureLoader().load(
-    //     'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
-    //     (t) => (t.encoding = THREE.sRGBEncoding)
+    // chess.updateMatrix()
+    // // const sampleGeom = new THREE.TorusGeometry(4, 0.1, 4, 30)
+    // const sampleGeom = chess.geometry.clone()
+    // sampleGeom.applyMatrix4(chess.matrix)
+    // const newMesh = new THREE.Mesh(sampleGeom, new THREE.MeshBasicMaterial())
+    // const sampler = new MeshSurfaceSampler(newMesh)
+    // sampler.build()
+    // const textures = {
+    //   chess: getPositionTextureFromMesh(
+    //     sampler,
+    //     this.particlesParams.textureSize,
+    //     this.particlesParams.textureSize.x * this.particlesParams.textureSize.y
     //   ),
-    // })
-    // this.context.scene.add(chess)
+    // }
 
-    this.particlesParams.normalTexture = textures.chess.normal
-    this.particlesParams.attractorsTexture = textures.chess.position
+    // // chess.material = new THREE.MeshMatcapMaterial({
+    // //   matcap: new THREE.TextureLoader().load(
+    // //     'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
+    // //     (t) => (t.encoding = THREE.sRGBEncoding)
+    // //   ),
+    // // })
+    // // this.context.scene.add(chess)
+
+    // this.particlesParams.normalTexture = textures.chess.normal
+    // this.particlesParams.attractorsTexture = textures.chess.position
   }
 
   public tick(time: number, delta: number): void {

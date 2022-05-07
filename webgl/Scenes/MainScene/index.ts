@@ -15,6 +15,8 @@ import vertex from '/webgl/Components/Prototype/FloatingPieces/HeadSet/index.ver
 import ParticleManager from '~~/webgl/Components/Prototype/ParticleManager'
 import { FolderApi } from 'tweakpane'
 import Monolith from '~~/webgl/Components/Prototype/Monolith'
+import Cloud from '~~/webgl/Components/Cloud'
+import CloudManager from '~~/webgl/Components/CloudManager'
 
 export type Section = 'projects' | 'about' | 'lab'
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
@@ -147,41 +149,44 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       this.water = new Water(this.genContext())
       this.scene.add(this.water.object)
 
-      const cloud1 = new THREE.Mesh(
-        new THREE.PlaneGeometry(2.43, 1),
-        new THREE.MeshBasicMaterial({
-          map: new THREE.TextureLoader().load('cloud2.png'),
-          transparent: true,
-          fog: false,
-        })
-      )
-      this.scene.add(cloud1)
-      cloud1.position.x = -100
-      cloud1.position.y = 9
-      cloud1.position.z = 30
-      cloud1.scale.multiplyScalar(20)
-      cloud1.rotateY(Math.PI / 2)
+      const cloudManager = new CloudManager(this.context)
+      this.scene.add(cloudManager.object)
 
-      const cloud2 = new THREE.Mesh(
-        new THREE.PlaneGeometry(2.43, 1),
-        new THREE.MeshBasicMaterial({
-          map: new THREE.TextureLoader().load('cloud3.webp'),
-          transparent: true,
-          fog: false,
-        })
-      )
-      this.scene.add(cloud2)
-      cloud2.position.x = -100
-      cloud2.position.y = 9
-      cloud2.position.z = -30
-      cloud2.scale.multiplyScalar(20)
-      cloud2.rotateY(Math.PI / 2)
+      // const cloud1 = new THREE.Mesh(
+      //   new THREE.PlaneGeometry(2.43, 1),
+      //   new THREE.MeshBasicMaterial({
+      //     map: new THREE.TextureLoader().load('cloud2.png'),
+      //     transparent: true,
+      //     fog: false,
+      //   })
+      // )
+
+      // this.scene.add(cloud1)
+      // cloud1.position.x = -100
+      // cloud1.position.y = 9
+      // cloud1.position.z = 30
+      // cloud1.scale.multiplyScalar(20)
+      // cloud1.rotateY(Math.PI / 2)
+
+      // const cloud2 = new THREE.Mesh(
+      //   new THREE.PlaneGeometry(2.43, 1),
+      //   new THREE.MeshBasicMaterial({
+      //     map: new THREE.TextureLoader().load('cloud3.webp'),
+      //     transparent: true,
+      //     fog: false,
+      //   })
+      // )
+      // this.scene.add(cloud2)
+      // cloud2.position.x = -100
+      // cloud2.position.y = 9
+      // cloud2.position.z = -30
+      // cloud2.scale.multiplyScalar(20)
+      // cloud2.rotateY(Math.PI / 2)
 
       this.monolith = new Monolith(this.genContext())
       this.scene.add(this.monolith.object)
 
       this.particles = new ParticleManager(this.genContext(), {
-        chess: cloud1,
         behaviour: 'PaperPlanes',
         geometry: (paperGltf.scene.getObjectByName('Plane') as THREE.Mesh).geometry,
       })
