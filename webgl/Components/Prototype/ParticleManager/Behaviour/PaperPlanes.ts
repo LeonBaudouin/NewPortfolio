@@ -86,20 +86,26 @@ export default class PaperPlanes extends AbstractBehaviour {
     const raycast = new THREE.Raycaster()
 
     const intersectPoint = new THREE.Vector3()
-    const mouseDown = () => {
-      this.isClicking.value = true
-    }
-    const mouseUp = () => {
-      this.isClicking.value = false
-    }
-    const mouseMove = (e: MouseEvent) => {
-      if (this.state !== 'click') return
+
+    const updateAttractorFromMouse = (e: MouseEvent) => {
       const p = pixelToScreenCoords(e.clientX, e.clientY)
       raycast.setFromCamera(p, this.context.camera)
 
       const doesIntersect = !!raycast.ray.intersectPlane(plane, intersectPoint)
       if (!doesIntersect || !box.containsPoint(intersectPoint)) raycast.ray.intersectBox(box, intersectPoint)
       this.context.particleParams.attractor.copy(intersectPoint)
+    }
+
+    const mouseDown = (e: MouseEvent) => {
+      this.isClicking.value = true
+      updateAttractorFromMouse(e)
+    }
+    const mouseUp = () => {
+      this.isClicking.value = false
+    }
+    const mouseMove = (e: MouseEvent) => {
+      if (this.state !== 'click') return
+      updateAttractorFromMouse(e)
     }
 
     this.context.renderer.domElement.addEventListener('mousedown', mouseDown)
