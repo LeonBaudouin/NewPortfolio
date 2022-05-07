@@ -108,8 +108,8 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       upColor: '#1f5792',
       gradientStart: -0.04,
       gradientEnd: 0.24,
-      fogColor: '#98c2cf',
-      intensity: 0.01,
+      fogColor: '#3d77b5',
+      intensity: 0.021,
       hasFog: true,
     })
     this.scene.add(this.environment.object)

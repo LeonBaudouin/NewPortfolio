@@ -1,6 +1,6 @@
 <template>
   <div class="list">
-    <Title text="About" />
+    <MainLink text="About" />
     <ProjectList />
   </div>
 </template>
@@ -14,5 +14,6 @@
 
   display: flex;
   flex-direction: column;
+  gap: 1.3rem;
 }
 </style>

@@ -85,7 +85,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     const mat = new THREE.MeshBasicMaterial({ wireframe: true })
     this.raycastMesh = new THREE.Mesh(geom, mat)
     this.raycastMesh.position.y = 0.01
-    this.raycastMesh.position.x = 10
+    this.raycastMesh.position.x = 11
     this.raycastMesh.visible = false
     this.raycastMesh.scale.setScalar(20)
     this.context.scene.add(this.raycastMesh)

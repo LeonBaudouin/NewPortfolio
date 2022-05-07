@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Title text="Projects" />
+    <MainLink text="Projects" />
     <li class="projectList">
       <ul v-for="project in projects" class="projectList__item">
         <ProjectTitle :name="project.name" :subtitle="project.subtitle" :imageUrl="project.imageUrl" />
@@ -49,10 +49,8 @@ const projects = [
 ]
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
-  margin-top: 1.3rem;
-
   min-height: 0;
 
   display: flex;
