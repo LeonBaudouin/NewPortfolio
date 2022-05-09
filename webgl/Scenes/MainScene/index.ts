@@ -149,7 +149,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       this.water = new Water(this.genContext())
       this.scene.add(this.water.object)
 
-      const cloudManager = new CloudManager(this.context)
+      const cloudManager = new CloudManager(this.genContext())
       this.scene.add(cloudManager.object)
 
       // const cloud1 = new THREE.Mesh(
