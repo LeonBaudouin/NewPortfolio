@@ -1,7 +1,13 @@
+const float PI = 3.141592653589793;
+
 uniform sampler2D uFbo;
 uniform vec2 uDelta;
 uniform vec3 uPosition;
 uniform float uPlaneScale;
+uniform vec2 uCenter;
+uniform float uRadius;
+uniform float uStrength;
+
 varying vec2 vUv;
 
 
@@ -20,8 +26,7 @@ void main() {
   vec2 uv = vUv + ((-uPosition.xz * vec2(1., -1.)) / uPlaneScale);
   // vec2 uv = vUv;
 
-  vec4 baseInfo = sampleFbo(uv);
-  vec4 info = baseInfo;
+  vec4 info = sampleFbo(uv);
 
   /* calculate average neighbor height */
   vec2 dx = vec2(uDelta.x, 0.0);
@@ -41,6 +46,11 @@ void main() {
 
   /* move the vertex along the velocity */
   info.r += info.g;
+
+  /* add the drop to the height */
+  float drop = max(0.0, 1.0 - length(uCenter - vUv) / uRadius);
+  drop = 0.5 - cos(drop * PI) * 0.5;
+  info.r += drop * uStrength;
 
   gl_FragColor = info;
 }
