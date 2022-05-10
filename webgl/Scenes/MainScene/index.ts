@@ -94,7 +94,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     return {
       ...this.context,
       get camera() {
-        console.log(ctx.camera.uuid)
         return ctx.camera
       },
       scene: this.scene,

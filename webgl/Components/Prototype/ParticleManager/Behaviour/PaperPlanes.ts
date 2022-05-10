@@ -61,7 +61,7 @@ export default class PaperPlanes extends AbstractBehaviour {
   }
 
   constructor({ tweakpane, ...context }: BehaviourContext) {
-    super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Plane Behaviour', index: 0 }) })
+    super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Plane Behaviour', index: 1, expanded: false }) })
     pseudoDeepAssign(this.context.particleParams, particlesData)
     pseudoDeepAssign(this.context.particleParams, states.rest)
 
@@ -83,16 +83,54 @@ export default class PaperPlanes extends AbstractBehaviour {
     const boxHelper = new THREE.Box3Helper(box)
     boxHelper.visible = false
 
-    const raycast = new THREE.Raycaster()
+    const interesectMeshes = new THREE.Object3D()
 
+    const interesectFrontPlane = new THREE.Mesh(
+      new THREE.PlaneBufferGeometry(10, 40),
+      new THREE.MeshBasicMaterial({ color: 'red', wireframe: false })
+    )
+    interesectFrontPlane.position.set(-6, 2.39, 0)
+    interesectFrontPlane.rotateX(-Math.PI / 2)
+    interesectFrontPlane.rotateY(0.5)
+    interesectMeshes.add(interesectFrontPlane)
+
+    const interesectBackPlane = new THREE.Mesh(
+      new THREE.PlaneBufferGeometry(40, 10),
+      new THREE.MeshBasicMaterial({ color: 'green', wireframe: false })
+    )
+    interesectBackPlane.position.set(-10.5, 5, 0)
+    interesectBackPlane.rotateY(Math.PI / 2)
+    interesectMeshes.add(interesectBackPlane)
+
+    const interesectCylinder = new THREE.Mesh(
+      new THREE.CylinderBufferGeometry(0.8, 0.8, 4.6, 16),
+      new THREE.MeshBasicMaterial({ color: 'blue', wireframe: false })
+    )
+    interesectCylinder.position.set(0, 2.3, 0)
+    interesectMeshes.add(interesectCylinder)
+
+    this.context.scene.add(interesectMeshes)
+    interesectMeshes.visible = false
+
+    const showRaycast = this.context.tweakpane.addInput(interesectMeshes, 'visible', {
+      label: 'Show Raycast',
+    })
+
+    const raycaster = new THREE.Raycaster()
     const intersectPoint = new THREE.Vector3()
 
-    const updateAttractorFromMouse = (e: MouseEvent) => {
+    const raycast = (e: MouseEvent, useReflection = false): THREE.Intersection | undefined => {
       const p = pixelToScreenCoords(e.clientX, e.clientY)
-      raycast.setFromCamera(p, this.context.camera)
+      if (useReflection) p.x = -p.x
+      raycaster.setFromCamera(p, useReflection ? (reflectionCamera as THREE.Camera) : this.context.camera)
+      const [intersection] = raycaster.intersectObject(interesectMeshes)
+      return intersection
+    }
 
-      const doesIntersect = !!raycast.ray.intersectPlane(plane, intersectPoint)
-      if (!doesIntersect || !box.containsPoint(intersectPoint)) raycast.ray.intersectBox(box, intersectPoint)
+    const updateAttractorFromMouse = (e: MouseEvent) => {
+      const topRaycast = raycast(e)
+      if (topRaycast) intersectPoint.copy(topRaycast.point)
+      else intersectPoint.copy(raycast(e, true)!.point)
       this.context.particleParams.attractor.copy(intersectPoint)
     }
 
@@ -125,6 +163,7 @@ export default class PaperPlanes extends AbstractBehaviour {
     this.toUnbind(() => {
       freqInput.dispose()
       amplitudeInput.dispose()
+      showRaycast.dispose()
       this.context.scene.remove(planeHelper)
       this.context.scene.remove(boxHelper)
       planeHelper.geometry.dispose()
@@ -135,6 +174,19 @@ export default class PaperPlanes extends AbstractBehaviour {
       this.context.renderer.domElement.removeEventListener('mousemove', mouseMove)
       unbind2()
     })
+
+    const reflectionCameraTestMesh = new THREE.Mesh(
+      new THREE.PlaneBufferGeometry(0.000001, 0.000001),
+      new THREE.MeshBasicMaterial()
+    )
+    this.context.scene.add(reflectionCameraTestMesh)
+
+    const mainCamera = this.context.camera
+    let reflectionCamera: THREE.Camera | null = null
+    reflectionCameraTestMesh.onBeforeRender = (_, __, camera) => {
+      if (reflectionCamera) return
+      if (camera.uuid !== mainCamera.uuid) reflectionCamera = camera
+    }
   }
 
   public tick(time: number, delta: number): void {
