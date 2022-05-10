@@ -95,10 +95,10 @@ export default class PaperPlanes extends AbstractBehaviour {
     interesectMeshes.add(interesectFrontPlane)
 
     const interesectBackPlane = new THREE.Mesh(
-      new THREE.PlaneBufferGeometry(40, 10),
+      new THREE.PlaneBufferGeometry(40, 30),
       new THREE.MeshBasicMaterial({ color: 'green', wireframe: false })
     )
-    interesectBackPlane.position.set(-10.5, 5, 0)
+    interesectBackPlane.position.set(-10.5, 15, 0)
     interesectBackPlane.rotateY(Math.PI / 2)
     interesectMeshes.add(interesectBackPlane)
 
