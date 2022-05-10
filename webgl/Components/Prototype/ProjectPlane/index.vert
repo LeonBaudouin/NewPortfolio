@@ -1,4 +1,5 @@
 varying vec3 vTextureCoords;
+uniform mat4 uLocalMatrix;
 uniform mat4 uPlaneMatrix;
 uniform float uPlaneRatio;
 uniform sampler2D uTexture;
@@ -17,7 +18,7 @@ vec2 adjustUvToImage(vec2 _st, vec2 center, float texRatio, float quadRatio, boo
 }
 
 void main() {
-  vTextureCoords = 0.5 - (uPlaneMatrix * modelMatrix * vec4(position, 1.0)).xyz;
+  vTextureCoords = 0.5 - (uPlaneMatrix * uLocalMatrix * vec4(position, 1.0)).xyz;
   ivec2 t = textureSize(uTexture, 1);
   float tRatio = float(t.x) / float(t.y);
   vTextureCoords.xy = adjustUvToImage(vTextureCoords.xy, vec2(0.5), tRatio, uPlaneRatio, false);

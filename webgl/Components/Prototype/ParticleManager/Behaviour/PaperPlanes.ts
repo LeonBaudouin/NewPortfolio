@@ -130,7 +130,10 @@ export default class PaperPlanes extends AbstractBehaviour {
     const updateAttractorFromMouse = (e: MouseEvent) => {
       const topRaycast = raycast(e)
       if (topRaycast) intersectPoint.copy(topRaycast.point)
-      else intersectPoint.copy(raycast(e, true)!.point)
+      else {
+        const reflectionRaycast = raycast(e, true)
+        if (reflectionRaycast) intersectPoint.copy(reflectionRaycast.point)
+      }
       this.context.particleParams.attractor.copy(intersectPoint)
     }
 

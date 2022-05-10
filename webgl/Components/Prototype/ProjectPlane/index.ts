@@ -12,68 +12,88 @@ const tempQuat = new THREE.Quaternion()
 
 type Direction = 'up' | 'down' | 'right' | 'left'
 
-export default class ProjectPlane extends AbstractObject<
-  WebGLAppContext,
-  THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
-> {
+export default class ProjectPlane extends AbstractObject {
   public bounds = new THREE.Vector4()
   private prog = reactive({ value: -1 })
   private tween: gsap.core.Tween
+  private plane: THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
+  private refPlane: THREE.Mesh
+
+  public get matrix() {
+    return this.plane.matrixWorld
+  }
 
   constructor(
     context: WebGLAppContext,
     { scale, position, direction }: { scale: THREE.Vector3; position: THREE.Vector3; direction: Direction }
   ) {
     super(context)
-
-    this.object = new THREE.Mesh(
+    this.object = new THREE.Object3D()
+    this.plane = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(1, 1),
       new THREE.ShaderMaterial({
         fragmentShader,
         vertexShader,
         uniforms: {
           uPlaneMatrix: { value: new THREE.Matrix4() },
+          uLocalMatrix: { value: null },
           uPlaneRatio: { value: 1 },
           uTexture: { value: null },
         },
         transparent: true,
       })
     )
+    this.plane.material.uniforms.uLocalMatrix.value = this.plane.matrix
+
+    this.object.add(this.plane)
+    this.refPlane = new THREE.Mesh(
+      new THREE.PlaneBufferGeometry(1, 1),
+      new THREE.MeshBasicMaterial({ color: 'blue', wireframe: true })
+    )
+    this.refPlane.position.copy(position)
+    this.refPlane.scale.copy(scale)
+    this.refPlane.visible = false
+    this.object.add(this.refPlane)
 
     const axe = direction === 'up' || direction === 'down' ? 'y' : 'x'
     const directionFactor = direction === 'up' || direction === 'left' ? 1 : -1
 
     const startPosition = position.clone()
     startPosition[axe] -= (directionFactor * scale[axe]) / 2
+    startPosition.z = 0.4
     const startScale = scale.clone()
-    startScale[axe] = 0
+    startScale[axe] = 0.00001
     const endPosition = position.clone()
     endPosition[axe] += (directionFactor * scale[axe]) / 2
+    endPosition.z = 0.4
     const endScale = scale.clone()
-    endScale[axe] = 0
+    endScale[axe] = 0.00001
 
-    // watchEffect(() => {
-    //   console.log(this.prog.value)
-    // })
+    window.requestAnimationFrame(() => {
+      this.refPlane.updateMatrix()
+      this.updatePlaneMatrix(this.refPlane.matrix)
+    })
+
+    // this.plane.visible = false
 
     this.toUnbind(
       watchEffect(() => {
         const v = Easing.Quadratic.InOut(Math.abs(this.prog.value))
         const anim = this.prog.value < 0 ? 'in' : 'out'
-        this.object.visible = v !== 1
+        // this.plane.visible = v !== 1
         if (anim === 'in') {
-          this.object.position.lerpVectors(position, startPosition, v)
-          this.object.scale.lerpVectors(scale, startScale, v)
+          this.plane.position.lerpVectors(position, startPosition, v)
+          this.plane.scale.lerpVectors(scale, startScale, v)
         } else {
-          this.object.position.lerpVectors(position, endPosition, v)
-          this.object.scale.lerpVectors(scale, endScale, v)
+          this.plane.position.lerpVectors(position, endPosition, v)
+          this.plane.scale.lerpVectors(scale, endScale, v)
         }
       })
     )
   }
 
   public setTexture(texture: THREE.Texture) {
-    this.object.material.uniforms.uTexture.value = texture
+    this.plane.material.uniforms.uTexture.value = texture
   }
 
   public show() {
@@ -90,11 +110,11 @@ export default class ProjectPlane extends AbstractObject<
 
   public updatePlaneMatrix(mat: THREE.Matrix4) {
     mat.decompose(tempTran, tempQuat, tempScale)
-    this.object.material.uniforms.uPlaneRatio.value = tempScale.x / tempScale.y
-    this.object.material.uniforms.uPlaneMatrix.value.identity().copy(mat).invert()
+    this.plane.material.uniforms.uPlaneRatio.value = tempScale.x / tempScale.y
+    this.plane.material.uniforms.uPlaneMatrix.value.identity().copy(mat).invert()
   }
 
   public tick(time: number, delta: number) {
-    this.bounds.set(this.object.position.x, this.object.position.y, this.object.scale.x, this.object.scale.y)
+    this.bounds.set(this.plane.position.x, this.plane.position.y, this.plane.scale.x, this.plane.scale.y)
   }
 }

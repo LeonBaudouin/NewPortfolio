@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import GPGPU from '~~/utils/GPGPU'
+import cremap from '~~/utils/math/cremap'
 import simFragment from './update.frag?raw'
 import vertex from './default.vert?raw'
 import pixelToScreenCoords from '~~/utils/webgl/pixelToScreenCoords'
@@ -98,9 +99,9 @@ export default class Ripples extends AbstractComponent<SceneContext> {
       this.raycastMesh.position.set(Math.cos(time) * 5, 0, Math.sin(time) * 5)
       if (temp1.length() == 0) temp1.copy(this.raycastMesh.position)
     }
-
-    // const distFromLastFrame = this.shader.uniforms.uCenter.value.distanceTo(this.mousePos)
+    const distFromLastFrame = this.shader.uniforms.uCenter.value.distanceTo(this.mousePos)
     this.shader.uniforms.uCenter.value.copy(this.mousePos)
+    this.shader.uniforms.uStrength.value = cremap(distFromLastFrame, [0, 0.001], [0, 0.02])
 
     this.shader.uniforms.uPlaneScale.value = this.raycastMesh.scale.x
     temp1.sub(this.raycastMesh.position)

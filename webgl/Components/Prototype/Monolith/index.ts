@@ -3,16 +3,15 @@ import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import * as THREE from 'three'
 import fragmentShader from './index.frag?raw'
 import vertexShader from './index.vert?raw'
-import GROUPS_DATA from './GROUPS_DATA'
-import ProjectPlaneGroup from '../ProjectPlaneGroup'
 import ProjectStore from '~~/stores/ProjectStore'
+import ProjectPlane from '../ProjectPlane'
+import gsap from 'gsap'
 
 export default class Monolith extends AbstractObject<
   WebGLAppContext,
   THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
 > {
-  private refPlane: THREE.Mesh
-  private planesGroups: ProjectPlaneGroup[]
+  private planesGroups: ProjectPlane[]
   private currentIndex: number | null = 0
   private textures: Record<string, THREE.Texture> = {}
 
@@ -21,7 +20,7 @@ export default class Monolith extends AbstractObject<
 
     this.object = new THREE.Mesh(
       new THREE.BoxGeometry(0.8, 4.8, 0.8),
-      // new THREE.MeshBasicMaterial({ color: '#eee' })
+      // new THREE.BoxGeometry(8, 48, 8),
       new THREE.ShaderMaterial({
         fragmentShader,
         vertexShader,
@@ -32,17 +31,10 @@ export default class Monolith extends AbstractObject<
               'https://makio135.com/matcaps/64/EAEAEA_B5B5B5_CCCCCC_D4D4D4-64px.png'
             ),
           },
-          uBoxes: {
-            value: [
-              new THREE.Vector4(0, 0, 0, 0),
-              new THREE.Vector4(0, 0, 0, 0),
-              new THREE.Vector4(0, 0, 0, 0),
-              new THREE.Vector4(0, 0, 0, 0),
-            ],
-          },
+          uPlaneMatrix: { value: [new THREE.Matrix4(), new THREE.Matrix4()] },
           uShadowRemap: { value: new THREE.Vector4(-0.04, 0.03, 0.71, 1) },
-          uShadowOffset: { value: new THREE.Vector2(-0.03, 0.04) },
-          uShadowDilate: { value: -0.03 },
+          uShadowOffset: { value: new THREE.Vector2(0, 0) },
+          uShadowDilate: { value: 0 },
           ...THREE.UniformsLib['fog'],
           ...this.context.globalUniforms,
         },
@@ -68,62 +60,51 @@ export default class Monolith extends AbstractObject<
       step: 0.01,
     })
 
-    this.refPlane = new THREE.Mesh(
-      new THREE.PlaneBufferGeometry(1, 1),
-      new THREE.MeshBasicMaterial({ color: 'blue', wireframe: true })
-    )
-    this.refPlane.position.z = 0.4
-    this.refPlane.scale.set(0.8, 4.8, 0.8)
-    this.refPlane.visible = false
-    this.object.add(this.refPlane)
-
     this.planesGroups = [
-      new ProjectPlaneGroup(
-        { ...this.context, tweakpane: this.context.tweakpane.addFolder({ title: '1st Plane Group' }) },
-        GROUPS_DATA[0]
-      ),
-      new ProjectPlaneGroup(
-        { ...this.context, tweakpane: this.context.tweakpane.addFolder({ title: '2nd Plane Group' }) },
-        GROUPS_DATA[1]
-      ),
+      new ProjectPlane(this.context, {
+        scale: new THREE.Vector3(0.65, 4.3, 1),
+        position: new THREE.Vector3(0.02, 0.07, 0.5),
+        direction: 'left',
+      }),
+      new ProjectPlane(this.context, {
+        scale: new THREE.Vector3(0.65, 4.3, 1),
+        position: new THREE.Vector3(0.02, 0.07, 0.5),
+        direction: 'left',
+      }),
     ]
     this.object.add(...this.planesGroups.map((p) => p.object))
 
+    let targetRotation = this.object.rotation.y
     this.toUnbind(
       watch(
         () => ProjectStore.state.hoveredProject,
         (newValue) => {
           if (this.currentIndex !== null) this.planesGroups[this.currentIndex].hide()
           if (!newValue) return
+          targetRotation -= Math.PI / 2
+          gsap.to(this.object.rotation, { y: targetRotation, duration: 0.5, ease: 'Power0.easeNone' })
+
           const newArray = this.planesGroups.map((_, i) => i).filter((v) => v !== this.currentIndex)
           const newIndex = Math.floor(Math.random() * (this.planesGroups.length - 2))
-          // console.log(newArray, newIndex)
           this.currentIndex = newArray[newIndex]
 
+          this.planesGroups[this.currentIndex].object.rotation.y = -targetRotation - 0.3 + Math.PI / 2
           this.planesGroups[this.currentIndex].show()
           this.planesGroups[this.currentIndex].setTexture(this.getTexture(newValue))
-          this.object.material.uniforms.uBoxes.value = this.planesGroups[this.currentIndex].getBounds()
-          // if (lastValue) this.planesGroups[lastValue]?.hide()
-          // if (newValue && this.planesGroups[newValue]) {
-          //   this.object.material.uniforms.uBoxes.value = this.planesGroups[newValue].getBounds()
-          //   this.planesGroups[newValue].show()
-          // }
         }
       )
     )
-
-    window.requestAnimationFrame(() => {
-      this.refPlane.updateMatrixWorld()
-      for (const p of this.planesGroups) p.updatePlanesMatrix(this.refPlane.matrixWorld)
-    })
   }
 
   private getTexture(imageUrl: string) {
-    if (!(imageUrl in this.textures)) this.textures[imageUrl] = new THREE.TextureLoader().load(imageUrl)
+    if (!(imageUrl in this.textures))
+      this.textures[imageUrl] = new THREE.TextureLoader().load(imageUrl, (t) => this.context.renderer.initTexture(t))
     return this.textures[imageUrl]
   }
 
   public tick(time: number, delta: number): void {
     for (const p of this.planesGroups) p.tick(time, delta)
+    this.object.material.uniforms.uPlaneMatrix.value[0].identity().copy(this.planesGroups[0].matrix).invert()
+    this.object.material.uniforms.uPlaneMatrix.value[1].identity().copy(this.planesGroups[1].matrix).invert()
   }
 }

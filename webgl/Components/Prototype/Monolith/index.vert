@@ -1,10 +1,24 @@
+uniform mat4 uPlaneMatrix[2];
+
 varying vec3 vViewPosition;
+varying vec3 vTextureCoords[2];
 varying vec3 vNormal;
 varying vec2 vCoords;
 
 #include <fog_pars_vertex>
 
+mat3 rotateY(float theta) {
+  return mat3(
+    cos(theta), 0., sin(theta),
+    0., 1., 0.,
+    -sin(theta), 0., cos(theta)
+  );
+}
+
 void main() {
+
+  vTextureCoords[0] = rotateY(3.14159265359 * 0.5) * (0.5 - (uPlaneMatrix[0] * modelMatrix * vec4(position, 1.0)).xyz);
+  vTextureCoords[1] = rotateY(3.14159265359 * 0.5) * (0.5 - (uPlaneMatrix[1] * modelMatrix * vec4(position, 1.0)).xyz);
 
   vNormal = normalMatrix * normal;
 

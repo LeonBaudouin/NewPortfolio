@@ -116,7 +116,6 @@ export default class Water extends AbstractObject<MainSceneContext> {
   }
 
   public tick(time: number, delta: number): void {
-    this.context.camera
     this.ripples.tick(time, delta)
     this.ripples.texture.wrapS = THREE.RepeatWrapping
     this.ripples.texture.wrapT = THREE.RepeatWrapping
