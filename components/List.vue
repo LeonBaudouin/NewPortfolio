@@ -1,7 +1,9 @@
 <template>
   <div class="list">
     <MainLink text="About" />
-    <ProjectList />
+    <slot name="about"></slot>
+    <MainLink text="Projects" />
+    <slot name="projects"></slot>
   </div>
 </template>
 
@@ -9,11 +11,11 @@
 .list {
   position: absolute;
   left: var(--x-page-margin);
-  top: 55vh;
-  height: 45vh;
+  $top: 51.5vh;
+  top: $top;
+  height: 100vh - $top;
 
   display: flex;
   flex-direction: column;
-  gap: 1.3rem;
 }
 </style>

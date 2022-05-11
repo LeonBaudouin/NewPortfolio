@@ -1,15 +1,20 @@
 <template>
   <div class="content">
     <MainTitle />
-    <List />
+    <List>
+      <template v-slot:[slotName]>
+        <NuxtPage />
+      </template>
+    </List>
   </div>
-  <!-- <div></div> -->
-  <!-- <Intro /> -->
-  <!-- <Cursor /> -->
 </template>
 
 <script setup lang="ts">
 const { $webgl, $tweakpane } = useNuxtApp()
+
+const router = useRouter()
+
+const slotName = computed(() => (router.currentRoute.value.path === '/' ? 'projects' : 'about'))
 
 useCleanup(() => {
   let rafId: ReturnType<typeof requestAnimationFrame>

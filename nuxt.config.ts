@@ -5,4 +5,13 @@ export default defineNuxtConfig({
   publicRuntimeConfig: {
     BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
   },
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@import "@/assets/styles/_mixins.scss";',
+        },
+      },
+    },
+  },
 })

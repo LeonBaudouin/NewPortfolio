@@ -1,12 +1,9 @@
 <template>
-  <div class="container">
-    <MainLink text="Projects" />
-    <li class="projectList">
-      <ul v-for="project in projects" class="projectList__item">
-        <ProjectTitle :name="project.name" :subtitle="project.subtitle" :imageUrl="project.imageUrl" />
-      </ul>
-    </li>
-  </div>
+  <li class="projectList">
+    <ul v-for="project in projects" class="projectList__item">
+      <ProjectTitle :name="project.name" :subtitle="project.subtitle" :imageUrl="project.imageUrl" />
+    </ul>
+  </li>
 </template>
 
 <script lang="ts" setup>
@@ -50,13 +47,6 @@ const projects = [
 </script>
 
 <style lang="scss" scoped>
-.container {
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-}
-
 .projectList {
   list-style: none;
   margin: 0.3rem 0 0 0;
@@ -65,11 +55,17 @@ const projects = [
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 1.8rem;
+  gap: 1.8rem 5rem;
+
+  margin-left: 2.8rem;
 
   &__item {
     margin: 0;
     padding: 0;
+  }
+
+  @include lowerHeight {
+    gap: 1.5rem 4.3rem;
   }
 }
 </style>

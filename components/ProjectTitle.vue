@@ -26,20 +26,28 @@ const mouseLeave = () => {
 <style lang="scss" scoped>
 .projectTitle {
   line-height: 1.3;
-  margin-left: 2rem;
+
   &__name {
     margin: 0;
     font-size: 1.3rem;
-    font-weight: 300;
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 2px;
+
+    @include lowerHeight {
+      font-size: 1.2rem;
+    }
   }
 
   &__subtitle {
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 200;
     letter-spacing: 2px;
+
+    @include lowerHeight {
+      font-size: 1.2rem;
+    }
   }
 }
 </style>

@@ -12,16 +12,19 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .title {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   letter-spacing: 2px;
   text-transform: uppercase;
-  margin: 0;
+  margin: 1rem 0 0 0;
   font-weight: 700;
 
   &::before {
     content: '\\.';
-    padding-right: 3px;
-    font-size: 1.3rem;
+    padding-right: 6px;
+  }
+
+  @include lowerHeight {
+    font-size: 1.6rem;
   }
 }
 </style>
