@@ -15,7 +15,6 @@ import CloudManager from '~~/webgl/Components/CloudManager'
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
   private cameraFolder: FolderApi
   private cameraHelper: THREE.CameraHelper
-  private raycastMesh: THREE.Object3D
   private particles: ParticleManager
   private debugCamera: DebugCamera
   private mainCamera: SimpleCamera
