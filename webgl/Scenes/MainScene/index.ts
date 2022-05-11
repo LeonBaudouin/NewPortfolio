@@ -39,7 +39,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
     this.debugCamera = new DebugCamera(this.genContext(), { defaultPosition: new THREE.Vector3(12, 0.5, 0) })
     this.scene = new THREE.Scene()
-    // this.scene.add(new THREE.AxesHelper())
     this.scene.add(this.debugCamera.object)
 
     this.mainCamera = new SimpleCamera(this.genContext(), { defaultPosition: new THREE.Vector3(0, 3, 15) })
@@ -109,12 +108,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     })
     this.scene.add(this.environment.object)
 
-    // this.particles = new Particles(this.genContext())
-    // this.scene.add(this.particles.object)
-
     this.toUnbind(() => {
-      // this.scene.remove(this.particles.object)
-      // this.particles.destroy()
       this.environment.destroy()
     })
 
@@ -122,8 +116,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     gltfLoader.loadAsync('./paper.glb').then((paperGltf) => {
       this.mainCamera.object.rotation.set(1.57, 1.57, -1.57)
       this.mainCamera.object.position.set(21, 0.2, 0)
-      // this.mainCamera.object.rotation.set(1.57, 1.6, -1.57)
-      // this.mainCamera.object.position.set(21.48, 0.7, 0)
       this.mainCamera.object.fov = 30
       this.mainCamera.object.updateProjectionMatrix()
       this.cameraHelper.update()
@@ -144,37 +136,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
       const cloudManager = new CloudManager(this.genContext())
       this.scene.add(cloudManager.object)
-
-      // const cloud1 = new THREE.Mesh(
-      //   new THREE.PlaneGeometry(2.43, 1),
-      //   new THREE.MeshBasicMaterial({
-      //     map: new THREE.TextureLoader().load('cloud2.png'),
-      //     transparent: true,
-      //     fog: false,
-      //   })
-      // )
-
-      // this.scene.add(cloud1)
-      // cloud1.position.x = -100
-      // cloud1.position.y = 9
-      // cloud1.position.z = 30
-      // cloud1.scale.multiplyScalar(20)
-      // cloud1.rotateY(Math.PI / 2)
-
-      // const cloud2 = new THREE.Mesh(
-      //   new THREE.PlaneGeometry(2.43, 1),
-      //   new THREE.MeshBasicMaterial({
-      //     map: new THREE.TextureLoader().load('cloud3.webp'),
-      //     transparent: true,
-      //     fog: false,
-      //   })
-      // )
-      // this.scene.add(cloud2)
-      // cloud2.position.x = -100
-      // cloud2.position.y = 9
-      // cloud2.position.z = -30
-      // cloud2.scale.multiplyScalar(20)
-      // cloud2.rotateY(Math.PI / 2)
 
       this.monolith = new Monolith(this.genContext())
       this.scene.add(this.monolith.object)
