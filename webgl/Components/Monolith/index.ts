@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import fragmentShader from './index.frag?raw'
 import vertexShader from './index.vert?raw'
 import ProjectStore from '~~/stores/ProjectStore'
-import ProjectPlane from '../ProjectPlane'
+import ProjectPlane from '../Prototype/ProjectPlane'
 import gsap from 'gsap'
 
 export default class Monolith extends AbstractObject<

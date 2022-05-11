@@ -4,7 +4,7 @@ import { Reflector } from 'three/examples/jsm/objects/Reflector'
 // import { Reflector } from '../../Native/index'
 import fragmentShader from './index.frag?raw'
 import vertexShader from './index.vert?raw'
-import Ripples from '../Ripples'
+import Ripples from '../Prototype/Ripples'
 import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
 import reactiveUniforms from '~~/utils/uniforms/reactiveUniforms'
 
