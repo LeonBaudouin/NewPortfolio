@@ -1,9 +1,13 @@
 <template>
   <div class="list">
     <MainLink text="About" />
-    <slot name="about"></slot>
+    <div class="list__section">
+      <slot name="about"></slot>
+    </div>
     <MainLink text="Projects" />
-    <slot name="projects"></slot>
+    <div class="list__section">
+      <slot name="projects"></slot>
+    </div>
   </div>
 </template>
 
@@ -17,5 +21,12 @@
 
   display: flex;
   flex-direction: column;
+
+  &__section {
+    margin-left: 2.8rem;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>

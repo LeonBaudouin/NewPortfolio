@@ -57,8 +57,6 @@ const projects = [
   flex-wrap: wrap;
   gap: 1.8rem 5rem;
 
-  margin-left: 2.8rem;
-
   &__item {
     margin: 0;
     padding: 0;
