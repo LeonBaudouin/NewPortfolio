@@ -123,7 +123,7 @@ export default class ParticlesScene extends AbstractScene<WebGLAppContext, THREE
     })
 
     const gltfLoader = new GLTFLoader()
-    gltfLoader.loadAsync('./display.glb').then((gltf) => {
+    gltfLoader.loadAsync('./proto/display.glb').then((gltf) => {
       const queen = gltf.scene.getObjectByName('Queen') as THREE.Mesh
 
       // queen.material = new THREE.MeshNormalMaterial()

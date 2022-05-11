@@ -11,37 +11,37 @@ const projects = [
   {
     name: "Figure d'artiste",
     subtitle: 'Gobelins x Louvre',
-    imageUrl: '/louvre.png',
+    imageUrl: '/projects/louvre.png',
   },
   {
     name: 'Safe Place',
     subtitle: 'Immersive Website',
-    imageUrl: '/safeplace.png',
+    imageUrl: '/projects/safeplace.png',
   },
   {
     name: 'Mamie Danger',
     subtitle: 'Mobile Game',
-    imageUrl: '/louvre.png',
+    imageUrl: '/projects/louvre.png',
   },
   {
     name: 'Abyss',
     subtitle: 'Data Visualization',
-    imageUrl: '/safeplace.png',
+    imageUrl: '/projects/safeplace.png',
   },
   {
     name: 'Belle Epoque',
     subtitle: 'Agency Website',
-    imageUrl: '/louvre.png',
+    imageUrl: '/projects/louvre.png',
   },
   {
     name: 'Portfolio V1',
     subtitle: 'Personal Website',
-    imageUrl: '/safeplace.png',
+    imageUrl: '/projects/safeplace.png',
   },
   {
     name: 'Xperience Métier',
     subtitle: 'Digital Escape Game',
-    imageUrl: '/louvre.png',
+    imageUrl: '/projects/louvre.png',
   },
 ]
 </script>
