@@ -1,12 +1,15 @@
 <template>
-  <h3 class="title">
-    {{ props.text }}
-  </h3>
+  <NuxtLink :to="props.to" class="title__link">
+    <h3 class="title">
+      {{ props.text }}
+    </h3>
+  </NuxtLink>
 </template>
 
 <script lang="ts" setup>
 const props = defineProps({
   text: { type: String, required: true },
+  to: { type: String, required: true },
 })
 </script>
 
@@ -25,6 +28,11 @@ const props = defineProps({
 
   @include lowerHeight {
     font-size: 1.6rem;
+  }
+
+  &__link {
+    color: inherit;
+    text-decoration: none;
   }
 }
 </style>

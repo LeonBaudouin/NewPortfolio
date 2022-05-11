@@ -1,10 +1,10 @@
 <template>
   <div class="list">
-    <MainLink text="About" />
+    <MainLink text="About" to="/about" />
     <div class="list__section">
       <slot name="about"></slot>
     </div>
-    <MainLink text="Projects" />
+    <MainLink text="Projects" to="/" />
     <div class="list__section">
       <slot name="projects"></slot>
     </div>
