@@ -12,7 +12,6 @@ import { FolderApi } from 'tweakpane'
 import Monolith from '~~/webgl/Components/Monolith'
 import CloudManager from '~~/webgl/Components/CloudManager'
 
-export type Section = 'projects' | 'about' | 'lab'
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
   private cameraFolder: FolderApi
   private cameraHelper: THREE.CameraHelper
@@ -24,10 +23,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   private water: Water
   private monolith: Monolith
 
-  private sceneState = reactive<{ raycastPosition: THREE.Vector3; section: Section | null }>({
-    raycastPosition: new THREE.Vector3(),
-    section: 'projects' as Section,
-  })
+  private sceneState = reactive({})
 
   private params = {
     debugCam: false,
@@ -62,21 +58,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
     this.context.renderer.compile(this.scene, this.camera)
 
-    const raycast = new THREE.Raycaster()
-
-    const onMouseMove = ({ clientX, clientY }: MouseEvent) => {
-      const mousePosition = pixelToScreenCoords(clientX, clientY)
-      raycast.setFromCamera(mousePosition, this.camera)
-      if (!this.raycastMesh) return
-
-      const [intersection] = raycast.intersectObject(this.raycastMesh)
-      if (!intersection) return
-      this.sceneState.raycastPosition.copy(intersection.point)
-    }
-
-    window.addEventListener('mousemove', onMouseMove)
     this.toUnbind(() => {
-      window.removeEventListener('mousemove', onMouseMove)
       this.scene.remove(this.debugCamera.object)
       this.debugCamera.destroy()
     })
