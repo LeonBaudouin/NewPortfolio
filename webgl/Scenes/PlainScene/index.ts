@@ -21,6 +21,8 @@ export default class PlainScene extends AbstractScene<WebGLAppContext, THREE.Per
   private environment: Environment
   private monolith: Monolith
 
+  private plain: Plain
+
   private sceneState = reactive({})
 
   private params = {
@@ -92,7 +94,9 @@ export default class PlainScene extends AbstractScene<WebGLAppContext, THREE.Per
       this.environment.destroy()
     })
 
-    this.scene.add(new Plain(this.genContext()).object)
+    this.plain = new Plain(this.genContext())
+    this.scene.add(this.plain.object)
+
     const gltfLoader = new GLTFLoader()
     gltfLoader.loadAsync('./paper.glb').then((paperGltf) => {
       this.mainCamera.object.rotation.set(0, 1.57, 0)
@@ -130,6 +134,7 @@ export default class PlainScene extends AbstractScene<WebGLAppContext, THREE.Per
     this.debugCamera.tick(time, delta)
     this.particles?.tick(time, delta)
     this.monolith?.tick(time, delta)
+    this.plain?.tick(time, delta)
   }
 }
 export type PlainSceneContext = ReturnType<PlainScene['genContext']>
