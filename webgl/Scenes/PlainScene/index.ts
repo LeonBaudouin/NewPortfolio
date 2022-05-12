@@ -85,7 +85,7 @@ export default class PlainScene extends AbstractScene<WebGLAppContext, THREE.Per
       gradientStart: -0.04,
       gradientEnd: 0.24,
       fogColor: '#3d77b5',
-      intensity: 0.021,
+      intensity: 0.011,
       hasFog: true,
     })
     this.scene.add(this.environment.object)
@@ -100,7 +100,7 @@ export default class PlainScene extends AbstractScene<WebGLAppContext, THREE.Per
     const gltfLoader = new GLTFLoader()
     gltfLoader.loadAsync('./paper.glb').then((paperGltf) => {
       this.mainCamera.object.rotation.set(0, 1.57, 0)
-      this.mainCamera.object.position.set(21, 2, 0)
+      this.mainCamera.object.position.set(21, 1.2, 0)
       this.mainCamera.object.fov = 30
       this.mainCamera.object.updateProjectionMatrix()
       this.cameraHelper.update()

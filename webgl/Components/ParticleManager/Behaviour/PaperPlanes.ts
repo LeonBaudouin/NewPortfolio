@@ -130,7 +130,7 @@ export default class PaperPlanes extends AbstractBehaviour {
     const updateAttractorFromMouse = (e: MouseEvent) => {
       const topRaycast = raycast(e)
       if (topRaycast) intersectPoint.copy(topRaycast.point)
-      else {
+      else if (reflectionCamera) {
         const reflectionRaycast = raycast(e, true)
         if (reflectionRaycast) intersectPoint.copy(reflectionRaycast.point)
       }
