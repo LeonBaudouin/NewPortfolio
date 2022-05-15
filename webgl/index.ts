@@ -10,6 +10,7 @@ import vertexShader from './index.vert?raw'
 import fragmentShader from './index.frag?raw'
 import ParticlesScene from './Scenes/ParticlesScene'
 import PlainScene from './Scenes/PlainScene'
+import Ressources from './Ressources'
 
 type Scenes = {
   main: MainScene
@@ -19,6 +20,8 @@ type Scenes = {
 type NuxtApp = ReturnType<typeof useNuxtApp>
 export default class WebGL extends LifeCycle {
   public renderer: THREE.WebGLRenderer
+
+  private ressources: Ressources
 
   public scenes: Scenes
   private currentScene: keyof Scenes
@@ -39,6 +42,7 @@ export default class WebGL extends LifeCycle {
 
     this.tweakpane = this.nuxtApp.$tweakpane
     this.clock = new THREE.Clock(true)
+    this.ressources = new Ressources()
     this.setupRenderer()
     this.setupScenes()
     const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight)
@@ -80,6 +84,7 @@ export default class WebGL extends LifeCycle {
     state: this.state,
     tweakpane: tweakpane || (this.tweakpane as FolderApi | TabPageApi),
     globalUniforms: this.globalUniforms,
+    ressources: this.ressources,
   })
 
   private setupScenes() {

@@ -93,40 +93,36 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       this.environment.destroy()
     })
 
-    const gltfLoader = new GLTFLoader()
-    gltfLoader.loadAsync('./paper.glb').then((paperGltf) => {
-      this.mainCamera.object.rotation.set(1.57, 1.57, -1.57)
-      this.mainCamera.object.position.set(21, 0.2, 0)
-      this.mainCamera.object.fov = 30
-      this.mainCamera.object.updateProjectionMatrix()
-      this.cameraHelper.update()
+    this.mainCamera.object.rotation.set(1.57, 1.57, -1.57)
+    this.mainCamera.object.position.set(21, 0.2, 0)
+    this.mainCamera.object.fov = 30
+    this.mainCamera.object.updateProjectionMatrix()
+    this.cameraHelper.update()
 
-      this.cameraFolder.addInput(this.mainCamera.object, 'rotation', {
-        label: 'Camera Rotation',
-        x: { step: 0.01 },
-        y: { step: 0.01 },
-        z: { step: 0.01 },
-      })
-      this.cameraFolder.addInput(this.mainCamera.object, 'position', { label: 'Camera Position' })
-      this.cameraFolder
-        .addInput(this.mainCamera.object, 'fov', { label: 'Camera Fov' })
-        .on('change', () => this.mainCamera.object.updateProjectionMatrix())
-
-      this.water = new Water(this.genContext())
-      this.scene.add(this.water.object)
-
-      const cloudManager = new CloudManager(this.genContext())
-      this.scene.add(cloudManager.object)
-
-      this.monolith = new Monolith(this.genContext())
-      this.scene.add(this.monolith.object)
-
-      this.particles = new ParticleManager(this.genContext(), {
-        behaviour: 'PaperPlanes',
-        geometry: (paperGltf.scene.getObjectByName('Plane') as THREE.Mesh).geometry,
-      })
-      this.scene.add(this.particles.object)
+    this.cameraFolder.addInput(this.mainCamera.object, 'rotation', {
+      label: 'Camera Rotation',
+      x: { step: 0.01 },
+      y: { step: 0.01 },
+      z: { step: 0.01 },
     })
+    this.cameraFolder.addInput(this.mainCamera.object, 'position', { label: 'Camera Position' })
+    this.cameraFolder
+      .addInput(this.mainCamera.object, 'fov', { label: 'Camera Fov' })
+      .on('change', () => this.mainCamera.object.updateProjectionMatrix())
+
+    this.water = new Water(this.genContext())
+    this.scene.add(this.water.object)
+
+    const cloudManager = new CloudManager(this.genContext())
+    this.scene.add(cloudManager.object)
+
+    this.monolith = new Monolith(this.genContext())
+    this.scene.add(this.monolith.object)
+
+    this.particles = new ParticleManager(this.genContext(), {
+      behaviour: 'PaperPlanes',
+    })
+    this.scene.add(this.particles.object)
   }
 
   public tick(time: number, delta: number): void {

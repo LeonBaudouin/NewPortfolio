@@ -5,20 +5,21 @@ import remap from '~~/utils/math/remap'
 import fragmentShader from './index.frag?raw'
 import vertexShader from './index.vert?raw'
 import reactiveUniforms from '~~/utils/uniforms/reactiveUniforms'
+import { SceneContext } from '~~/webgl/abstract/Context'
 
 export default class Grass extends AbstractObject<
-  WebGLAppContext,
+  SceneContext,
   THREE.InstancedMesh<THREE.InstancedBufferGeometry, THREE.ShaderMaterial>
 > {
-  constructor({ tweakpane, ...context }: WebGLAppContext) {
+  constructor({ tweakpane, ...context }: SceneContext, repartition: ArrayLike<number>) {
     super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Grass', expanded: false }) })
 
     const params = reactive({
       noiseSpeed: -0.5,
       noiseScale: 0.35,
       noiseStrength: 0.5,
-      color1: '#1C632E',
-      color2: '#33994d',
+      color1: '#07521a',
+      color2: '#188835',
       scale: new THREE.Vector2(2, 2),
       highlightStrength: -0.12,
     })
@@ -30,7 +31,7 @@ export default class Grass extends AbstractObject<
     this.context.tweakpane.addInput(params, 'scale', { label: 'Scale' })
     this.context.tweakpane.addInput(params, 'highlightStrength', { label: 'HighlightStrength' })
 
-    const amount = 2_000
+    const amount = repartition.length / 3
 
     const origGeometry = new THREE.PlaneGeometry(0.3 * 6.17, 0.3).translate(0, 0.15, 0)
 
@@ -63,6 +64,7 @@ export default class Grass extends AbstractObject<
           uScale: { value: new THREE.Vector2() },
           uHighlightStrength: { value: 0 },
           uTexture: { value: new THREE.TextureLoader().load('/grass/grass_1.png') },
+          uCam: { value: this.context.camera.position },
           ...THREE.UniformsLib['fog'],
         },
         side: THREE.DoubleSide,
@@ -72,15 +74,14 @@ export default class Grass extends AbstractObject<
       amount
     )
 
+    this.object.renderOrder = 1
+
     reactiveUniforms(this.object.material.uniforms, params)
 
     const obj = new THREE.Object3D()
     for (let i = 0; i < amount; i++) {
       obj.rotation.y = Math.PI / 2
-      // obj.rotateY(Math.random() * Math.PI * 2)
-      const x = remap(Math.random(), [0, 1], [20, -30])
-      const y = remap(Math.random(), [0, 1], [-20, 20])
-      obj.position.set(x, 0, y)
+      obj.position.set(repartition[i * 3 + 0], repartition[i * 3 + 1], repartition[i * 3 + 2])
       obj.updateMatrix()
       this.object.setMatrixAt(i, obj.matrix)
     }

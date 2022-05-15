@@ -51,16 +51,10 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
     run: true,
     attractorsTexture: null,
     normalTexture: null,
-    geometry: null,
   })
 
-  constructor(
-    context: MainSceneContext,
-    { behaviour = 'Circle', geometry }: { behaviour?: keyof typeof behaviours; geometry?: THREE.BufferGeometry }
-  ) {
+  constructor(context: MainSceneContext, { behaviour = 'Circle' }: { behaviour?: keyof typeof behaviours }) {
     super({ ...context, tweakpane: context.tweakpane.addFolder({ title: 'Particle Manager', expanded: false }) })
-
-    if (geometry) this.particlesParams.geometry = geometry
 
     const behaviourName = ref<keyof typeof behaviours>(behaviour)
 

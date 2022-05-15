@@ -8,6 +8,8 @@ export default class CloudManager extends AbstractObject<MainSceneContext> {
     super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Clouds', expanded: false }) })
 
     this.object = new THREE.Object3D()
+    this.object.scale.multiplyScalar(3.3)
+    this.object.position.x -= 50
 
     const loader = new THREE.TextureLoader()
     const textureNames = ['cloud_1', 'cloud_2', 'cloud_3', 'cloud_4']

@@ -11,7 +11,6 @@ export type CubesParams = {
   matcap?: string | THREE.Texture
   textureSize: THREE.Vector2
   normalTexture?: null | THREE.Texture
-  geometry?: null | THREE.BufferGeometry
 }
 
 export type CubesData = Required<CubesParams>
@@ -90,15 +89,9 @@ export default class Cubes extends AbstractObject<
     //     label: 'Matcap',
     //   })
 
-    const origGeometry: THREE.BufferGeometry = this.data.geometry || new THREE.BoxBufferGeometry()
     const geometry = new THREE.InstancedBufferGeometry()
 
     geometry.instanceCount = params.textureSize.x * params.textureSize.y
-
-    Object.keys(origGeometry.attributes).forEach((attributeName) => {
-      geometry.attributes[attributeName] = origGeometry.attributes[attributeName]
-    })
-    geometry.index = origGeometry.index
 
     const index = new Float32Array(params.textureSize.x * params.textureSize.y)
 
@@ -112,11 +105,19 @@ export default class Cubes extends AbstractObject<
     }
     geometry.setAttribute('aPixelPosition', new THREE.InstancedBufferAttribute(pixelPos, 2, false))
 
-    // const numPoints = params.textureSize.x * params.textureSize.y
-    // const positions = new THREE.BufferAttribute(new Float32Array(numPoints * 3).fill(0), 3)
-    // geometry.setAttribute('position', positions)
-
     this.object = new THREE.InstancedMesh(geometry, mat, 512 || params.textureSize.x * params.textureSize.y)
+
+    watch(
+      () => this.context.ressources.state.paperPlane,
+      (gltf) => {
+        if (gltf === null) return
+        const origGeometry = (gltf.scene.getObjectByName('Plane') as THREE.Mesh).geometry
+        Object.keys(origGeometry.attributes).forEach((attributeName) => {
+          geometry.attributes[attributeName] = origGeometry.attributes[attributeName]
+        })
+        geometry.index = origGeometry.index
+      }
+    )
 
     this.context.tweakpane.addInput(this.object, 'count', {
       label: 'Amount',

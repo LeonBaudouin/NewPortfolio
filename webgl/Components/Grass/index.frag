@@ -5,6 +5,7 @@ uniform float uHighlightStrength;
 
 varying vec2 vUv;
 varying float vNoise;
+varying float vDist;
 
 #include <fog_pars_fragment>
 
@@ -14,7 +15,10 @@ void main() {
   vec3 color = mix(uColor1, uColor2, vUv.y);
 
   color *= 1.0 + vNoise * uHighlightStrength;
-  gl_FragColor = vec4(color, texture.r);
+  float alpha = texture.r;
+  gl_FragColor = vec4(color, alpha);
+
+  // gl_FragColor = vec4(vec3(vDist), texture.r);
 
   if (gl_FragColor.a < 0.5) discard;
 

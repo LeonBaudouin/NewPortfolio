@@ -20,6 +20,7 @@ const props = defineProps({
   text-transform: uppercase;
   margin: 1rem 0 0 0;
   font-weight: 700;
+  display: inline-block;
 
   &::before {
     content: '\\.';
@@ -33,6 +34,7 @@ const props = defineProps({
   &__link {
     color: inherit;
     text-decoration: none;
+    align-self: flex-start;
   }
 }
 </style>

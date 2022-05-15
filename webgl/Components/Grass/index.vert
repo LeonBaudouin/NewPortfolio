@@ -1,10 +1,12 @@
 uniform float uTime;
 uniform vec2 uScale;
+uniform vec3 uCam;
 
 varying vec4 vPosition;
 varying vec3 vNormal;
 varying float vNoise;
 varying vec2 vUv;
+varying float vDist;
 
 uniform float uNoiseSpeed;
 uniform float uNoiseScale;
@@ -14,6 +16,11 @@ uniform float uNoiseStrength;
 
 float remap(float value, float start1, float stop1, float start2, float stop2) {
   return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
+}
+
+float cremap(float value, float start1, float stop1, float start2, float stop2) {
+  float r = remap(value, start1, stop1, start2, stop2);
+  return clamp(r, min(start2, stop2), max(start2, stop2));
 }
 
 float cnoise(vec3 v) {
@@ -39,12 +46,14 @@ float wave(vec3 pos) {
 }
 
 void main() {
-  vPosition = instanceMatrix * modelMatrix * vec4(position * uScale.xyx, 1.);
+  vec4 worldPosition = instanceMatrix * modelMatrix * vec4(position * uScale.xyx, 1.);
+  vDist = cremap(length(uCam - worldPosition.xyz), 50., 60., 1., 0.);
   vNormal = normalize(normalMatrix * normal);
 
   vUv = uv;
-  vNoise = wave(vPosition.xyz);
+  vNoise = wave(worldPosition.xyz);
 
+  vPosition = instanceMatrix * modelMatrix * vec4(position * uScale.xyx * vDist, 1.);
   vPosition.x += vNoise * uNoiseStrength * vUv.y;
 
   vec4 mvPosition = viewMatrix * vPosition;
