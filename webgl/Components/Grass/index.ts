@@ -33,7 +33,7 @@ export default class Grass extends AbstractObject<
 
     const amount = repartition.length / 3
 
-    const origGeometry = new THREE.PlaneGeometry(0.3 * 6.17, 0.3).translate(0, 0.15, 0)
+    const origGeometry = new THREE.PlaneGeometry(0.3 * 6.17, 0.3, 12).translate(0, 0.15, 0)
 
     const bufferGeometry = new THREE.InstancedBufferGeometry()
 
@@ -55,6 +55,8 @@ export default class Grass extends AbstractObject<
         fragmentShader,
         vertexShader,
         uniforms: {
+          tContact: { value: null },
+          uContactMatrix: { value: new THREE.Matrix4() },
           uNoiseStrength: { value: 0 },
           uNoiseScale: { value: 0 },
           uNoiseSpeed: { value: 0 },

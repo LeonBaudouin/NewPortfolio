@@ -3,6 +3,7 @@ uniform vec2 uScale;
 uniform vec3 uCam;
 
 varying vec4 vPosition;
+varying vec3 vDisplace;
 varying vec3 vNormal;
 varying float vNoise;
 varying vec2 vUv;
@@ -11,6 +12,8 @@ varying float vDist;
 uniform float uNoiseSpeed;
 uniform float uNoiseScale;
 uniform float uNoiseStrength;
+uniform mat4 uContactMatrix;
+uniform sampler2D tContact;
 
 #include <fog_pars_vertex>
 
@@ -53,8 +56,23 @@ void main() {
   vUv = uv;
   vNoise = wave(worldPosition.xyz);
 
+  vec2 contactUv = (uContactMatrix * vec4(worldPosition.x, 0., worldPosition.z, 1.)).xz;
+  contactUv = contactUv * vec2(1., -1.) + .5;
+  vec3 contact = texture2D(tContact, contactUv).rgb;
+
+  vDisplace = contact;
+
   vPosition = instanceMatrix * modelMatrix * vec4(position * uScale.xyx * vDist, 1.);
-  vPosition.x += vNoise * uNoiseStrength * vUv.y;
+  // vPosition.x += (vNoise + contact.x) * uNoiseStrength * vUv.y;
+  vec3 displacement = vec3(
+    mix(vNoise * uNoiseStrength, contact.y, contact.x),
+    (1. - contact.x) * 0.3,
+    -contact.z
+  );
+  // displacement.y = sin(max((displacement.x + displacement.y) * 1.57, 1.57));
+  vPosition.xyz += displacement * vUv.y;
+  // vPosition.x += displace.x * uNoiseStrength * vUv.y;
+  // vPosition.z += displace.y * uNoiseStrength * vUv.y;
 
   vec4 mvPosition = viewMatrix * vPosition;
   gl_Position = projectionMatrix * mvPosition;
