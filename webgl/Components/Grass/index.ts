@@ -18,8 +18,8 @@ export default class Grass extends AbstractObject<
       noiseSpeed: -0.5,
       noiseScale: 0.35,
       noiseStrength: 0.5,
-      color1: '#07521a',
-      color2: '#188835',
+      color1: '#083b0a',
+      color2: '#09ad29',
       scale: new THREE.Vector2(2, 2),
       highlightStrength: -0.12,
     })
@@ -69,7 +69,6 @@ export default class Grass extends AbstractObject<
           uCam: { value: this.context.camera.position },
           ...THREE.UniformsLib['fog'],
         },
-        side: THREE.DoubleSide,
         fog: true,
         transparent: true,
       }),

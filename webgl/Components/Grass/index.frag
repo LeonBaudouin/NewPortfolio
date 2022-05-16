@@ -22,7 +22,7 @@ void main() {
   // gl_FragColor = vec4(vec3((vDisplace.yz + 1.) / 2., 0.), alpha);
   // gl_FragColor = vec4(vec3(vDisplace.yz, 0.), texture.r);
 
-  if (gl_FragColor.a < 0.5) discard;
+  if (gl_FragColor.a < 0.2) discard;
 
   #include <fog_fragment>
 

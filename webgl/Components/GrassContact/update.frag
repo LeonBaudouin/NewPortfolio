@@ -33,10 +33,6 @@ vec3 sdgCircle( in vec2 p, in float r )
     return vec3( d-r, p/d );
 }
 
-float quadraticOut(float t) {
-  return -t * (t - 2.0);
-}
-
 void main() {
   /* get vertex info */
   vec2 uv = vUv + ((-uPosition.xz * vec2(1., -1.)) / uPlaneScale);
@@ -48,7 +44,7 @@ void main() {
   // float drop = max(0.0, 1.0 - length(uCenter - vUv) / uRadius);
   vec3 drop = sdgCircle(vUv - uCenter, uRadius);
   drop.x = cremap(drop.x, -uRadius, 0., 1., 0.);
-  drop.yz *= quadraticOut(drop.x);
+  drop.yz *= drop.x;
   drop *= uStrength;
   // drop *= max(0., 1. - length(drop));
 

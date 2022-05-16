@@ -14,8 +14,8 @@ export default class PlainMesh extends AbstractObject<SceneContext> {
     const params = reactive({
       noiseSpeed: -0.5,
       noiseScale: 0.35,
-      color1: '#0c6f25',
-      color2: '#1c983c',
+      color1: '#09880e',
+      color2: '#03a824',
     })
     this.context.tweakpane.addInput(params, 'noiseSpeed', { label: 'Noise Speed' })
     this.context.tweakpane.addInput(params, 'noiseScale', { label: 'Noise Scale' })

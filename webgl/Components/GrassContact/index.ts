@@ -48,7 +48,7 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
         uPosition: { value: new THREE.Vector3() },
         uPlaneScale: { value: 20 },
         uCenter: { value: new THREE.Vector2(-100, -100) },
-        uRadius: { value: 0.03 },
+        uRadius: { value: 0.02 },
         uStrength: { value: 1 },
       },
     })
@@ -67,7 +67,7 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
     const geom = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2)
     const mat = new THREE.MeshBasicMaterial({ wireframe: true })
     this.raycastMesh = new THREE.Mesh(geom, mat)
-    this.raycastMesh.position.y = 0.6
+    this.raycastMesh.position.y = 0.4
     this.raycastMesh.position.x = 11
     this.raycastMesh.visible = false
     this.raycastMesh.renderOrder = 100
@@ -101,7 +101,7 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
     }
     const distFromLastFrame = this.shader.uniforms.uCenter.value.distanceTo(this.mousePos)
     this.shader.uniforms.uCenter.value.copy(this.mousePos)
-    this.shader.uniforms.uStrength.value = cremap(distFromLastFrame, [0, 0.03], [0, 3])
+    this.shader.uniforms.uStrength.value = 0.5
 
     this.shader.uniforms.uPlaneScale.value = this.raycastMesh.scale.x
     temp1.sub(this.raycastMesh.position)

@@ -48,6 +48,12 @@ float wave(vec3 pos) {
   return noise;
 }
 
+float isNorm(vec2 _st) {
+  if (_st.x > 1. || _st.y > 1. || _st.x < 0. || _st.y < 0.)
+    return 0.;
+  return 1.;
+}
+
 void main() {
   vec4 worldPosition = instanceMatrix * modelMatrix * vec4(position * uScale.xyx, 1.);
   vDist = cremap(length(uCam - worldPosition.xyz), 50., 60., 1., 0.);
@@ -58,7 +64,7 @@ void main() {
 
   vec2 contactUv = (uContactMatrix * vec4(worldPosition.x, 0., worldPosition.z, 1.)).xz;
   contactUv = contactUv * vec2(1., -1.) + .5;
-  vec3 contact = texture2D(tContact, contactUv).rgb;
+  vec3 contact = texture2D(tContact, contactUv).rgb * isNorm(contactUv);
 
   vDisplace = contact;
 
@@ -66,7 +72,8 @@ void main() {
   // vPosition.x += (vNoise + contact.x) * uNoiseStrength * vUv.y;
   vec3 displacement = vec3(
     mix(vNoise * uNoiseStrength, contact.y, contact.x),
-    (1. - contact.x) * 0.3,
+    // (1. - contact.x) * 0.3,
+    remap(contact.x, 0., 1., 0., -0.1),
     -contact.z
   );
   // displacement.y = sin(max((displacement.x + displacement.y) * 1.57, 1.57));
