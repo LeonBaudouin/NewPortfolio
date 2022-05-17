@@ -6,7 +6,7 @@ import { SceneContext } from '~~/webgl/abstract/Context'
 import reactiveUniforms from '~~/utils/uniforms/reactiveUniforms'
 
 export default class PlainMesh extends AbstractObject<SceneContext> {
-  private shaderMaterial: THREE.ShaderMaterial
+  public shaderMaterial: THREE.ShaderMaterial
 
   constructor({ tweakpane, ...context }: SceneContext, geometry: THREE.BufferGeometry) {
     super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Plain', expanded: false }) })
@@ -31,7 +31,7 @@ export default class PlainMesh extends AbstractObject<SceneContext> {
         uTime: { value: 0 },
         uColor1: { value: new THREE.Color() },
         uColor2: { value: new THREE.Color() },
-        uCam: { value: this.context.camera.position },
+        ...this.context.globalUniforms,
         ...THREE.UniformsLib['fog'],
       },
       fog: true,

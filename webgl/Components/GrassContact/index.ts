@@ -60,7 +60,7 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
     const geom = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2)
     const mat = new THREE.MeshBasicMaterial({ wireframe: true })
     this.raycastMesh = new THREE.Mesh(geom, mat)
-    this.raycastMesh.position.y = 0.4
+    this.raycastMesh.position.y = -0.6
     this.raycastMesh.position.x = 11
     this.raycastMesh.visible = false
     this.raycastMesh.renderOrder = 100
@@ -68,6 +68,7 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
     this.context.scene.add(this.raycastMesh)
 
     const mouseMove = (e: MouseEvent) => {
+      if (!this.context.state.inPlain) return
       this.raycaster.setFromCamera(pixelToScreenCoords(e.clientX, e.clientY), this.context.camera)
       const [intersection] = this.raycaster.intersectObject(this.raycastMesh)
       if (intersection) this.mousePos.copy(intersection.uv!)

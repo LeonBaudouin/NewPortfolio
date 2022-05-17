@@ -2,18 +2,17 @@ uniform float uTime;
 uniform vec2 uScale;
 uniform vec3 uCam;
 
-varying vec4 vPosition;
 varying vec3 vDisplace;
-varying vec3 vNormal;
 varying float vNoise;
+varying float vShadow;
 varying vec2 vUv;
-varying float vDist;
 
 uniform float uNoiseSpeed;
 uniform float uNoiseScale;
 uniform float uNoiseStrength;
 uniform mat4 uContactMatrix;
 uniform sampler2D tContact;
+uniform float uTransitionProg;
 
 #include <fog_pars_vertex>
 
@@ -54,10 +53,47 @@ float isNorm(vec2 _st) {
   return 1.;
 }
 
+float exponentialIn(float t) {
+  return t == 0.0 ? t : pow(2.0, 10.0 * (t - 1.0));
+}
+
+vec2 rotateUV(vec2 uv, float rotation, vec2 mid)
+{
+    return vec2(
+      cos(rotation) * (uv.x - mid.x) + sin(rotation) * (uv.y - mid.y) + mid.x,
+      cos(rotation) * (uv.y - mid.y) - sin(rotation) * (uv.x - mid.x) + mid.y
+    );
+}
+
+float computeAlpha(vec2 pos) {
+  float scale = 20.;
+
+  float prog = uTransitionProg * 1.13;
+
+  float branchNumber = 10.;
+  float bulgeSize = 0.700 * prog + 0.776 * exponentialIn(prog);
+
+  vec2 center = vec2(0.);
+  pos -= center;
+	pos /= scale;
+  pos += center;
+  float rot = length(center - pos) * 1.388;
+  vec2 rotatedPos = rotateUV(pos, rot, center);
+  vec2 centeredPos = center - rotatedPos;
+
+  float b = max(-pos.x, 0.);
+
+  vec2 dir = normalize(centeredPos);
+  float angleProg = atan(dir.y, dir.x);
+  float bulge = (1. + sin(angleProg * branchNumber)) / 2. + b * 4.;
+  float stepV = prog + bulge * bulgeSize;
+	return smoothstep(stepV + 0.1, stepV - 0.1, length(centeredPos));
+}
+
+
 void main() {
   vec4 worldPosition = instanceMatrix * modelMatrix * vec4(position * uScale.xyx, 1.);
-  vDist = cremap(length(uCam - worldPosition.xyz), 50., 60., 1., 0.);
-  vNormal = normalize(normalMatrix * normal);
+  float dist = cremap(length(uCam - worldPosition.xyz), 50., 60., 1., 0.);
 
   vUv = uv;
   vNoise = wave(worldPosition.xyz);
@@ -68,20 +104,17 @@ void main() {
 
   vDisplace = contact;
 
-  vPosition = instanceMatrix * modelMatrix * vec4(position * uScale.xyx * vDist, 1.);
-  // vPosition.x += (vNoise + contact.x) * uNoiseStrength * vUv.y;
+  vec4 pos = instanceMatrix * modelMatrix * vec4(position * uScale.xyx * dist, 1.);
   vec3 displacement = vec3(
     mix(vNoise * uNoiseStrength, contact.y, contact.x),
-    // (1. - contact.x) * 0.3,
     remap(contact.x, 0., 1., 0., -0.1),
     -contact.z
   );
-  // displacement.y = sin(max((displacement.x + displacement.y) * 1.57, 1.57));
-  vPosition.xyz += displacement * vUv.y;
-  // vPosition.x += displace.x * uNoiseStrength * vUv.y;
-  // vPosition.z += displace.y * uNoiseStrength * vUv.y;
+  pos.xyz += displacement * vUv.y;
 
-  vec4 mvPosition = viewMatrix * vPosition;
+  vShadow = uTransitionProg > 0. ? 1. - computeAlpha(pos.xz * vec2(1., -1.) + vec2(3., 3.)) : 1.;
+
+  vec4 mvPosition = viewMatrix * pos;
   gl_Position = projectionMatrix * mvPosition;
 
   #include <fog_vertex>

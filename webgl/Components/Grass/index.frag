@@ -5,8 +5,8 @@ uniform float uHighlightStrength;
 
 varying vec2 vUv;
 varying float vNoise;
-varying float vDist;
 varying vec3 vDisplace;
+varying float vShadow;
 
 #include <fog_pars_fragment>
 
@@ -30,4 +30,5 @@ void main() {
   // #ifdef ALPHATEST
   //   if(gl_FragColor.a < ALPHATEST) discard;
   // #endif
+  gl_FragColor.rbg = mix(gl_FragColor.rbg, vec3(0.), vShadow * 0.5);
 }

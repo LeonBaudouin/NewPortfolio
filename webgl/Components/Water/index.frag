@@ -1,3 +1,5 @@
+const float PI = 3.141592653589793;
+
 uniform sampler2D tDiffuse;
 uniform sampler2D tRipples;
 uniform mat4 uRipplesMatrix;
@@ -11,6 +13,7 @@ uniform vec2 uFresnelRemap;
 uniform vec4 uBlendRemap;
 uniform vec3 uBlendColor;
 uniform vec4 uRampRemap;
+uniform float uTransitionProg;
 
 varying vec4 vUv;
 varying vec3 vPosition;
@@ -133,6 +136,17 @@ float smax0(float a, float b, float k)
   return smin1(a, b, -k);
 }
 
+float exponentialIn(float t) {
+  return t == 0.0 ? t : pow(2.0, 10.0 * (t - 1.0));
+}
+
+vec2 rotateUV(vec2 uv, float rotation, vec2 mid)
+{
+    return vec2(
+      cos(rotation) * (uv.x - mid.x) + sin(rotation) * (uv.y - mid.y) + mid.x,
+      cos(rotation) * (uv.y - mid.y) - sin(rotation) * (uv.x - mid.x) + mid.y
+    );
+}
 
 vec3 getDisplacedPosition(vec2 _position, vec2 basePosition) {
   vec2 uv = _position * vec2(1., -1.) + .5;
@@ -152,6 +166,31 @@ vec3 rgb2hsv(vec3 c)
     float d = q.x - min(q.w, q.y);
     float e = 1.0e-10;
     return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+float computeAlpha(vec2 pos) {
+  float scale = 20.;
+
+  float prog = uTransitionProg * 1.13;
+
+  float branchNumber = 10.;
+  float bulgeSize = 0.700 * prog + 0.776 * exponentialIn(prog);
+
+  vec2 center = vec2(0.);
+  pos -= center;
+	pos /= scale;
+  pos += center;
+  float rot = length(center - pos) * 1.388;
+  vec2 rotatedPos = rotateUV(pos, rot, center);
+  vec2 centeredPos = center - rotatedPos;
+
+  float b = max(-pos.x, 0.);
+
+  vec2 dir = normalize(centeredPos);
+  float angleProg = atan(dir.y, dir.x);
+  float bulge = (1. + sin(angleProg * branchNumber)) / 2. + b * 4.;
+  float stepV = prog + bulge * bulgeSize;
+	return step(length(centeredPos), stepV);
 }
 
 void main() {
@@ -202,8 +241,12 @@ void main() {
   // c = blendOverlay( c, color );
   c = blendOverlay( c, vec3(deepnessBlend) );
 
+  float alpha = uTransitionProg > 0. ? 1. - computeAlpha(vPosition.xy) : 1.;
+
   // gl_FragColor = vec4(vec3(sat), 1.);
-  gl_FragColor = vec4(c + f, 1.);
+  gl_FragColor = vec4(c + f, alpha);
+
+  if (alpha < 0.5) discard;
   // gl_FragColor = vec4(vec3(deepnessBlend), 1.);
 
 

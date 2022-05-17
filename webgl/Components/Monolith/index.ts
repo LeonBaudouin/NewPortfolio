@@ -19,7 +19,7 @@ export default class Monolith extends AbstractObject<
     super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Monolith', expanded: false }) })
 
     this.object = new THREE.Mesh(
-      new THREE.BoxGeometry(0.8, 4.8, 0.8),
+      new THREE.BoxGeometry(0.8, 5.8, 0.8),
       // new THREE.BoxGeometry(8, 48, 8),
       new THREE.ShaderMaterial({
         fragmentShader,
@@ -44,7 +44,7 @@ export default class Monolith extends AbstractObject<
       // })
     )
     this.object.rotateY(Math.PI / 2 - 0.3)
-    this.object.position.y = 2.25
+    this.object.position.y = 1.25
     // this.object.visible = false
     this.context.tweakpane.addInput(this.object.rotation, 'y', { label: 'Monolith Rotation' })
     this.context.tweakpane.addInput(this.object.material.uniforms.uShadowRemap, 'value', {
@@ -62,13 +62,13 @@ export default class Monolith extends AbstractObject<
 
     this.planesGroups = [
       new ProjectPlane(this.context, {
-        scale: new THREE.Vector3(0.65, 4.3, 1),
-        position: new THREE.Vector3(0.02, 0.07, 0.5),
+        scale: new THREE.Vector3(0.65, 3.9, 1),
+        position: new THREE.Vector3(0.02, 0.815, 0.5),
         direction: 'left',
       }),
       new ProjectPlane(this.context, {
-        scale: new THREE.Vector3(0.65, 4.3, 1),
-        position: new THREE.Vector3(0.02, 0.07, 0.5),
+        scale: new THREE.Vector3(0.65, 3.9, 1),
+        position: new THREE.Vector3(0.02, 0.815, 0.5),
         direction: 'left',
       }),
     ]

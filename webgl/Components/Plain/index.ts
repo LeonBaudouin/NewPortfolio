@@ -13,10 +13,13 @@ export default class Plain extends AbstractObject<SceneContext> {
   private plainMesh: PlainMesh
   private grassContact: GrassContact
 
+  public data = reactive({ transitionProg: 0 })
+
   constructor({ tweakpane, ...context }: SceneContext) {
     super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Plain', expanded: false }) })
 
     this.object = new THREE.Object3D()
+    this.object.position.y -= 1
 
     this.grassContact = new GrassContact(this.context)
 
@@ -35,11 +38,21 @@ export default class Plain extends AbstractObject<SceneContext> {
         if (gltf === null) return
         this.plainMesh = new PlainMesh(this.context, (gltf.scene.getObjectByName('Plane001') as THREE.Mesh).geometry)
         this.object.add(this.plainMesh.object)
+        this.plainMesh.object.scale.y = this.data.transitionProg
+      }
+    )
+
+    watch(
+      () => this.data.transitionProg,
+      (prog) => {
+        this.object.visible = prog > 0
+        if (this.plainMesh) this.plainMesh.object.scale.y = prog
       }
     )
   }
 
   public tick(time: number, delta: number): void {
+    if (!this.object.visible) return
     this.grassContact?.tick(time, delta)
     if (this.grass && this.grassContact) {
       this.grass.object.material.uniforms.tContact.value = this.grassContact.texture

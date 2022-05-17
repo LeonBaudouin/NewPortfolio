@@ -1,7 +1,7 @@
 uniform float uTime;
-uniform vec3 uCam;
 
 varying float vNoise;
+varying vec3 vWorldPosition;
 
 uniform float uNoiseSpeed;
 uniform float uNoiseScale;
@@ -41,10 +41,9 @@ float wave(vec3 pos) {
 
 void main() {
   vec4 worldPosition = modelMatrix * vec4(position, 1.);
-  float dist = cremap(length(uCam - worldPosition.xyz), 45., 50., 1., 0.);
 
   vNoise = wave(worldPosition.xyz);
-
+  vWorldPosition = worldPosition.xyz;
   vec4 mvPosition = viewMatrix * worldPosition;
   gl_Position = projectionMatrix * mvPosition;
 
