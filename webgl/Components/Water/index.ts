@@ -41,7 +41,7 @@ export default class Water extends AbstractObject<MainSceneContext> {
           tDiffuse: { value: null },
           textureMatrix: { value: null },
           tRipples: { value: null },
-          uRipplesMatrix: { value: null },
+          uRipplesMatrix: { value: new THREE.Matrix4() },
           uDebug: { value: 0 },
           uTime: { value: 0 },
           uNoiseIntensity: { value: 0.0003 },

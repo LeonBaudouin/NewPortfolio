@@ -14,6 +14,11 @@ const { $webgl, $tweakpane } = useNuxtApp()
 
 const router = useRouter()
 
+    if ($webgl) $webgl.state.inPlain = path !== '/'
+  },
+  { immediate: true }
+)
+
 const slotName = computed(() => (router.currentRoute.value.path === '/' ? 'projects' : 'about'))
 
 useCleanup(() => {
