@@ -2,13 +2,10 @@ import * as THREE from 'three'
 import { FolderApi, ListApi, Pane, TabPageApi } from 'tweakpane'
 import LifeCycle from './abstract/LifeCycle'
 import MainScene from './Scenes/MainScene'
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
-import vertexShader from './index.vert?raw'
-import fragmentShader from './index.frag?raw'
 import ParticlesScene from './Scenes/ParticlesScene'
 import Ressources from './Ressources'
+import GPGPU from '~~/utils/GPGPU'
+import RenderTargetDebugger from './Components/RenderTargetDebugger'
 
 type Scenes = {
   main: MainScene
@@ -24,11 +21,10 @@ export default class WebGL extends LifeCycle {
   private currentScene: keyof Scenes
   private clock: THREE.Clock
   private tweakpane: FolderApi
-  private postProcessing: EffectComposer
-  private renderPass: RenderPass
-  private shaderPass: ShaderPass
-  public state = reactive<{ introState: 'start' | 'endDrag' | 'complete' }>({ introState: 'start' })
+  public state = reactive<{ inPlain: boolean }>({ inPlain: false })
   private nuxtApp: NuxtApp
+  private simulation: GPGPU
+  private renderTargetDebugger: RenderTargetDebugger
   private globalUniforms = {
     uInReflection: { value: false },
   }
@@ -41,22 +37,8 @@ export default class WebGL extends LifeCycle {
     this.clock = new THREE.Clock(true)
     this.ressources = new Ressources()
     this.setupRenderer()
+    this.setupSimulation()
     this.setupScenes()
-    const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight)
-    ;(renderTarget as any).samples = 2
-    this.postProcessing = new EffectComposer(this.renderer, renderTarget)
-    this.renderPass = new RenderPass(this.scenes.main.scene, this.scenes.main.camera)
-    this.shaderPass = new ShaderPass({
-      vertexShader,
-      fragmentShader,
-      uniforms: {
-        tDiffuse: { value: null },
-        uSRGB: { value: false },
-      },
-    })
-    // this.tweakpane.addInput(this.shaderPass.material.uniforms.uSRGB, 'value', { label: 'sRGB' })
-    this.postProcessing.addPass(this.renderPass)
-    this.postProcessing.addPass(this.shaderPass)
 
     this.currentScene =
       Object.keys(this.scenes).indexOf(this.nuxtApp.$params.scene || '') > -1
@@ -82,6 +64,7 @@ export default class WebGL extends LifeCycle {
     tweakpane: tweakpane || (this.tweakpane as FolderApi | TabPageApi),
     globalUniforms: this.globalUniforms,
     ressources: this.ressources,
+    simulation: this.simulation,
   })
 
   private setupScenes() {
@@ -111,18 +94,46 @@ export default class WebGL extends LifeCycle {
     window.addEventListener('resize', resize)
   }
 
+  private setupSimulation() {
+    const size = new THREE.Vector2(1024, 1024)
+
+    const initTexture = new THREE.DataTexture(
+      new Float32Array(new Array(size.x * size.y * 4).fill(0)),
+      size.x,
+      size.y,
+      THREE.RGBAFormat,
+      THREE.FloatType
+    )
+
+    this.simulation = new GPGPU({
+      size,
+      renderer: this.renderer,
+      initTexture,
+      renderTargetParams: {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearMipmapLinearFilter,
+      },
+    })
+
+    this.renderTargetDebugger = new RenderTargetDebugger(this.genContext())
+    this.tweakpane.addInput(this.renderTargetDebugger.object, 'visible', { label: 'Render Target Debugger' })
+  }
+
   public tick() {
-    const deltaTime = this.clock.getDelta()
-    const elapsedTime = this.clock.elapsedTime
+    // const deltaTime = this.clock.getDelta()
+    // const elapsedTime = this.clock.elapsedTime
 
     const currentScene = this.scenes[this.currentScene]
 
-    currentScene.tick(elapsedTime, deltaTime)
-    this.renderer.render(currentScene.scene, currentScene.camera)
-    // this.renderPass.camera = currentScene.camera
-    // this.renderPass.scene = currentScene.scene
-    // this.postProcessing.render()
-    // console.log(this.shaderPass)
+    // currentScene.tick(elapsedTime, deltaTime)
+    // this.renderer.render(currentScene.scene, currentScene.camera)
+
+    if (this.renderTargetDebugger.object.visible) {
+      this.renderer.autoClear = false
+      this.renderTargetDebugger.object.material.uniforms.uTexture.value = this.simulation.outputTexture
+      this.renderer.render(this.renderTargetDebugger.object, currentScene.camera)
+      this.renderer.autoClear = true
+    }
   }
 }
 

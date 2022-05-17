@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-import GPGPU from '~~/utils/GPGPU'
 import cremap from '~~/utils/math/cremap'
 import simFragment from './update.frag?raw'
 import vertex from './default.vert?raw'
@@ -10,10 +9,9 @@ import AbstractComponent from '~~/webgl/abstract/AbstractComponent'
 const temp1 = new THREE.Vector3()
 
 export default class GrassContact extends AbstractComponent<SceneContext> {
-  private simulation: GPGPU
   private raycaster = new THREE.Raycaster()
   private raycastMesh: THREE.Object3D
-  private shader: THREE.Shader
+  private quad: THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
   private mousePos = new THREE.Vector2(-100, -100)
 
   public get matrix(): THREE.Matrix4 {
@@ -21,7 +19,7 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
     return this.raycastMesh.matrix
   }
   public get texture(): THREE.Texture {
-    return this.simulation.getBuffer().texture
+    return this.context.simulation.getBuffer().texture
   }
 
   private params = {
@@ -52,17 +50,8 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
         uStrength: { value: 1 },
       },
     })
-    this.shader = simulationShader
-    this.simulation = new GPGPU({
-      size,
-      renderer: this.context.renderer,
-      shader: simulationShader,
-      initTexture,
-      renderTargetParams: {
-        minFilter: THREE.LinearFilter,
-        magFilter: THREE.LinearMipmapLinearFilter,
-      },
-    })
+
+    this.quad = new THREE.Mesh(new THREE.PlaneBufferGeometry(), simulationShader)
 
     const geom = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2)
     const mat = new THREE.MeshBasicMaterial({ wireframe: true })
@@ -88,7 +77,8 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
     this.toUnbind(() => {
       geom.dispose()
       mat.dispose()
-      this.simulation.dispose()
+      this.quad.material.dispose()
+      this.quad.geometry.dispose()
       initTexture.dispose()
       window.removeEventListener('mousemove', mouseMove)
     })
@@ -99,14 +89,14 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
       this.raycastMesh.position.set(Math.cos(time) * 5, 0, Math.sin(time) * 5)
       if (temp1.length() == 0) temp1.copy(this.raycastMesh.position)
     }
-    const distFromLastFrame = this.shader.uniforms.uCenter.value.distanceTo(this.mousePos)
-    this.shader.uniforms.uCenter.value.copy(this.mousePos)
-    this.shader.uniforms.uStrength.value = cremap(distFromLastFrame, [0, 0.0001], [0, 0.5])
+    const distFromLastFrame = this.quad.material.uniforms.uCenter.value.distanceTo(this.mousePos)
+    this.quad.material.uniforms.uCenter.value.copy(this.mousePos)
+    this.quad.material.uniforms.uStrength.value = cremap(distFromLastFrame, [0, 0.0001], [0, 0.5])
 
-    this.shader.uniforms.uPlaneScale.value = this.raycastMesh.scale.x
+    this.quad.material.uniforms.uPlaneScale.value = this.raycastMesh.scale.x
     temp1.sub(this.raycastMesh.position)
-    this.shader.uniforms.uPosition.value.copy(temp1)
+    this.quad.material.uniforms.uPosition.value.copy(temp1)
     temp1.copy(this.raycastMesh.position)
-    this.simulation.render()
+    this.context.simulation.render({ overrideQuad: this.quad })
   }
 }

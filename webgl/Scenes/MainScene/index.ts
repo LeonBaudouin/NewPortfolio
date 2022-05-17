@@ -23,8 +23,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   private plain: Plain
   private monolith: Monolith
 
-  private inPlain = ref(false)
-
   private sceneState = reactive({})
 
   private params = {
@@ -52,7 +50,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.context.tweakpane
       .addInput(this.params, 'debugCam', { label: 'Debug Cam' })
       .on('change', ({ value }) => (this.camera = value ? this.debugCamera.object : this.mainCamera.object))
-    this.context.tweakpane.addInput(this.inPlain, 'value', { label: 'In Plain' })
+    this.context.tweakpane.addInput(this.context.state, 'inPlain', { label: 'In Plain' })
 
     this.cameraFolder = this.context.tweakpane.addFolder({ title: 'Main Camera', expanded: false })
     this.cameraFolder.addInput(this.cameraHelper, 'visible', { label: 'Camera Helper' })
@@ -95,7 +93,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     })
 
     watchEffect(() => {
-      gsap.to(this.environment.data, { intensity: this.inPlain.value ? 0.004 : 0.021, duration: 0.3 })
+      gsap.to(this.environment.data, { intensity: this.context.state.inPlain ? 0.004 : 0.021, duration: 0.3 })
     })
 
     this.scene.add(this.environment.object)
@@ -108,7 +106,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.mainCamera.object.position.set(21, 0.2, 0)
 
     watchEffect(() => {
-      gsap.to(this.mainCamera.object.position, { y: this.inPlain.value ? 1.2 : 0.2, duration: 0.3 })
+      gsap.to(this.mainCamera.object.position, { y: this.context.state.inPlain ? 1.2 : 0.2, duration: 0.3 })
     })
 
     this.mainCamera.object.fov = 30
@@ -132,8 +130,8 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.scene.add(this.plain.object)
 
     watchEffect(() => {
-      this.plain.object.visible = this.inPlain.value
-      this.water.object.visible = !this.inPlain.value
+      this.plain.object.visible = this.context.state.inPlain
+      this.water.object.visible = !this.context.state.inPlain
     })
 
     const cloudManager = new CloudManager(this.genContext())
@@ -151,7 +149,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   public tick(time: number, delta: number): void {
     this.debugCamera.tick(time, delta)
     this.particles?.tick(time, delta)
-    if (this.inPlain.value) this.plain?.tick(time, delta)
+    if (this.context.state.inPlain) this.plain?.tick(time, delta)
     else this.water?.tick(time, delta)
     this.monolith?.tick(time, delta)
   }
