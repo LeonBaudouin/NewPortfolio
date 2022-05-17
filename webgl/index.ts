@@ -5,17 +5,14 @@ import MainScene from './Scenes/MainScene'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
-import { Params } from '~~/plugins/params.client'
 import vertexShader from './index.vert?raw'
 import fragmentShader from './index.frag?raw'
 import ParticlesScene from './Scenes/ParticlesScene'
-import PlainScene from './Scenes/PlainScene'
 import Ressources from './Ressources'
 
 type Scenes = {
   main: MainScene
   particles: ParticlesScene
-  plain: PlainScene
 }
 type NuxtApp = ReturnType<typeof useNuxtApp>
 export default class WebGL extends LifeCycle {
@@ -92,12 +89,10 @@ export default class WebGL extends LifeCycle {
 
     const mainPage = tabs.pages[0]
     const testPage = tabs.addPage({ title: 'Particles' })
-    const plainPage = tabs.addPage({ title: 'Plain' })
 
     this.scenes = {
       main: new MainScene(this.genContext(mainPage)),
       particles: new ParticlesScene(this.genContext(testPage)),
-      plain: new PlainScene(this.genContext(plainPage)),
     }
     this.toUnbind(this.scenes.main.destroy, tabs.dispose)
   }

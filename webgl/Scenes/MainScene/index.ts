@@ -1,16 +1,16 @@
 import * as THREE from 'three'
 import { WebGLAppContext } from '~/webgl'
-import pixelToScreenCoords from '~~/utils/webgl/pixelToScreenCoords'
 import AbstractScene from '~~/webgl/abstract/AbstractScene'
 import DebugCamera from '~~/webgl/Components/Camera/DebugCamera'
 import Environment from '~~/webgl/Components/Environment'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import Water from '~~/webgl/Components/Water'
+import Plain from '~~/webgl/Components/Plain'
 import SimpleCamera from '~~/webgl/Components/Camera/SimpleCamera'
 import ParticleManager from '~~/webgl/Components/ParticleManager'
 import { FolderApi } from 'tweakpane'
 import Monolith from '~~/webgl/Components/Monolith'
 import CloudManager from '~~/webgl/Components/CloudManager'
+import gsap from 'gsap'
 
 export default class MainScene extends AbstractScene<WebGLAppContext, THREE.PerspectiveCamera> {
   private cameraFolder: FolderApi
@@ -20,7 +20,10 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   private mainCamera: SimpleCamera
   private environment: Environment
   private water: Water
+  private plain: Plain
   private monolith: Monolith
+
+  private inPlain = ref(false)
 
   private sceneState = reactive({})
 
@@ -49,6 +52,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.context.tweakpane
       .addInput(this.params, 'debugCam', { label: 'Debug Cam' })
       .on('change', ({ value }) => (this.camera = value ? this.debugCamera.object : this.mainCamera.object))
+    this.context.tweakpane.addInput(this.inPlain, 'value', { label: 'In Plain' })
 
     this.cameraFolder = this.context.tweakpane.addFolder({ title: 'Main Camera', expanded: false })
     this.cameraFolder.addInput(this.cameraHelper, 'visible', { label: 'Camera Helper' })
@@ -85,16 +89,28 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       gradientEnd: 0.24,
       fogColor: '#3d77b5',
       intensity: 0.021,
+      // fogColor: '#71b5ff',
+      // intensity: 0.004,
       hasFog: true,
     })
+
+    watchEffect(() => {
+      gsap.to(this.environment.data, { intensity: this.inPlain.value ? 0.004 : 0.021, duration: 0.3 })
+    })
+
     this.scene.add(this.environment.object)
 
     this.toUnbind(() => {
       this.environment.destroy()
     })
 
-    this.mainCamera.object.rotation.set(1.57, 1.57, -1.57)
+    this.mainCamera.object.rotation.set(0, 1.57, 0)
     this.mainCamera.object.position.set(21, 0.2, 0)
+
+    watchEffect(() => {
+      gsap.to(this.mainCamera.object.position, { y: this.inPlain.value ? 1.2 : 0.2, duration: 0.3 })
+    })
+
     this.mainCamera.object.fov = 30
     this.mainCamera.object.updateProjectionMatrix()
     this.cameraHelper.update()
@@ -112,6 +128,13 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
     this.water = new Water(this.genContext())
     this.scene.add(this.water.object)
+    this.plain = new Plain(this.genContext())
+    this.scene.add(this.plain.object)
+
+    watchEffect(() => {
+      this.plain.object.visible = this.inPlain.value
+      this.water.object.visible = !this.inPlain.value
+    })
 
     const cloudManager = new CloudManager(this.genContext())
     this.scene.add(cloudManager.object)
@@ -128,7 +151,8 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   public tick(time: number, delta: number): void {
     this.debugCamera.tick(time, delta)
     this.particles?.tick(time, delta)
-    this.water?.tick(time, delta)
+    if (this.inPlain.value) this.plain?.tick(time, delta)
+    else this.water?.tick(time, delta)
     this.monolith?.tick(time, delta)
   }
 }
