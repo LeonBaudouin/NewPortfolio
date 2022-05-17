@@ -101,7 +101,7 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
     }
     const distFromLastFrame = this.shader.uniforms.uCenter.value.distanceTo(this.mousePos)
     this.shader.uniforms.uCenter.value.copy(this.mousePos)
-    this.shader.uniforms.uStrength.value = 0.5
+    this.shader.uniforms.uStrength.value = cremap(distFromLastFrame, [0, 0.0001], [0, 0.5])
 
     this.shader.uniforms.uPlaneScale.value = this.raycastMesh.scale.x
     temp1.sub(this.raycastMesh.position)
