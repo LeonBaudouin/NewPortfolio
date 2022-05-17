@@ -82,8 +82,11 @@ export default class GPGPU {
     this.prerender(newInitTexture)
   }
 
-  public updateInitTexture(newInitTexture: THREE.Texture) {
-    this.prerender(newInitTexture)
+  public updateInitTexture(
+    newInitTexture: THREE.Texture,
+    quad: THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial> | null = null
+  ) {
+    this.prerender(newInitTexture, quad)
   }
 
   public getBuffer() {
@@ -126,8 +129,17 @@ export default class GPGPU {
     this.targetB.dispose()
   }
 
-  private prerender(initTexture: THREE.Texture) {
-    this.setQuadTexture(initTexture)
+  private prerender(
+    initTexture: THREE.Texture,
+    quad: THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial> | null = null
+  ) {
+    if (quad) {
+      this.scene.add(quad)
+      quad.scale.set(this.size.x, this.size.y, 0)
+      quad.rotation.x = Math.PI
+      if (this.quad) this.quad.visible = false
+    }
+    this.setQuadTexture(initTexture, quad)
 
     this.renderer.setRenderTarget(this.targetA)
     this.renderer.render(this.scene, this.camera)
@@ -137,6 +149,10 @@ export default class GPGPU {
     this.renderer.setRenderTarget(null)
 
     this.outputTexture = this.targetB.texture
+    if (quad) {
+      this.scene.remove(quad)
+      if (this.quad) this.quad.visible = false
+    }
   }
 
   private setQuadTexture(

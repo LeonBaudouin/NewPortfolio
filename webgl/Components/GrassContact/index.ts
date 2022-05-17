@@ -53,6 +53,10 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
 
     this.quad = new THREE.Mesh(new THREE.PlaneBufferGeometry(), simulationShader)
 
+    watchEffect(() => {
+      if (this.context.state.inPlain) this.context.simulation.updateInitTexture(new THREE.Texture(), this.quad)
+    })
+
     const geom = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2)
     const mat = new THREE.MeshBasicMaterial({ wireframe: true })
     this.raycastMesh = new THREE.Mesh(geom, mat)

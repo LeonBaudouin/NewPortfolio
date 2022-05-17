@@ -11,7 +11,7 @@ export default class RenderTargetDebugger extends AbstractObject<
   constructor(context: WebGLAppContext) {
     super(context)
     this.object = new THREE.Mesh(
-      new THREE.PlaneBufferGeometry(700, 700).translate(-500, 500, 0),
+      new THREE.PlaneBufferGeometry(700, 700).translate(800, -500, 0),
       new THREE.ShaderMaterial({
         fragmentShader,
         vertexShader,

@@ -116,17 +116,18 @@ export default class WebGL extends LifeCycle {
     })
 
     this.renderTargetDebugger = new RenderTargetDebugger(this.genContext())
+    this.renderTargetDebugger.object.visible = false
     this.tweakpane.addInput(this.renderTargetDebugger.object, 'visible', { label: 'Render Target Debugger' })
   }
 
   public tick() {
-    // const deltaTime = this.clock.getDelta()
-    // const elapsedTime = this.clock.elapsedTime
+    const deltaTime = this.clock.getDelta()
+    const elapsedTime = this.clock.elapsedTime
 
     const currentScene = this.scenes[this.currentScene]
 
-    // currentScene.tick(elapsedTime, deltaTime)
-    // this.renderer.render(currentScene.scene, currentScene.camera)
+    currentScene.tick(elapsedTime, deltaTime)
+    this.renderer.render(currentScene.scene, currentScene.camera)
 
     if (this.renderTargetDebugger.object.visible) {
       this.renderer.autoClear = false
