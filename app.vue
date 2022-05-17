@@ -14,6 +14,9 @@ const { $webgl, $tweakpane } = useNuxtApp()
 
 const router = useRouter()
 
+watch(
+  () => router.currentRoute.value.path,
+  (path) => {
     if ($webgl) $webgl.state.inPlain = path !== '/'
   },
   { immediate: true }
