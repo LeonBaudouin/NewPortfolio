@@ -8,9 +8,8 @@
 <style lang="scss">
 .mainTitle {
   line-height: 1.1;
-  position: absolute;
-  left: var(--x-page-margin);
-  top: var(--y-page-margin);
+  margin-left: var(--x-page-margin);
+  margin-top: var(--y-page-margin);
   &__name {
     font-size: 1.8rem;
     letter-spacing: 3px;

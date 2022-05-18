@@ -25,7 +25,7 @@ const mouseLeave = () => {
 
 <style lang="scss" scoped>
 .projectTitle {
-  line-height: 1.3;
+  line-height: 1.1;
 
   &__name {
     margin: 0;

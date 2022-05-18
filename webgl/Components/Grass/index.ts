@@ -76,6 +76,8 @@ export default class Grass extends AbstractObject<
       amount
     )
 
+    // this.object.visible = false
+
     this.object.renderOrder = 1
 
     reactiveUniforms(this.object.material.uniforms, params)

@@ -1,7 +1,8 @@
 <template>
   <div class="content">
     <MainTitle />
-    <List>
+    <NuxtPage v-if="!slotName" />
+    <List v-if="slotName">
       <template v-slot:[slotName]>
         <NuxtPage />
       </template>
@@ -17,13 +18,17 @@ const router = useRouter()
 watch(
   () => router.currentRoute.value.path,
   (path) => {
-    if ($webgl) $webgl.state.inPlain = path !== '/'
+    if ($webgl) $webgl.state.inPlain = path === '/about'
   },
   { immediate: true }
 )
 
-const slotName = computed(() => (router.currentRoute.value.path === '/' ? 'projects' : 'about'))
+const slotAssoc: Record<string, string> = {
+  '/': 'projects',
+  '/about': 'about',
+}
 
+const slotName = computed(() => slotAssoc[router.currentRoute.value.path])
 useCleanup(() => {
   let rafId: ReturnType<typeof requestAnimationFrame>
   const fpsGraph = $tweakpane.addBlade({
@@ -65,8 +70,8 @@ useCleanup(() => {
 
 html {
   --main-color: #ffffff;
-  --x-page-margin: 5vw;
-  --y-page-margin: 5vh;
+  --x-page-margin: 5rem;
+  --y-page-margin: 3rem;
 }
 
 body {

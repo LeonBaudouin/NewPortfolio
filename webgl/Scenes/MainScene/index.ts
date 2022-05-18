@@ -125,7 +125,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       const params: gsap.TweenVars = {
         // duration: 2.3,
         // ease: this.context.state.inPlain ? 'Power3.easeIn' : 'Power3.easeOut',
-        duration: 0.5,
+        duration: 1,
         // ease: this.context.state.inPlain ? 'Power3.easeIn' : 'Power3.easeOut',
       }
       gsap.to(this.plain.data, {

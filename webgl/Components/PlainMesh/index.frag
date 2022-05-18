@@ -1,6 +1,7 @@
 uniform vec3 uColor1;
 uniform vec3 uColor2;
 uniform float uTransitionProg;
+uniform sampler2D uTexture;
 
 varying float vNoise;
 varying vec3 vWorldPosition;
@@ -21,6 +22,12 @@ vec2 rotateUV(vec2 uv, float rotation, vec2 mid)
       cos(rotation) * (uv.x - mid.x) + sin(rotation) * (uv.y - mid.y) + mid.x,
       cos(rotation) * (uv.y - mid.y) - sin(rotation) * (uv.x - mid.x) + mid.y
     );
+}
+
+float isNorm(vec2 _st) {
+  if (_st.x > 1. || _st.y > 1. || _st.x < 0. || _st.y < 0.)
+    return 0.;
+  return 1.;
 }
 
 float computeAlpha(vec2 pos) {
@@ -48,10 +55,24 @@ float computeAlpha(vec2 pos) {
 	return smoothstep(stepV + 0.1, stepV - 0.1, length(centeredPos));
 }
 
+float rand(vec2 co){
+    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
 void main() {
-  vec3 color = mix(uColor1, uColor2, remap(vNoise, -1., 1., 0., 1.));
+
+  vec2 coords = vWorldPosition.zx * vec2(1., -1.) * 0.8;
+  float grass = texture2D(uTexture, fract(coords)).g;
+  grass *= smoothstep(0., 1., fract(coords.y));
+  grass *= isNorm(fract(coords)) * smoothstep(0., 1., rand(floor(coords) + 0.1));
+
+  float mixV = remap(vNoise, -1., 1., 0., 1.);
+  mixV = mix(mixV, 1.-mixV, grass * 5.);
+
+  vec3 color = mix(uColor1, uColor2, mixV);
   gl_FragColor = vec4(color, 1.);
   float shadow = uTransitionProg > 0. ? 1. - computeAlpha(vWorldPosition.xz * vec2(1., -1.) + vec2(3., 3.)) : 1.;
+
 
   #include <fog_fragment>
   gl_FragColor.rbg = mix(gl_FragColor.rbg, vec3(0.), shadow * 0.5);

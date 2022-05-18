@@ -30,7 +30,8 @@ export default class Plain extends AbstractObject<SceneContext> {
         const geometry = (gltf.scene.getObjectByName('grid1') as THREE.Mesh).geometry
         this.grass = new Grass(this.context, geometry.attributes.position.array)
         this.object.add(this.grass.object)
-      }
+      },
+      { immediate: true }
     )
     watch(
       () => this.context.ressources.state.plain,
@@ -39,7 +40,8 @@ export default class Plain extends AbstractObject<SceneContext> {
         this.plainMesh = new PlainMesh(this.context, (gltf.scene.getObjectByName('Plane001') as THREE.Mesh).geometry)
         this.object.add(this.plainMesh.object)
         this.plainMesh.object.scale.y = this.data.transitionProg
-      }
+      },
+      { immediate: true }
     )
 
     watch(
@@ -47,7 +49,8 @@ export default class Plain extends AbstractObject<SceneContext> {
       (prog) => {
         this.object.visible = prog > 0
         if (this.plainMesh) this.plainMesh.object.scale.y = prog
-      }
+      },
+      { immediate: true }
     )
   }
 

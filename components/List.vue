@@ -17,7 +17,7 @@
   left: var(--x-page-margin);
   $top: 51.5vh;
   top: $top;
-  height: 100vh - $top;
+  height: calc((100vh - $top) - 3rem);
 
   display: flex;
   flex-direction: column;
