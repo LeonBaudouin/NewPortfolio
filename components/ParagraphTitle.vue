@@ -1,6 +1,11 @@
 <template>
-  <h4 class="paragraphTitle">What is Lorem Ipsum?</h4>
+  <h4 class="paragraphTitle" v-if="title">{{ title }}</h4>
+  <div class="paragraphTitle" v-else style="user-select: none">&nbsp;</div>
 </template>
+
+<script lang="ts" setup>
+const { title } = defineProps({ title: { type: String } })
+</script>
 
 <style lang="scss" scoped>
 .paragraphTitle {

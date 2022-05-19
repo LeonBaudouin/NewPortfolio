@@ -1,12 +1,20 @@
 <template>
   <div class="content">
-    <ParagraphTitle class="content__title" />
+    <ParagraphTitle class="content__title" :title="title" />
     <div class="content__texts">
-      <Paragraph />
-      <Paragraph />
+      <Paragraph v-for="text in texts" :content="text" />
     </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+import { PropType } from 'vue'
+
+const { texts, title } = defineProps({
+  texts: { type: Array as PropType<string[]>, required: true },
+  title: { type: String },
+})
+</script>
 
 <style lang="scss" scoped>
 .content {

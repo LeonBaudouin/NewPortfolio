@@ -1,10 +1,12 @@
 <template>
-  <p class="paragraph">
-    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-    <strong>dummy text ever</strong> since the 1500s, when an unknown printer took a galley of type and scrambled it to
-    make a type specimen book.
-  </p>
+  <p class="paragraph" v-html="content" />
 </template>
+
+<script lang="ts" setup>
+const { content } = defineProps({
+  content: { type: String, required: true },
+})
+</script>
 
 <style lang="scss" scoped>
 .paragraph {

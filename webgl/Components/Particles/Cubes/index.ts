@@ -48,7 +48,7 @@ export default class Cubes extends AbstractObject<
         uVelocityTexture: { value: null },
         uNormalTexture: { value: null },
         uTextureEdges: { value: new THREE.Vector4(4.7, 0.7, -0.15, -0.7) },
-        uTexture: { value: new THREE.TextureLoader().load('./projects/safeplace.png', (t) => (t.flipY = false)) },
+        uTexture: { value: new THREE.TextureLoader().load('/projects/safeplace.png', (t) => (t.flipY = false)) },
         uTextureAlpha: { value: 0 },
         uMatcap: {
           value: null,
