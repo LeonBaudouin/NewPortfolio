@@ -1,20 +1,84 @@
 <template>
-  <div class="carousel__wrapper" @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mousemove="handleMouseMove">
+  <div
+    class="carousel__wrapper"
+    @mousedown="handleMouseDown"
+    @mouseup="handleMouseUp"
+    @mousemove="handleMouseMove"
+    @wheel="handleWheel"
+    @mouseenter="inCarousel = true"
+    @mouseleave="inCarousel = false"
+  >
     <div class="carousel" :style="style" ref="carousel">
-      <img src="/projects/safeplace/1.png" class="carousel__image" @dragstart.prevent />
-      <img src="/projects/safeplace/3.png" class="carousel__image" @dragstart.prevent />
-      <img src="/projects/safeplace/4.png" class="carousel__image" @dragstart.prevent />
-      <img src="/projects/safeplace/5.png" class="carousel__image" @dragstart.prevent />
-      <img src="/projects/safeplace/1.png" class="carousel__image" @dragstart.prevent />
-      <img src="/projects/safeplace/3.png" class="carousel__image" @dragstart.prevent />
-      <img src="/projects/safeplace/4.png" class="carousel__image" @dragstart.prevent />
-      <img src="/projects/safeplace/5.png" class="carousel__image" @dragstart.prevent />
+      <Image
+        src="/projects/safeplace/1.png"
+        alt=""
+        :width="587"
+        :height="318"
+        :delay="Math.random() * 0.5"
+        class="carousel__image"
+      />
+      <Image
+        src="/projects/safeplace/3.png"
+        alt=""
+        :width="587"
+        :height="318"
+        :delay="Math.random() * 0.5"
+        class="carousel__image"
+      />
+      <Image
+        src="/projects/safeplace/4.png"
+        alt=""
+        :width="587"
+        :height="318"
+        :delay="Math.random() * 0.5"
+        class="carousel__image"
+      />
+      <Image
+        src="/projects/safeplace/5.png"
+        alt=""
+        :width="587"
+        :height="318"
+        :delay="Math.random() * 0.5"
+        class="carousel__image"
+      />
+      <Image
+        src="/projects/safeplace/1.png"
+        alt=""
+        :width="587"
+        :height="318"
+        :delay="Math.random() * 0.5"
+        class="carousel__image"
+      />
+      <Image
+        src="/projects/safeplace/3.png"
+        alt=""
+        :width="587"
+        :height="318"
+        :delay="Math.random() * 0.5"
+        class="carousel__image"
+      />
+      <Image
+        src="/projects/safeplace/4.png"
+        alt=""
+        :width="587"
+        :height="318"
+        :delay="Math.random() * 0.5"
+        class="carousel__image"
+      />
+      <Image
+        src="/projects/safeplace/5.png"
+        alt=""
+        :width="587"
+        :height="318"
+        :delay="Math.random() * 0.5"
+        class="carousel__image"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { off } from 'process'
+import normalizeWheel from '~~/utils/dom/normalizeWheel'
 import round from '~~/utils/math/round'
 
 const cursorOrigin = ref<{ x: number; y: number } | null>(null)
@@ -48,9 +112,12 @@ const handleMouseUp = () => {
   cursorOrigin.value = null
 }
 
-watchEffect(() => {
-  console.log(x.value)
-})
+const handleWheel = (e: WheelEvent) => {
+  const { pixelX, pixelY } = normalizeWheel(e)
+  const scrollSpeed = pixelX + pixelY
+  const sign = Math.sign(scrollSpeed + speed.value)
+  speed.value = Math.max(Math.abs(scrollSpeed), Math.abs(speed.value)) * sign
+}
 
 useRaf(() => {
   if (cursorOrigin.value === null) {
@@ -60,6 +127,12 @@ useRaf(() => {
     speed.value = lastX.value - x.value
     lastX.value = x.value
   }
+})
+const inCarousel = ref(false)
+
+watchEffect(() => {
+  if (process.server) return
+  document.body.style.overscrollBehavior = inCarousel.value ? 'none' : 'auto'
 })
 </script>
 

@@ -2,7 +2,7 @@
   <div class="project">
     <TextContent class="project__text--first" :title="title" :texts="text1" />
     <TextContent class="project__text--second" :texts="text2" />
-    <img src="/projects/safeplace/2.png" class="project__image" />
+    <Image src="/projects/safeplace/2.png" alt="Safeplace" class="project__image" :width="587" :height="318" />
     <Carousel class="project__carousel" />
   </div>
 </template>
@@ -39,11 +39,13 @@ const text2 = [
   }
   &__image {
     grid-area: image;
-    display: block;
-    max-width: 100%;
-    height: auto;
-    max-height: 40vh;
     justify-self: end;
+    // display: block;
+    // max-width: 100%;
+    // height: auto;
+    // max-height: 40vh;
+    // justify-self: end;
+    // width: 100%;
   }
 
   &__carousel {
