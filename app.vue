@@ -7,6 +7,7 @@
         <NuxtPage />
       </template>
     </List>
+    <ImageShow />
   </div>
 </template>
 

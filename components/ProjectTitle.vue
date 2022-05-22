@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts" setup>
-import ProjectStore from '~~/stores/ProjectStore'
+import MainStore from '~~/stores/MainStore'
 
 const props = defineProps({
   name: { required: true, type: String },
@@ -15,11 +15,11 @@ const props = defineProps({
 })
 
 const mouseEnter = () => {
-  ProjectStore.state.hoveredProject = props.imageUrl
+  MainStore.state.hoveredProject = props.imageUrl
 }
 
 const mouseLeave = () => {
-  ProjectStore.state.hoveredProject = null
+  MainStore.state.hoveredProject = null
 }
 </script>
 

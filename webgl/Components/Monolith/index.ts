@@ -3,7 +3,7 @@ import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import * as THREE from 'three'
 import fragmentShader from './index.frag?raw'
 import vertexShader from './index.vert?raw'
-import ProjectStore from '~~/stores/ProjectStore'
+import MainStore from '~~/stores/MainStore'
 import ProjectPlane from '../Prototype/ProjectPlane'
 import gsap from 'gsap'
 
@@ -77,7 +77,7 @@ export default class Monolith extends AbstractObject<
     let targetRotation = this.object.rotation.y
     this.toUnbind(
       watch(
-        () => ProjectStore.state.hoveredProject,
+        () => MainStore.state.hoveredProject,
         (newValue) => {
           if (this.currentIndex !== null) this.planesGroups[this.currentIndex].hide()
           if (!newValue) return

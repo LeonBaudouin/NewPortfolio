@@ -4,7 +4,7 @@ import pseudoDeepAssign from '~~/utils/pseudoDeepAssign'
 import { FolderApi } from 'tweakpane'
 import remap from '~~/utils/math/remap'
 import pixelToScreenCoords from '~~/utils/webgl/pixelToScreenCoords'
-import ProjectStore from '~~/stores/ProjectStore'
+import MainStore from '~~/stores/MainStore'
 
 const particlesData = {
   useTexture: false,
@@ -55,7 +55,7 @@ export default class PaperPlanes extends AbstractBehaviour {
 
   private get state(): keyof typeof states {
     let state: keyof typeof states = 'rest'
-    if (!!ProjectStore.state.hoveredProject) state = 'hover'
+    if (!!MainStore.state.hoveredProject) state = 'hover'
     if (this.isClicking.value) state = 'click'
     return state
   }
