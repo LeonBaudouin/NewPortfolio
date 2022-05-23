@@ -28,31 +28,31 @@ const projects = [
   {
     name: 'Mamie Danger',
     subtitle: 'Mobile Game',
-    imageUrl: '/projects/louvre.png',
+    imageUrl: '/projects/mamie-danger.png',
     slug: 'slt',
   },
   {
     name: 'Abyss',
     subtitle: 'Data Visualization',
-    imageUrl: '/projects/safeplace.png',
+    imageUrl: '/projects/abyss.png',
     slug: 'slt',
   },
   {
     name: 'Belle Epoque',
     subtitle: 'Agency Website',
-    imageUrl: '/projects/louvre.png',
+    imageUrl: '/projects/belle-epoque.jpg',
     slug: 'slt',
   },
   {
     name: 'Portfolio V1',
     subtitle: 'Personal Website',
-    imageUrl: '/projects/safeplace.png',
+    imageUrl: '/projects/portfolio.jpg',
     slug: 'slt',
   },
   {
     name: 'Xperience Métier',
     subtitle: 'Digital Escape Game',
-    imageUrl: '/projects/louvre.png',
+    imageUrl: '/projects/x-perience.png',
     slug: 'slt',
   },
 ]

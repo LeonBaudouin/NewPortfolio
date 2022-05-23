@@ -11,7 +11,7 @@ float isNorm(vec2 _st) {
 
 void main() {
   vec2 uv = vTextureCoords.xy;
-  uv.y = 1. - uv.y;
+  uv = 1. - uv;
   vec3 color = texture2D(uTexture, uv).rgb;
 
   gl_FragColor = vec4(color, 1.);
