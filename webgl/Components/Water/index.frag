@@ -14,6 +14,7 @@ uniform vec4 uBlendRemap;
 uniform vec3 uBlendColor;
 uniform vec4 uRampRemap;
 uniform float uTransitionProg;
+uniform float uTransitionForward;
 
 varying vec4 vUv;
 varying vec3 vPosition;
@@ -190,7 +191,8 @@ float computeAlpha(vec2 pos) {
   float angleProg = atan(dir.y, dir.x);
   float bulge = (1. + sin(angleProg * branchNumber)) / 2. + b * 4.;
   float stepV = prog + bulge * bulgeSize;
-	return step(length(centeredPos), stepV);
+  float v = step(length(centeredPos), stepV);
+	return uTransitionForward > 0. ? 1. - v : v;
 }
 
 void main() {
@@ -241,7 +243,7 @@ void main() {
   // c = blendOverlay( c, color );
   c = blendOverlay( c, vec3(deepnessBlend) );
 
-  float alpha = uTransitionProg > 0. ? 1. - computeAlpha(vPosition.xy) : 1.;
+  float alpha = computeAlpha(vPosition.xy);
 
   // gl_FragColor = vec4(vec3(sat), 1.);
   gl_FragColor = vec4(c + f, alpha);

@@ -25,7 +25,7 @@ export default class Water extends AbstractObject<MainSceneContext> {
     // blendRemap: new THREE.Vector4(0, 1.6, 0, 0.46),
     blendRemap: new THREE.Vector4(0, 1.6, 0, 0.6),
     rampRemap: new THREE.Vector4(0, 2.0, 0.13, 0.46),
-    transitionProg: 0,
+    showWater: 0,
   })
 
   constructor({ tweakpane: parentTP, ...context }: MainSceneContext) {
@@ -53,7 +53,6 @@ export default class Water extends AbstractObject<MainSceneContext> {
           uBlendRemap: { value: new THREE.Vector4() },
           uBlendColor: { value: new THREE.Color() },
           uRampRemap: { value: new THREE.Vector4() },
-          ...this.context.globalUniforms,
         },
         fragmentShader,
         vertexShader,
@@ -73,6 +72,7 @@ export default class Water extends AbstractObject<MainSceneContext> {
     }
 
     this.material = plane.material as THREE.ShaderMaterial
+    this.material.uniforms = { ...this.material.uniforms, ...this.context.globalUniforms }
     this.material.uniforms.color.value.set(this.params.color)
 
     reactiveUniforms(this.material.uniforms, this.params)
@@ -111,14 +111,14 @@ export default class Water extends AbstractObject<MainSceneContext> {
       label: 'Ramp Remap',
       step: 0.1,
     })
-    this.context.tweakpane.addInput(this.params, 'transitionProg', { label: 'Prog', step: 0.01 })
+    this.context.tweakpane.addInput(this.params, 'showWater', { label: 'Prog', step: 0.01 })
 
     plane.rotation.x = -Math.PI / 2
 
     this.object = plane
 
     watchEffect(() => {
-      this.object.visible = this.params.transitionProg < 1
+      this.object.visible = this.params.showWater < 1
     })
   }
 

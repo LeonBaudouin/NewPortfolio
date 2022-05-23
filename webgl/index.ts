@@ -28,6 +28,7 @@ export default class WebGL extends LifeCycle {
   private globalUniforms = {
     uInReflection: { value: false },
     uTransitionProg: { value: 0 },
+    uTransitionForward: { value: 0 },
   }
 
   constructor(nuxtApp: any) {

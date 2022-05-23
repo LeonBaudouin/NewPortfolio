@@ -1,6 +1,7 @@
 uniform vec3 uColor1;
 uniform vec3 uColor2;
 uniform float uTransitionProg;
+uniform float uTransitionForward;
 uniform sampler2D uTexture;
 
 varying float vNoise;
@@ -52,7 +53,8 @@ float computeAlpha(vec2 pos) {
   float angleProg = atan(dir.y, dir.x);
   float bulge = (1. + sin(angleProg * branchNumber)) / 2. + b * 4.;
   float stepV = prog + bulge * bulgeSize;
-	return smoothstep(stepV + 0.1, stepV - 0.1, length(centeredPos));
+  float v = smoothstep(stepV + 0.1, stepV - 0.1, length(centeredPos));
+	return uTransitionForward > 0. ? 1. - v : v;
 }
 
 float rand(vec2 co){
@@ -71,7 +73,7 @@ void main() {
 
   vec3 color = mix(uColor1, uColor2, mixV);
   gl_FragColor = vec4(color, 1.);
-  float shadow = uTransitionProg > 0. ? 1. - computeAlpha(vWorldPosition.xz * vec2(1., -1.) + vec2(3., 3.)) : 1.;
+  float shadow = computeAlpha(vWorldPosition.xz * vec2(1., -1.) + vec2(3., 3.));
 
 
   #include <fog_fragment>

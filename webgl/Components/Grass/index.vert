@@ -13,6 +13,7 @@ uniform float uNoiseStrength;
 uniform mat4 uContactMatrix;
 uniform sampler2D tContact;
 uniform float uTransitionProg;
+uniform float uTransitionForward;
 
 #include <fog_pars_vertex>
 
@@ -87,7 +88,8 @@ float computeAlpha(vec2 pos) {
   float angleProg = atan(dir.y, dir.x);
   float bulge = (1. + sin(angleProg * branchNumber)) / 2. + b * 4.;
   float stepV = prog + bulge * bulgeSize;
-	return smoothstep(stepV + 0.1, stepV - 0.1, length(centeredPos));
+  float v = smoothstep(stepV + 0.1, stepV - 0.1, length(centeredPos));
+	return uTransitionForward > 0. ? 1. - v : v;
 }
 
 
@@ -112,7 +114,7 @@ void main() {
   );
   pos.xyz += displacement * vUv.y;
 
-  vShadow = uTransitionProg > 0. ? 1. - computeAlpha(pos.xz * vec2(1., -1.) + vec2(3., 3.)) : 1.;
+  vShadow = computeAlpha(pos.xz * vec2(1., -1.) + vec2(3., 3.));
 
   vec4 mvPosition = viewMatrix * pos;
   gl_Position = projectionMatrix * mvPosition;

@@ -138,17 +138,23 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
           duration: 1,
         }
         gsap.to(this.plain.data, {
-          transitionProg: inPlain ? 1 : 0,
+          showPlain: inPlain ? 1 : 0,
           ...params,
         })
         gsap.to(this.water.params, {
-          transitionProg: inPlain ? 1 : 0,
+          showWater: inPlain ? 1 : 0,
           ...params,
         })
-        gsap.to(this.context.globalUniforms.uTransitionProg, {
-          value: inPlain ? 1 : 0,
-          ...params,
-        })
+        this.context.globalUniforms.uTransitionForward.value = inPlain ? 1 : 0
+        gsap.fromTo(
+          this.context.globalUniforms.uTransitionProg,
+          { value: 0 },
+          {
+            value: 1,
+            ...params,
+            // onUpdate: () => console.log(this.context.globalUniforms.uTransitionProg.value),
+          }
+        )
         gsap.to(this.environment.data, {
           intensity: inPlain ? 0.004 : 0.021,
           ...params,
