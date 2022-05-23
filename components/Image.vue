@@ -19,7 +19,7 @@ const { src, alt, width, height, delay, fill } = defineProps({
 })
 
 const delayWithUnit = computed(() => delay + 's')
-const effectiveSrc = ref('/placeholder/1:1.png')
+const effectiveSrc = ref('/placeholder/1_1.png')
 const loaded = ref(false)
 const show = ref(false)
 
