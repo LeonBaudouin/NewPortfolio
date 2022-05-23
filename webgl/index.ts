@@ -11,7 +11,7 @@ type Scenes = {
   main: MainScene
   particles: ParticlesScene
 }
-type NuxtApp = ReturnType<typeof useNuxtApp>
+type NuxtApp = ReturnType<typeof useNuxtApp> & { $router: ReturnType<typeof useRouter> }
 export default class WebGL extends LifeCycle {
   public renderer: THREE.WebGLRenderer
 
@@ -21,7 +21,7 @@ export default class WebGL extends LifeCycle {
   private currentScene: keyof Scenes
   private clock: THREE.Clock
   private tweakpane: FolderApi
-  public state = reactive<{ inPlain: boolean }>({ inPlain: false })
+  public state = reactive({})
   private nuxtApp: NuxtApp
   private simulation: GPGPU
   private renderTargetDebugger: RenderTargetDebugger
@@ -34,7 +34,7 @@ export default class WebGL extends LifeCycle {
     super()
     this.nuxtApp = nuxtApp
 
-    this.tweakpane = this.nuxtApp.$tweakpane
+    this.tweakpane = this.nuxtApp.$tweakpane!
     this.clock = new THREE.Clock(true)
     this.ressources = new Ressources()
     this.setupRenderer()
@@ -66,6 +66,7 @@ export default class WebGL extends LifeCycle {
     globalUniforms: this.globalUniforms,
     ressources: this.ressources,
     simulation: this.simulation,
+    nuxtApp: this.nuxtApp,
   })
 
   private setupScenes() {
@@ -86,7 +87,6 @@ export default class WebGL extends LifeCycle {
       antialias: true,
     })
     this.renderer.outputEncoding = THREE.LinearEncoding
-    // this.renderer.outputEncoding = THREE.LinearEncoding
     this.renderer.debug.checkShaderErrors = true
     const resize = () => {
       this.renderer.setSize(window.innerWidth, window.innerHeight)

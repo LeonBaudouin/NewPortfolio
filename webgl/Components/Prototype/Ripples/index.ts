@@ -46,7 +46,8 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     this.quad = new THREE.Mesh(new THREE.PlaneBufferGeometry(), simulationShader)
 
     watchEffect(() => {
-      if (!this.context.state.inPlain) this.context.simulation.updateInitTexture(new THREE.Texture(), this.quad)
+      if (this.context.nuxtApp.$router.currentRoute.value.name !== 'about')
+        this.context.simulation.updateInitTexture(new THREE.Texture(), this.quad)
     })
 
     const geom = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2)
@@ -59,7 +60,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     this.context.scene.add(this.raycastMesh)
 
     const mouseMove = (e: MouseEvent) => {
-      if (this.context.state.inPlain) return
+      if (this.context.nuxtApp.$router.currentRoute.value.name === 'about') return
       this.raycaster.setFromCamera(pixelToScreenCoords(e.clientX, e.clientY), this.context.camera)
       const [intersection] = this.raycaster.intersectObject(this.raycastMesh)
       if (intersection) this.mousePos.copy(intersection.uv!)

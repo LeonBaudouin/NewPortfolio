@@ -43,14 +43,16 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.cameraHelper = new THREE.CameraHelper(this.mainCamera.object)
     this.cameraHelper.visible = false
     this.scene.add(this.debugCamera.object)
-    this.scene.add(this.mainCamera.object)
+    const rotation = new THREE.Object3D()
+    rotation.rotateY(Math.PI / 2)
+    rotation.add(this.mainCamera.object)
+    this.scene.add(rotation)
     this.scene.add(this.cameraHelper)
     this.camera = this.params.debugCam ? this.debugCamera.object : this.mainCamera.object
 
     this.context.tweakpane
       .addInput(this.params, 'debugCam', { label: 'Debug Cam' })
       .on('change', ({ value }) => (this.camera = value ? this.debugCamera.object : this.mainCamera.object))
-    this.context.tweakpane.addInput(this.context.state, 'inPlain', { label: 'In Plain' })
 
     this.cameraFolder = this.context.tweakpane.addFolder({ title: 'Main Camera', expanded: false })
     this.cameraFolder.addInput(this.cameraHelper, 'visible', { label: 'Camera Helper' })
@@ -98,8 +100,16 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       this.environment.destroy()
     })
 
-    this.mainCamera.object.rotation.set(0, 1.57, 0)
-    this.mainCamera.object.position.set(21, 0.2, 0)
+    this.mainCamera.object.rotation.set(0, 0, 0)
+    this.mainCamera.object.position.set(0, 0.2, 21)
+
+    watch(
+      () => this.context.nuxtApp.$router.currentRoute.value.name === 'project-slug',
+      (inProject) => {
+        gsap.to(this.mainCamera.object.rotation, { x: inProject ? 0.3 : 0, ease: 'Power3.easeInOut', duration: 1.5 })
+      },
+      { immediate: true }
+    )
 
     this.mainCamera.object.fov = 30
     this.mainCamera.object.updateProjectionMatrix()
@@ -121,30 +131,31 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.plain = new Plain(this.genContext())
     this.scene.add(this.plain.object)
 
-    watchEffect(() => {
-      const params: gsap.TweenVars = {
-        // duration: 2.3,
-        // ease: this.context.state.inPlain ? 'Power3.easeIn' : 'Power3.easeOut',
-        duration: 1,
-        // ease: this.context.state.inPlain ? 'Power3.easeIn' : 'Power3.easeOut',
-      }
-      gsap.to(this.plain.data, {
-        transitionProg: this.context.state.inPlain ? 1 : 0,
-        ...params,
-      })
-      gsap.to(this.water.params, {
-        transitionProg: this.context.state.inPlain ? 1 : 0,
-        ...params,
-      })
-      gsap.to(this.context.globalUniforms.uTransitionProg, {
-        value: this.context.state.inPlain ? 1 : 0,
-        ...params,
-      })
-      gsap.to(this.environment.data, {
-        intensity: this.context.state.inPlain ? 0.004 : 0.021,
-        ...params,
-      })
-    })
+    watch(
+      () => this.context.nuxtApp.$router.currentRoute.value.name === 'about',
+      (inPlain) => {
+        const params: gsap.TweenVars = {
+          duration: 1,
+        }
+        gsap.to(this.plain.data, {
+          transitionProg: inPlain ? 1 : 0,
+          ...params,
+        })
+        gsap.to(this.water.params, {
+          transitionProg: inPlain ? 1 : 0,
+          ...params,
+        })
+        gsap.to(this.context.globalUniforms.uTransitionProg, {
+          value: inPlain ? 1 : 0,
+          ...params,
+        })
+        gsap.to(this.environment.data, {
+          intensity: inPlain ? 0.004 : 0.021,
+          ...params,
+        })
+      },
+      { immediate: true }
+    )
 
     const cloudManager = new CloudManager(this.genContext())
     this.scene.add(cloudManager.object)

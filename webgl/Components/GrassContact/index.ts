@@ -53,9 +53,13 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
 
     this.quad = new THREE.Mesh(new THREE.PlaneBufferGeometry(), simulationShader)
 
-    watchEffect(() => {
-      if (this.context.state.inPlain) this.context.simulation.updateInitTexture(new THREE.Texture(), this.quad)
-    })
+    watch(
+      () => this.context.nuxtApp.$router.currentRoute.value.name,
+      (name) => {
+        if (name === 'about') this.context.simulation.updateInitTexture(new THREE.Texture(), this.quad)
+      },
+      { immediate: true }
+    )
 
     const geom = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2)
     const mat = new THREE.MeshBasicMaterial({ wireframe: true })
@@ -68,7 +72,7 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
     this.context.scene.add(this.raycastMesh)
 
     const mouseMove = (e: MouseEvent) => {
-      if (!this.context.state.inPlain) return
+      if (this.context.nuxtApp.$router.currentRoute.value.name !== 'about') return
       this.raycaster.setFromCamera(pixelToScreenCoords(e.clientX, e.clientY), this.context.camera)
       const [intersection] = this.raycaster.intersectObject(this.raycastMesh)
       if (intersection) this.mousePos.copy(intersection.uv!)

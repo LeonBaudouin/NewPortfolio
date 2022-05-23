@@ -130,7 +130,7 @@ export default class PaperPlanes extends AbstractBehaviour {
     const updateAttractorFromMouse = (e: MouseEvent) => {
       const topRaycast = raycast(e)
       if (topRaycast) intersectPoint.copy(topRaycast.point)
-      else if (reflectionCamera && !this.context.state.inPlain) {
+      else if (reflectionCamera && this.context.nuxtApp.$router.currentRoute.value.name === '/about') {
         const reflectionRaycast = raycast(e, true)
         if (reflectionRaycast) intersectPoint.copy(reflectionRaycast.point)
       }
