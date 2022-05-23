@@ -1,7 +1,23 @@
 <template>
-  <div class="image__container" :class="{ 'image__container--loaded': loaded, 'image__container--show': show }">
-    <canvas class="image__shim" :width="width" :height="height" :style="shimFillStyle"></canvas>
-    <img :src="effectiveSrc" :alt="alt" @dragstart.prevent @load="handleLoad" @click="handleClick" class="image" />
+  <div
+    class="image__container"
+    :class="{
+      'image__container--loaded': loaded,
+      'image__container--show': show,
+      'image__container--width': fill === 'width',
+      'image__container--height': fill === 'height',
+    }"
+  >
+    <canvas class="image__shim" :width="width" :height="height"></canvas>
+    <img
+      :src="effectiveSrc"
+      :alt="alt"
+      @dragstart.prevent
+      @load="handleLoad"
+      @pointerdown="pointerDown"
+      @pointerup="pointerUp"
+      class="image"
+    />
   </div>
 </template>
 
@@ -23,7 +39,9 @@ const effectiveSrc = ref('/placeholder/1_1.png')
 const loaded = ref(false)
 const show = ref(false)
 
-const shimFillStyle = computed(() => ({ [fill]: '100%' }))
+const invertedRatio = computed(() => height / width)
+
+// const shimFillStyle = computed(() => ({ [fill]: '100%' }))
 
 onMounted(() => {
   show.value = true
@@ -38,8 +56,16 @@ const handleLoad = () => {
   }, 1000 + delay * 800)
 }
 
-const handleClick = () => {
-  if (loaded.value) MainStore.state.imageToShow = src
+const startPos = { x: 0, y: 0 }
+const pointerDown = (e: PointerEvent) => {
+  if (e.button !== 0) return
+  startPos.x = e.clientX
+  startPos.y = e.clientY
+}
+
+const pointerUp = ({ clientX: x2, clientY: y2 }: PointerEvent) => {
+  const { x: x1, y: y1 } = startPos
+  if (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) < 10) if (loaded.value) MainStore.state.imageToShow = src
 }
 
 onUnmounted(() => {
@@ -50,10 +76,12 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .image {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   visibility: hidden;
+  cursor: pointer;
 
   &__shim {
     height: 100%;
@@ -61,8 +89,20 @@ onUnmounted(() => {
 
   &__container {
     position: relative;
-    display: table-cell;
-    width: auto;
+
+    &--height {
+      display: table-cell;
+      width: auto;
+    }
+
+    &--width {
+      padding-top: calc(v-bind(invertedRatio) * 100%);
+      width: 100%;
+
+      .image__shim {
+        display: none;
+      }
+    }
 
     &::before {
       content: '';

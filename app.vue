@@ -69,6 +69,16 @@ useCleanup(() => {
   -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+
+  &:visited {
+    color: inherit;
+  }
+}
+
 html {
   --main-color: #ffffff;
   --x-page-margin: 5rem;

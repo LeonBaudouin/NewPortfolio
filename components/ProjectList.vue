@@ -1,7 +1,12 @@
 <template>
   <li class="projectList">
     <ul v-for="project in projects" class="projectList__item">
-      <ProjectTitle :name="project.name" :subtitle="project.subtitle" :imageUrl="project.imageUrl" />
+      <ProjectTitle
+        :name="project.name"
+        :subtitle="project.subtitle"
+        :imageUrl="project.imageUrl"
+        :slug="project.slug"
+      />
     </ul>
   </li>
 </template>
@@ -12,36 +17,43 @@ const projects = [
     name: "Figure d'artiste",
     subtitle: 'Gobelins x Louvre',
     imageUrl: '/projects/louvre.png',
+    slug: 'slt',
   },
   {
     name: 'Safe Place',
     subtitle: 'Immersive Website',
     imageUrl: '/projects/safeplace.png',
+    slug: 'slt',
   },
   {
     name: 'Mamie Danger',
     subtitle: 'Mobile Game',
     imageUrl: '/projects/louvre.png',
+    slug: 'slt',
   },
   {
     name: 'Abyss',
     subtitle: 'Data Visualization',
     imageUrl: '/projects/safeplace.png',
+    slug: 'slt',
   },
   {
     name: 'Belle Epoque',
     subtitle: 'Agency Website',
     imageUrl: '/projects/louvre.png',
+    slug: 'slt',
   },
   {
     name: 'Portfolio V1',
     subtitle: 'Personal Website',
     imageUrl: '/projects/safeplace.png',
+    slug: 'slt',
   },
   {
     name: 'Xperience Métier',
     subtitle: 'Digital Escape Game',
     imageUrl: '/projects/louvre.png',
+    slug: 'slt',
   },
 ]
 </script>

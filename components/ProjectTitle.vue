@@ -1,8 +1,8 @@
 <template>
-  <div class="projectTitle" @mouseenter="mouseEnter" @mouseleave="mouseLeave">
+  <NuxtLink :to="projectSlug" class="projectTitle" @mouseenter="mouseEnter" @mouseleave="mouseLeave">
     <h4 class="projectTitle__name">{{ props.name }}</h4>
     <div class="projectTitle__subtitle">{{ props.subtitle }}</div>
-  </div>
+  </NuxtLink>
 </template>
 
 <script lang="ts" setup>
@@ -12,6 +12,7 @@ const props = defineProps({
   name: { required: true, type: String },
   subtitle: { required: true, type: String },
   imageUrl: { required: true, type: String },
+  slug: { required: true, type: String },
 })
 
 const mouseEnter = () => {
@@ -21,6 +22,8 @@ const mouseEnter = () => {
 const mouseLeave = () => {
   MainStore.state.hoveredProject = null
 }
+
+const projectSlug = computed(() => `/project/${props.slug}`)
 </script>
 
 <style lang="scss" scoped>

@@ -1,8 +1,8 @@
 <template>
-  <div class="mainTitle">
+  <NuxtLink to="/" class="mainTitle">
     <h1 class="mainTitle__name">Léon Baudouin</h1>
     <h2 class="mainTitle__job">Creative developer</h2>
-  </div>
+  </NuxtLink>
 </template>
 
 <style lang="scss">

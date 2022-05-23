@@ -1,85 +1,30 @@
 <template>
   <div
     class="carousel__wrapper"
-    @mousedown="handleMouseDown"
-    @mouseup="handleMouseUp"
-    @mousemove="handleMouseMove"
+    @pointerdown="handleMouseDown"
+    @pointerup="handleMouseUp"
+    @pointermove="handleMouseMove"
     @wheel="handleWheel"
-    @mouseenter="inCarousel = true"
-    @mouseleave="inCarousel = false"
+    @pointerenter="inCarousel = true"
+    @pointerleave="inCarousel = false"
   >
     <div class="carousel" :style="style" ref="carousel">
-      <Image
-        src="/projects/safeplace/1.png"
-        alt=""
-        :width="587"
-        :height="318"
-        :delay="Math.random() * 0.5"
-        class="carousel__image"
-      />
-      <Image
-        src="/projects/safeplace/3.png"
-        alt=""
-        :width="587"
-        :height="318"
-        :delay="Math.random() * 0.5"
-        class="carousel__image"
-      />
-      <Image
-        src="/projects/safeplace/4.png"
-        alt=""
-        :width="587"
-        :height="318"
-        :delay="Math.random() * 0.5"
-        class="carousel__image"
-      />
-      <Image
-        src="/projects/safeplace/5.png"
-        alt=""
-        :width="587"
-        :height="318"
-        :delay="Math.random() * 0.5"
-        class="carousel__image"
-      />
-      <Image
-        src="/projects/safeplace/1.png"
-        alt=""
-        :width="587"
-        :height="318"
-        :delay="Math.random() * 0.5"
-        class="carousel__image"
-      />
-      <Image
-        src="/projects/safeplace/3.png"
-        alt=""
-        :width="587"
-        :height="318"
-        :delay="Math.random() * 0.5"
-        class="carousel__image"
-      />
-      <Image
-        src="/projects/safeplace/4.png"
-        alt=""
-        :width="587"
-        :height="318"
-        :delay="Math.random() * 0.5"
-        class="carousel__image"
-      />
-      <Image
-        src="/projects/safeplace/5.png"
-        alt=""
-        :width="587"
-        :height="318"
-        :delay="Math.random() * 0.5"
-        class="carousel__image"
-      />
+      <Image v-for="(image, i) in loopImages" v-bind="image" :delay="i * 0.15" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { PropType } from 'vue'
 import normalizeWheel from '~~/utils/dom/normalizeWheel'
 import round from '~~/utils/math/round'
+import Image from './Image.vue'
+
+const props = defineProps({
+  images: { type: Array as PropType<{ src: string; alt: string; width: number; height: number }[]>, required: true },
+})
+
+const loopImages = computed(() => [props.images, props.images, props.images].flat())
 
 const cursorOrigin = ref<{ x: number; y: number } | null>(null)
 const scrollOrigin = ref(0)
@@ -89,7 +34,7 @@ const speed = ref(0)
 
 const carousel = ref<HTMLElement>()
 
-const width = computed(() => (carousel.value?.getBoundingClientRect().width || 100000) / 2)
+const width = computed(() => (carousel.value?.getBoundingClientRect().width || 100000) / 3)
 
 const style = computed(() => {
   const offset = x.value > 0 ? -width.value : 0

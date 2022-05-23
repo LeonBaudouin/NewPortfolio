@@ -2,8 +2,15 @@
   <div class="project">
     <TextContent class="project__text--first" :title="title" :texts="text1" />
     <TextContent class="project__text--second" :texts="text2" />
-    <Image src="/projects/safeplace/2.png" alt="Safeplace" class="project__image" :width="587" :height="318" />
-    <Carousel class="project__carousel" />
+    <Image
+      src="/projects/safeplace/2.png"
+      alt="Safeplace"
+      class="project__image"
+      :width="587"
+      :height="318"
+      fill="height"
+    />
+    <Carousel class="project__carousel" :images="images" />
   </div>
 </template>
 
@@ -14,6 +21,33 @@ const text1 = [
 ]
 const text2 = [
   'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem <strong>dummy text ever</strong> since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+]
+
+const images = [
+  {
+    src: '/projects/safeplace/1.png',
+    alt: '',
+    width: 587,
+    height: 318,
+  },
+  {
+    src: '/projects/safeplace/3.png',
+    alt: '',
+    width: 587,
+    height: 318,
+  },
+  {
+    src: '/projects/safeplace/4.png',
+    alt: '',
+    width: 587,
+    height: 318,
+  },
+  {
+    src: '/projects/safeplace/5.png',
+    alt: '',
+    width: 587,
+    height: 318,
+  },
 ]
 </script>
 
