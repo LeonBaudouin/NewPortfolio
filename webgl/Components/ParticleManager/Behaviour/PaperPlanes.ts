@@ -120,7 +120,6 @@ export default class PaperPlanes extends AbstractBehaviour {
     })
 
     const raycaster = new THREE.Raycaster()
-    const intersectPoint = new THREE.Vector3()
 
     const raycast = (e: MouseEvent, useReflection = false): THREE.Intersection | undefined => {
       const p = pixelToScreenCoords(e.clientX, e.clientY)
@@ -130,22 +129,6 @@ export default class PaperPlanes extends AbstractBehaviour {
       return intersection
     }
 
-    const updateAttractorFromMouse = (e: MouseEvent) => {
-      const topRaycast = raycast(e)
-      if (topRaycast) this.context.particleParams.attractor.copy(topRaycast.point)
-      // else if (reflectionCamera && this.context.nuxtApp.$router.currentRoute.value.name === '/about') {
-      //   const reflectionRaycast = raycast(e, true)
-      //   if (reflectionRaycast) intersectPoint.copy(reflectionRaycast.point)
-      // }
-    }
-
-    // const mouseDown = (e: MouseEvent) => {
-    //   this.isFollowing.value = true
-    //   updateAttractorFromMouse(e)
-    // }
-    // const mouseUp = () => {
-    //   this.isFollowing.value = false
-    // }
     const mouseMove = (e: MouseEvent) => {
       if (this.state === 'project') return
       const intersect = raycast(e)
@@ -156,8 +139,6 @@ export default class PaperPlanes extends AbstractBehaviour {
       if (shouldFollow) this.context.particleParams.attractor.copy(intersect.point)
     }
 
-    // this.context.renderer.domElement.addEventListener('mousedown', mouseDown)
-    // this.context.renderer.domElement.addEventListener('mouseup', mouseUp)
     this.context.renderer.domElement.addEventListener('mousemove', mouseMove)
 
     this.context.scene.add(planeHelper)
@@ -179,8 +160,6 @@ export default class PaperPlanes extends AbstractBehaviour {
       planeHelper.geometry.dispose()
       boxHelper.geometry.dispose()
       ;(this.context.tweakpane as FolderApi).dispose()
-      // this.context.renderer.domElement.removeEventListener('mousedown', mouseDown)
-      // this.context.renderer.domElement.removeEventListener('mouseup', mouseUp)
       this.context.renderer.domElement.removeEventListener('mousemove', mouseMove)
       unbind2()
     })
