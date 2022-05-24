@@ -92,6 +92,7 @@ export default class PaperPlanes extends AbstractBehaviour {
     interesectFrontPlane.position.set(-6, 2.39, 0)
     interesectFrontPlane.rotateX(-Math.PI / 2)
     interesectFrontPlane.rotateY(0.5)
+    interesectFrontPlane.name = 'FrontPlane'
     interesectMeshes.add(interesectFrontPlane)
 
     const interesectBackPlane = new THREE.Mesh(
@@ -100,6 +101,7 @@ export default class PaperPlanes extends AbstractBehaviour {
     )
     interesectBackPlane.position.set(-10.5, 15, 0)
     interesectBackPlane.rotateY(Math.PI / 2)
+    interesectBackPlane.name = 'BackPlane'
     interesectMeshes.add(interesectBackPlane)
 
     const interesectCylinder = new THREE.Mesh(
@@ -107,6 +109,7 @@ export default class PaperPlanes extends AbstractBehaviour {
       new THREE.MeshBasicMaterial({ color: 'blue', wireframe: false })
     )
     interesectCylinder.position.set(0, 2.3, 0)
+    interesectCylinder.name = 'Cylinder'
     interesectMeshes.add(interesectCylinder)
 
     this.context.scene.add(interesectMeshes)
@@ -146,8 +149,11 @@ export default class PaperPlanes extends AbstractBehaviour {
     const mouseMove = (e: MouseEvent) => {
       if (this.state === 'project') return
       const intersect = raycast(e)
-      this.isFollowing.value = !!intersect
-      if (intersect) this.context.particleParams.attractor.copy(intersect.point)
+
+      const shouldFollow = !!intersect && intersect.object.name !== 'Cylinder'
+
+      this.isFollowing.value = shouldFollow
+      if (shouldFollow) this.context.particleParams.attractor.copy(intersect.point)
     }
 
     // this.context.renderer.domElement.addEventListener('mousedown', mouseDown)
