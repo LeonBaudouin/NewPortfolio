@@ -1,12 +1,16 @@
 <template>
   <div class="content">
     <MainTitle />
-    <NuxtPage v-if="!slotName" />
-    <List v-if="slotName">
-      <template v-slot:[slotName]>
+    <Transition mode="out-in">
+      <div v-if="!slotName">
         <NuxtPage />
-      </template>
-    </List>
+      </div>
+      <List v-else="slotName">
+        <template v-slot:[slotName]>
+          <NuxtPage />
+        </template>
+      </List>
+    </Transition>
     <ImageShow />
   </div>
 </template>
@@ -93,5 +97,15 @@ body > canvas {
 .tp-fldv_c > .tp-cntv,
 .tp-tabv_c .tp-brkv > .tp-cntv {
   margin-left: 0 !important;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>
