@@ -67,15 +67,10 @@ const projects = [
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 1.8rem 5rem;
 
   &__item {
     margin: 0;
     padding: 0;
-  }
-
-  @include lowerHeight {
-    gap: 1.5rem 4.3rem;
   }
 }
 </style>

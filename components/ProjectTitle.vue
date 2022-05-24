@@ -29,6 +29,10 @@ const projectSlug = computed(() => `/project/${props.slug}`)
 <style lang="scss" scoped>
 .projectTitle {
   line-height: 1.1;
+  padding: 0 5rem 1.8rem 0;
+  @include lowerHeight {
+    padding: 0 4rem 1.5rem 0;
+  }
 
   &__name {
     margin: 0;
