@@ -17,9 +17,9 @@ export default class Grass extends AbstractObject<
     const params = reactive({
       noiseSpeed: -0.5,
       noiseScale: 0.35,
-      noiseStrength: 0.5,
-      color1: '#083b0a',
-      color2: '#09ad29',
+      noiseStrength: 0.15,
+      color1: '#021503',
+      color2: '#07b128',
       scale: new THREE.Vector2(2, 2),
       highlightStrength: -0.12,
     })
