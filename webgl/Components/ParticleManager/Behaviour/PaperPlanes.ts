@@ -27,12 +27,12 @@ const states = {
     rotationStrength: new THREE.Vector2(0.02, 0.05),
     forceCap: { min: 0.07, max: 0.09 },
   },
-  click: {
+  follow: {
     inertia: { min: 0.45, max: 0.67 },
-    rotationStrength: new THREE.Vector2(0, 0.03),
+    rotationStrength: new THREE.Vector2(0.02, 0.03),
     forceCap: { min: 0.1, max: 0.1 },
   },
-  hover: {
+  project: {
     // attractor: new THREE.Vector3(0, 4, 0),
     // inertia: { min: 0.6, max: 0.65 },
     // rotationStrength: new THREE.Vector2(0.12, 0.24),
@@ -51,12 +51,12 @@ export default class PaperPlanes extends AbstractBehaviour {
       amplitude: { min: 2.1, max: 3.39 },
     },
   }
-  private isClicking = ref(false)
+  private isFollowing = ref(false)
 
   private get state(): keyof typeof states {
     let state: keyof typeof states = 'rest'
-    if (!!MainStore.state.hoveredProject) state = 'hover'
-    if (this.isClicking.value) state = 'click'
+    if (!!MainStore.state.hoveredProject) state = 'project'
+    if (this.isFollowing.value) state = 'follow'
     return state
   }
 
@@ -129,28 +129,29 @@ export default class PaperPlanes extends AbstractBehaviour {
 
     const updateAttractorFromMouse = (e: MouseEvent) => {
       const topRaycast = raycast(e)
-      if (topRaycast) intersectPoint.copy(topRaycast.point)
-      else if (reflectionCamera && this.context.nuxtApp.$router.currentRoute.value.name === '/about') {
-        const reflectionRaycast = raycast(e, true)
-        if (reflectionRaycast) intersectPoint.copy(reflectionRaycast.point)
-      }
-      this.context.particleParams.attractor.copy(intersectPoint)
+      if (topRaycast) this.context.particleParams.attractor.copy(topRaycast.point)
+      // else if (reflectionCamera && this.context.nuxtApp.$router.currentRoute.value.name === '/about') {
+      //   const reflectionRaycast = raycast(e, true)
+      //   if (reflectionRaycast) intersectPoint.copy(reflectionRaycast.point)
+      // }
     }
 
-    const mouseDown = (e: MouseEvent) => {
-      this.isClicking.value = true
-      updateAttractorFromMouse(e)
-    }
-    const mouseUp = () => {
-      this.isClicking.value = false
-    }
+    // const mouseDown = (e: MouseEvent) => {
+    //   this.isFollowing.value = true
+    //   updateAttractorFromMouse(e)
+    // }
+    // const mouseUp = () => {
+    //   this.isFollowing.value = false
+    // }
     const mouseMove = (e: MouseEvent) => {
-      if (this.state !== 'click') return
-      updateAttractorFromMouse(e)
+      if (this.state === 'project') return
+      const intersect = raycast(e)
+      this.isFollowing.value = !!intersect
+      if (intersect) this.context.particleParams.attractor.copy(intersect.point)
     }
 
-    this.context.renderer.domElement.addEventListener('mousedown', mouseDown)
-    this.context.renderer.domElement.addEventListener('mouseup', mouseUp)
+    // this.context.renderer.domElement.addEventListener('mousedown', mouseDown)
+    // this.context.renderer.domElement.addEventListener('mouseup', mouseUp)
     this.context.renderer.domElement.addEventListener('mousemove', mouseMove)
 
     this.context.scene.add(planeHelper)
@@ -172,8 +173,8 @@ export default class PaperPlanes extends AbstractBehaviour {
       planeHelper.geometry.dispose()
       boxHelper.geometry.dispose()
       ;(this.context.tweakpane as FolderApi).dispose()
-      this.context.renderer.domElement.removeEventListener('mousedown', mouseDown)
-      this.context.renderer.domElement.removeEventListener('mouseup', mouseUp)
+      // this.context.renderer.domElement.removeEventListener('mousedown', mouseDown)
+      // this.context.renderer.domElement.removeEventListener('mouseup', mouseUp)
       this.context.renderer.domElement.removeEventListener('mousemove', mouseMove)
       unbind2()
     })
