@@ -64,9 +64,9 @@ const projects = [
   margin: 0.3rem 0 0 0;
   padding: 0;
   min-height: 0;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-rows: repeat(4, auto);
+  grid-template-columns: repeat(2, auto);
 
   &__item {
     margin: 0;
