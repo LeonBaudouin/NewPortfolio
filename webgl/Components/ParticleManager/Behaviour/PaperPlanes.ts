@@ -5,6 +5,7 @@ import { FolderApi } from 'tweakpane'
 import remap from '~~/utils/math/remap'
 import pixelToScreenCoords from '~~/utils/webgl/pixelToScreenCoords'
 import MainStore from '~~/stores/MainStore'
+import { FALSE } from 'sass'
 
 const particlesData = {
   useTexture: false,
@@ -139,7 +140,12 @@ export default class PaperPlanes extends AbstractBehaviour {
       if (shouldFollow) this.context.particleParams.attractor.copy(intersect.point)
     }
 
+    const mouseLeave = () => {
+      this.isFollowing.value = false
+    }
+
     this.context.renderer.domElement.addEventListener('mousemove', mouseMove)
+    this.context.renderer.domElement.addEventListener('mouseleave', mouseLeave)
 
     this.context.scene.add(planeHelper)
     this.context.scene.add(boxHelper)
@@ -161,6 +167,7 @@ export default class PaperPlanes extends AbstractBehaviour {
       boxHelper.geometry.dispose()
       ;(this.context.tweakpane as FolderApi).dispose()
       this.context.renderer.domElement.removeEventListener('mousemove', mouseMove)
+      this.context.renderer.domElement.removeEventListener('mouseleave', mouseLeave)
       unbind2()
     })
 

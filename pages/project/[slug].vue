@@ -1,7 +1,7 @@
 <template>
   <div class="project">
-    <TextContent class="project__text--first" :title="title" :texts="text1" />
-    <TextContent class="project__text--second" :texts="text2" />
+    <TextContent class="project__text project__text--first" :title="title" :texts="text1" />
+    <TextContent class="project__text project__text--second" :texts="text2" />
     <Image
       src="/projects/safeplace/2.png"
       alt="Safeplace"
@@ -50,6 +50,20 @@ const images = [
   },
 ]
 </script>
+
+<style lang="scss" scoped>
+.project__text {
+  .v-enter-active &,
+  .v-leave-active & {
+    transition: opacity 0.5s ease;
+  }
+
+  .v-enter-from &,
+  .v-leave-to & {
+    opacity: 0;
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .project {

@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <MainTitle />
-    <Transition mode="out-in">
+    <Transition mode="out-in" :duration="500">
       <div v-if="!slotName">
         <NuxtPage />
       </div>
@@ -97,15 +97,5 @@ body > canvas {
 .tp-fldv_c > .tp-cntv,
 .tp-tabv_c .tp-brkv > .tp-cntv {
   margin-left: 0 !important;
-}
-
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
 }
 </style>
