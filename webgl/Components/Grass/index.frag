@@ -7,8 +7,19 @@ varying vec2 vUv;
 varying float vNoise;
 varying vec3 vDisplace;
 varying float vShadow;
+varying vec3 vWorldPosition;
 
 #include <fog_pars_fragment>
+
+float remap(float value, float start1, float stop1, float start2, float stop2)
+{
+    return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
+}
+
+float cremap(float value, float start1, float stop1, float start2, float stop2) {
+    float r = remap(value, start1, stop1, start2, stop2);
+    return clamp(r, start2, stop2);
+}
 
 void main() {
   vec4 texture = texture2D(uTexture, vUv);
@@ -21,8 +32,10 @@ void main() {
 
   // gl_FragColor = vec4(vec3((vDisplace.yz + 1.) / 2., 0.), alpha);
   // gl_FragColor = vec4(vec3(vDisplace.yz, 0.), texture.r);
+  float alphaTest = cremap(vWorldPosition.x, -20., 30., 0.2, 0.5);
 
-  if (gl_FragColor.a < 0.2) discard;
+  if (gl_FragColor.a < alphaTest) discard;
+  // if (gl_FragColor.a < 0.2) discard;
 
   #include <fog_fragment>
 

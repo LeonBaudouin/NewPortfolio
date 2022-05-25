@@ -72,6 +72,8 @@ void main() {
   mixV = mix(mixV, 1.-mixV, grass * 5.);
 
   vec3 color = mix(uColor1, uColor2, mixV);
+  float darkFloor = smoothstep(0., 10., vWorldPosition.x);
+  color = mix(color, vec3(0.007, 0.082, 0.011), darkFloor);
   gl_FragColor = vec4(color, 1.);
   float shadow = computeAlpha(vWorldPosition.xz * vec2(1., -1.) + vec2(3., 3.));
 

@@ -3,6 +3,7 @@ uniform vec2 uScale;
 uniform vec3 uCam;
 
 varying vec3 vDisplace;
+varying vec3 vWorldPosition;
 varying float vNoise;
 varying float vShadow;
 varying vec2 vUv;
@@ -99,6 +100,7 @@ void main() {
 
   vUv = uv;
   vNoise = wave(worldPosition.xyz);
+  vWorldPosition = worldPosition.xyz;
 
   vec2 contactUv = (uContactMatrix * vec4(worldPosition.x, 0., worldPosition.z, 1.)).xz;
   contactUv = contactUv * vec2(1., -1.) + .5;
