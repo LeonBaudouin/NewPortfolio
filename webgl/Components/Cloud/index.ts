@@ -2,6 +2,7 @@ import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import * as THREE from 'three'
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls'
 import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
+import Ressources from '~~/webgl/Ressources'
 
 export default class Cloud extends AbstractObject<
   MainSceneContext,
@@ -11,12 +12,11 @@ export default class Cloud extends AbstractObject<
 
   constructor(
     { tweakpane, ...context }: MainSceneContext,
-    textures: Record<string, THREE.Texture>,
     defaultParams: {
       position?: THREE.Vector3Tuple
       scale?: number
       rotation?: THREE.Vector3Tuple
-      texture?: string
+      texture?: keyof Ressources['textures']
       opacity?: number
     } = {}
   ) {
@@ -31,7 +31,7 @@ export default class Cloud extends AbstractObject<
     this.object = new THREE.Mesh(
       new THREE.PlaneGeometry(1, 1),
       new THREE.MeshBasicMaterial({
-        map: textures[params.texture],
+        map: this.context.ressources.textures[params.texture],
         transparent: true,
         fog: false,
         opacity: defaultParams.opacity || 1,
@@ -65,12 +65,17 @@ export default class Cloud extends AbstractObject<
 
     watchEffect(() => {
       this.object.scale
-        .set(textures[params.texture].image.width / textures[params.texture].image.height, 1, 1)
+        .set(
+          this.context.ressources.textures[params.texture].image.width /
+            this.context.ressources.textures[params.texture].image.height,
+          1,
+          1
+        )
         .multiplyScalar(params.scale)
     })
 
     watchEffect(() => {
-      this.object.material.map = textures[params.texture]
+      this.object.material.map = this.context.ressources.textures[params.texture]
     })
 
     watchEffect((onCleanup) => {

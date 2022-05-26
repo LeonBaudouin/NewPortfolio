@@ -22,7 +22,7 @@ export default class Plain extends AbstractObject<SceneContext> {
     this.grassContact = new GrassContact(this.context)
 
     watch(
-      () => this.context.ressources.state.grassPoints,
+      () => this.context.ressources.models.grassPoints,
       (gltf) => {
         if (gltf === null) return
         const geometry = (gltf.scene.getObjectByName('grid1') as THREE.Mesh).geometry
@@ -31,8 +31,9 @@ export default class Plain extends AbstractObject<SceneContext> {
       },
       { immediate: true }
     )
+
     watch(
-      () => this.context.ressources.state.plain,
+      () => this.context.ressources.models.plain,
       (gltf) => {
         if (gltf === null) return
         this.plainMesh = new PlainMesh(this.context, (gltf.scene.getObjectByName('Plane001') as THREE.Mesh).geometry)

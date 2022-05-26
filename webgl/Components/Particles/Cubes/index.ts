@@ -48,13 +48,10 @@ export default class Cubes extends AbstractObject<
         uVelocityTexture: { value: null },
         uNormalTexture: { value: null },
         uTextureEdges: { value: new THREE.Vector4(4.7, 0.7, -0.15, -0.7) },
-        uTexture: { value: new THREE.TextureLoader().load('/projects/safeplace.png', (t) => (t.flipY = false)) },
+        uTexture: { value: null },
         uTextureAlpha: { value: 0 },
         uMatcap: {
           value: null,
-          // value: new THREE.TextureLoader().load('./headset_2_256px.png', (t) => (t.encoding = THREE.LinearEncoding)),
-          // value: new THREE.TextureLoader().load('./particle_matcap.png', (t) => (t.encoding = THREE.LinearEncoding)),
-          // value: new THREE.TextureLoader().load('./particles_test.png', (t) => (t.encoding = THREE.LinearEncoding)),
         },
         uSize: {
           value: 0,
@@ -82,12 +79,6 @@ export default class Cubes extends AbstractObject<
 
     this.context.tweakpane.addInput(mat.uniforms.uSize, 'value', { label: 'Size' })
     this.context.tweakpane.addInput(mat.uniforms.uSizeVariation, 'value', { label: 'Size Variation' })
-    // if (typeof this.data.matcap == 'string')
-    //   this.context.tweakpane.addInput(this.data, 'matcap', {
-    //     view: 'input-image',
-    //     imageFit: 'contain',
-    //     label: 'Matcap',
-    //   })
 
     const geometry = new THREE.InstancedBufferGeometry()
 
@@ -108,7 +99,7 @@ export default class Cubes extends AbstractObject<
     this.object = new THREE.InstancedMesh(geometry, mat, 512 || params.textureSize.x * params.textureSize.y)
 
     watch(
-      () => this.context.ressources.state.paperPlane,
+      () => this.context.ressources.models.paperPlane,
       (gltf) => {
         if (gltf === null) return
         const origGeometry = (gltf.scene.getObjectByName('Plane') as THREE.Mesh).geometry

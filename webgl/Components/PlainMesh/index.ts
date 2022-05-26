@@ -32,7 +32,7 @@ export default class PlainMesh extends AbstractObject<SceneContext> {
         uColor1: { value: new THREE.Color() },
         uColor2: { value: new THREE.Color() },
         uTexture: {
-          value: new THREE.TextureLoader().load('/grass/grass_1.png', (t) => (t.minFilter = THREE.NearestFilter)),
+          value: this.context.ressources.textures.grassNearestFilter,
         },
         ...this.context.globalUniforms,
         ...THREE.UniformsLib['fog'],

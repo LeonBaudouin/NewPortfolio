@@ -163,8 +163,15 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       { immediate: true }
     )
 
-    const cloudManager = new CloudManager(this.genContext())
-    this.scene.add(cloudManager.object)
+    watch(
+      () => this.context.ressources.state.isLoaded,
+      (isLoaded) => {
+        if (!isLoaded) return
+        const cloudManager = new CloudManager(this.genContext())
+        this.scene.add(cloudManager.object)
+      },
+      { immediate: false }
+    )
 
     this.monolith = new Monolith(this.genContext())
     this.scene.add(this.monolith.object)

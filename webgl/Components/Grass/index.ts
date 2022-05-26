@@ -65,7 +65,7 @@ export default class Grass extends AbstractObject<
           uColor2: { value: new THREE.Color() },
           uScale: { value: new THREE.Vector2() },
           uHighlightStrength: { value: 0 },
-          uTexture: { value: new THREE.TextureLoader().load('/grass/grass_1.png') },
+          uTexture: { value: this.context.ressources.textures.grass },
           uCam: { value: this.context.camera.position },
           ...this.context.globalUniforms,
           ...THREE.UniformsLib['fog'],

@@ -26,9 +26,7 @@ export default class Monolith extends AbstractObject<
         fog: true,
         uniforms: {
           uMatcap: {
-            value: new THREE.TextureLoader().load(
-              'https://makio135.com/matcaps/64/EAEAEA_B5B5B5_CCCCCC_D4D4D4-64px.png'
-            ),
+            value: this.context.ressources.textures.lightMatcap,
           },
           uPlaneMatrix: { value: [new THREE.Matrix4(), new THREE.Matrix4()] },
           uShadowRemap: { value: new THREE.Vector4(-0.04, 0.03, 0.71, 1) },
@@ -92,8 +90,9 @@ export default class Monolith extends AbstractObject<
   }
 
   private getTexture(imageUrl: string) {
+    const loader = new THREE.TextureLoader()
     if (!(imageUrl in this.textures))
-      this.textures[imageUrl] = new THREE.TextureLoader().load(imageUrl, (t) => this.context.renderer.initTexture(t))
+      this.textures[imageUrl] = loader.load(imageUrl, (t) => this.context.renderer.initTexture(t))
     return this.textures[imageUrl]
   }
 

@@ -34,21 +34,24 @@ export default class WebGL extends LifeCycle {
     this.nuxtApp = nuxtApp
 
     this.tweakpane = this.nuxtApp.$tweakpane!
-    this.clock = new THREE.Clock(true)
     this.ressources = new Ressources()
     this.setupRenderer()
+
+    watchEffect(() => console.log(this.ressources.state.progress))
+
     this.setupSimulation()
+    this.clock = new THREE.Clock(true)
     this.setupScenes()
 
     this.currentScene =
-      Object.keys(this.scenes).indexOf(this.nuxtApp.$params.scene || '') > -1
+      Object.keys(this.scenes!).indexOf(this.nuxtApp.$params.scene || '') > -1
         ? (this.nuxtApp.$params.scene as keyof Scenes)
         : 'main'
 
     const sceneBlade = this.tweakpane.addBlade({
       view: 'list',
       label: 'Scene',
-      options: Object.keys(this.scenes).map((key) => ({ text: key, value: key })),
+      options: Object.keys(this.scenes!).map((key) => ({ text: key, value: key })),
       value: this.currentScene,
       index: 0,
     }) as ListApi<string>
