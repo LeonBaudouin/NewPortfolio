@@ -1,8 +1,9 @@
-import { defineNuxtConfig } from 'nuxt3'
+import { defineNuxtConfig } from 'nuxt'
 
 // https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
 export default defineNuxtConfig({
-  modules: ["@nuxt/content"],
+  modules: ['@nuxt/content'],
+  content: {},
   publicRuntimeConfig: {
     BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
   },
