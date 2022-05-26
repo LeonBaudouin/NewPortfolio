@@ -59,7 +59,14 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
     this.setObjects()
 
-    this.context.renderer.compile(this.scene, this.camera)
+    watch(
+      () => this.context.ressources.state.isLoaded,
+      (isLoaded) => {
+        if (!isLoaded) return
+        this.context.renderer.compile(this.scene, this.camera)
+      },
+      { immediate: true }
+    )
 
     this.toUnbind(() => {
       this.scene.remove(this.debugCamera.object)
@@ -133,9 +140,10 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
 
     watch(
       () => this.context.nuxtApp.$router.currentRoute.value.name === 'about',
-      (inPlain) => {
+      (inPlain, previousValue) => {
+        const isImmediate = !previousValue
         const params: gsap.TweenVars = {
-          duration: 1,
+          duration: isImmediate ? 0 : 1,
         }
         gsap.to(this.plain.data, {
           showPlain: inPlain ? 1 : 0,

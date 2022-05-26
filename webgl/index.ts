@@ -19,7 +19,8 @@ export default class WebGL extends LifeCycle {
   private currentScene: keyof Scenes
   private clock: THREE.Clock
   private tweakpane: FolderApi
-  public state = reactive({})
+  public state = reactive({ isReady: false })
+  private prepFramesCounter = 0
   private nuxtApp: NuxtApp
   private simulation: GPGPU
   private renderTargetDebugger: RenderTargetDebugger
@@ -122,6 +123,11 @@ export default class WebGL extends LifeCycle {
   }
 
   public tick() {
+    if (this.ressources.state.isLoaded && !this.state.isReady) {
+      this.prepFramesCounter++
+      if (this.prepFramesCounter > 9) this.state.isReady = true
+    }
+
     const deltaTime = this.clock.getDelta()
     const elapsedTime = this.clock.elapsedTime
 
