@@ -12,9 +12,8 @@ const particlesData = {
   rotateAround: true,
   fixOnAttractor: false,
   G: 10,
-  gravity: new THREE.Vector3(0, 0, 0),
+  // gravity: new THREE.Vector3(0, 0, 0),
   // rotationDirection: new THREE.Euler(-1.56, -1.31, 1.56),
-  rotationDirection: new THREE.Euler(-1.56, -1.57, 1.56),
   sizeVariation: new THREE.Vector4(0.05, 0.15, 1, 1),
   size: 0.7,
   run: true,
@@ -27,11 +26,15 @@ const states = {
     inertia: { min: 0.2, max: 0.25 },
     rotationStrength: new THREE.Vector2(0.02, 0.05),
     forceCap: { min: 0.07, max: 0.09 },
+    rotationDirection: new THREE.Euler(-1.56, -1.57, 1.56),
+    gravity: new THREE.Vector3(0, 0, 0),
   },
   follow: {
     inertia: { min: 0.45, max: 0.67 },
     rotationStrength: new THREE.Vector2(0.02, 0.03),
     forceCap: { min: 0.1, max: 0.1 },
+    rotationDirection: new THREE.Euler(-0.73, -2.6, 2.35),
+    gravity: new THREE.Vector3(0, 0.004, 0),
   },
   project: {
     // attractor: new THREE.Vector3(0, 4, 0),
@@ -42,6 +45,8 @@ const states = {
     inertia: { min: 0.6, max: 0.65 },
     rotationStrength: new THREE.Vector2(0.06, 0.1),
     forceCap: { min: 0.07, max: 0.09 },
+    rotationDirection: new THREE.Euler(-1.56, -1.57, 1.56),
+    gravity: new THREE.Vector3(0, 0, 0),
   },
 }
 
