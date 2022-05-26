@@ -2,15 +2,12 @@ import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import { MainSceneContext } from '~~/webgl/Scenes/MainScene'
 import * as THREE from 'three'
 import Particles, { ParticleSystemParams } from '../Particles'
-import { getPositionTextureFromMesh } from '~~/utils/buffer/positionTextureFromMesh'
-import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 import AbstractBehaviour from './Behaviour/AbstractBehaviour'
 import Introduction from './Behaviour/Introduction'
 import TensionHold from './Behaviour/TensionHold'
 import PaperPlanes from './Behaviour/PaperPlanes'
 import Sandbox from './Behaviour/Sandbox'
 import Circle from './Behaviour/Circle'
-import gsap from 'gsap/all'
 import ComposeBlock from './Behaviour/ComposeBlock'
 
 const behaviours = {
@@ -78,39 +75,9 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
       },
       { immediate: true }
     )
-    // pseudoDeepAssign(this.particlesParams, particles_data.still)
 
     this.particles = new Particles(this.context, this.particlesParams)
     this.object = this.particles.object
-
-    // chess.rotateZ(0.3)
-    // chess.rotateX(0.3)
-
-    // chess.updateMatrix()
-    // // const sampleGeom = new THREE.TorusGeometry(4, 0.1, 4, 30)
-    // const sampleGeom = chess.geometry.clone()
-    // sampleGeom.applyMatrix4(chess.matrix)
-    // const newMesh = new THREE.Mesh(sampleGeom, new THREE.MeshBasicMaterial())
-    // const sampler = new MeshSurfaceSampler(newMesh)
-    // sampler.build()
-    // const textures = {
-    //   chess: getPositionTextureFromMesh(
-    //     sampler,
-    //     this.particlesParams.textureSize,
-    //     this.particlesParams.textureSize.x * this.particlesParams.textureSize.y
-    //   ),
-    // }
-
-    // // chess.material = new THREE.MeshMatcapMaterial({
-    // //   matcap: new THREE.TextureLoader().load(
-    // //     'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
-    // //     (t) => (t.encoding = THREE.sRGBEncoding)
-    // //   ),
-    // // })
-    // // this.context.scene.add(chess)
-
-    // this.particlesParams.normalTexture = textures.chess.normal
-    // this.particlesParams.attractorsTexture = textures.chess.position
   }
 
   public tick(time: number, delta: number): void {

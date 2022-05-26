@@ -1,7 +1,6 @@
 import AbstractObject from '~~/webgl/abstract/AbstractObject'
 import * as THREE from 'three'
 import Grass from '../Grass'
-import TestGrass from '../TestGrass'
 import { SceneContext } from '~~/webgl/abstract/Context'
 import PlainMesh from '../PlainMesh'
 import GrassContact from '../GrassContact'
@@ -9,7 +8,6 @@ import GrassContact from '../GrassContact'
 const temp1 = new THREE.Matrix4()
 export default class Plain extends AbstractObject<SceneContext> {
   private grass: Grass
-  // private testGrass: TestGrass
   private plainMesh: PlainMesh
   private grassContact: GrassContact
 
@@ -62,7 +60,6 @@ export default class Plain extends AbstractObject<SceneContext> {
       this.grass.object.material.uniforms.uContactMatrix.value = temp1.copy(this.grassContact.matrix).invert()
     }
     this.grass?.tick(time, delta)
-    // this.grass?.object.material.uniforms
     this.plainMesh?.tick(time, delta)
   }
 }

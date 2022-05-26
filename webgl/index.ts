@@ -2,14 +2,12 @@ import * as THREE from 'three'
 import { FolderApi, ListApi, Pane, TabPageApi } from 'tweakpane'
 import LifeCycle from './abstract/LifeCycle'
 import MainScene from './Scenes/MainScene'
-import ParticlesScene from './Scenes/ParticlesScene'
 import Ressources from './Ressources'
 import GPGPU from '~~/utils/GPGPU'
 import RenderTargetDebugger from './Components/RenderTargetDebugger'
 
 type Scenes = {
   main: MainScene
-  particles: ParticlesScene
 }
 type NuxtApp = ReturnType<typeof useNuxtApp> & { $router: ReturnType<typeof useRouter> }
 export default class WebGL extends LifeCycle {
@@ -74,11 +72,9 @@ export default class WebGL extends LifeCycle {
     const tabs = this.tweakpane.addTab({ pages: [{ title: 'Main' }] })
 
     const mainPage = tabs.pages[0]
-    const testPage = tabs.addPage({ title: 'Particles' })
 
     this.scenes = {
       main: new MainScene(this.genContext(mainPage)),
-      particles: new ParticlesScene(this.genContext(testPage)),
     }
     this.toUnbind(this.scenes.main.destroy, tabs.dispose)
   }

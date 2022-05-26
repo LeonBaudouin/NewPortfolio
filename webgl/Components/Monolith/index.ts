@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import fragmentShader from './index.frag?raw'
 import vertexShader from './index.vert?raw'
 import MainStore from '~~/stores/MainStore'
-import ProjectPlane from '../Prototype/ProjectPlane'
+import ProjectPlane from '../ProjectPlane'
 import gsap from 'gsap'
 
 export default class Monolith extends AbstractObject<
@@ -20,7 +20,6 @@ export default class Monolith extends AbstractObject<
 
     this.object = new THREE.Mesh(
       new THREE.BoxGeometry(0.8, 5.8, 0.8),
-      // new THREE.BoxGeometry(8, 48, 8),
       new THREE.ShaderMaterial({
         fragmentShader,
         vertexShader,
@@ -39,13 +38,9 @@ export default class Monolith extends AbstractObject<
           ...this.context.globalUniforms,
         },
       })
-      // new THREE.MeshMatcapMaterial({
-      //   matcap: new THREE.TextureLoader().load('https://makio135.com/matcaps/64/EAEAEA_B5B5B5_CCCCCC_D4D4D4-64px.png'),
-      // })
     )
     this.object.rotateY(Math.PI / 2 - 0.3)
     this.object.position.y = 1.25
-    // this.object.visible = false
     this.context.tweakpane.addInput(this.object.rotation, 'y', { label: 'Monolith Rotation' })
     this.context.tweakpane.addInput(this.object.material.uniforms.uShadowRemap, 'value', {
       label: 'Shadow Remap',
