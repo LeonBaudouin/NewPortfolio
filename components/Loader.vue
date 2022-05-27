@@ -1,15 +1,14 @@
 <template>
   <transition name="fade">
-    <div v-if="showLoader" class="loader" :style="{ '--prog': prog }">
+    <div v-if="!$webgl?.state.isReady" class="loader" :style="{ '--prog': prog }">
       <div class="loader__bar"></div>
     </div>
   </transition>
 </template>
 
 <script lang="ts" setup>
-const { $webgl, $params } = useNuxtApp()
+const { $webgl } = useNuxtApp()
 
-const showLoader = computed(() => ($params?.loader === null ? !$webgl?.state.isReady : $params?.loader))
 const prog = computed(() => $webgl?.ressources.state.progress || 0)
 </script>
 
