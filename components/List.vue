@@ -1,12 +1,11 @@
 <template>
   <div class="list">
-    <MainLink text="About" to="/about" />
-    <div class="list__section">
-      <slot name="about"></slot>
+    <div class="list__titles">
+      <MainLink text="About" to="/about" />
+      <MainLink text="Projects" to="/" />
     </div>
-    <MainLink text="Projects" to="/" />
     <div class="list__section">
-      <slot name="projects"></slot>
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -22,8 +21,14 @@
   display: flex;
   flex-direction: column;
 
+  &__titles {
+    display: flex;
+    gap: 2rem;
+  }
+
   &__section {
     margin-left: 2.8rem;
+    margin-top: 1.5rem;
     min-height: 0;
     display: flex;
     flex-direction: column;

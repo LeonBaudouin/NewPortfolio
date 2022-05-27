@@ -5,6 +5,12 @@
   </NuxtLink>
 </template>
 
+<script lang="ts" setup>
+const { currentRoute } = useRouter()
+
+const isActive = computed(() => currentRoute.value.name === 'home')
+</script>
+
 <style lang="scss">
 .mainTitle {
   line-height: 1.1;

@@ -37,7 +37,7 @@ const projectSlug = computed(() => `/project/${props.slug}`)
   &__name {
     margin: 0;
     font-size: 1.3rem;
-    font-weight: 400;
+    font-weight: 300;
     text-transform: uppercase;
     letter-spacing: 2px;
 

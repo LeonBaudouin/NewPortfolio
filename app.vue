@@ -7,9 +7,7 @@
         <NuxtPage />
       </div>
       <List v-else="slotName">
-        <template v-slot:[slotName]>
-          <NuxtPage />
-        </template>
+        <NuxtPage />
       </List>
     </Transition>
     <ImageShow />
@@ -87,6 +85,7 @@ body {
   font-family: 'Poppins', sans-serif;
   color: var(--main-color);
   margin: 0;
+  background-color: black;
 }
 
 body > canvas {

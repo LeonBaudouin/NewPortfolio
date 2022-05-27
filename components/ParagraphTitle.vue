@@ -14,5 +14,6 @@ const { title } = defineProps({ title: { type: String } })
   font-weight: 700;
   letter-spacing: 1px;
   line-height: 1.4;
+  text-transform: uppercase;
 }
 </style>

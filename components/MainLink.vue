@@ -22,19 +22,32 @@ const props = defineProps({
   font-weight: 700;
   display: inline-block;
 
+  @include lowerHeight {
+    font-size: 1.6rem;
+  }
+
   &::before {
     content: '\\.';
     padding-right: 6px;
-  }
-
-  @include lowerHeight {
-    font-size: 1.6rem;
   }
 
   &__link {
     color: inherit;
     text-decoration: none;
     align-self: flex-start;
+    -webkit-text-stroke: 0.5px white;
+    color: transparent;
+    transition: all 0.5s ease;
+
+    @include hover {
+      color: white;
+      -webkit-text-stroke: 0.5px transparent;
+    }
+
+    &.router-link-active {
+      color: white;
+      -webkit-text-stroke: 0.5px transparent;
+    }
   }
 }
 </style>
