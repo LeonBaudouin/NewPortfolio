@@ -9,7 +9,7 @@
 <script lang="ts" setup>
 const { $webgl, $params } = useNuxtApp()
 
-const showLoader = computed(() => ($params.loader === null ? !$webgl?.state.isReady : $params.loader))
+const showLoader = computed(() => ($params?.loader === null ? !$webgl?.state.isReady : $params?.loader))
 const prog = computed(() => $webgl?.ressources.state.progress || 0)
 </script>
 
