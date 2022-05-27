@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div v-show="!$webgl.state.isReady" class="hideDiv"></div>
+    <div v-show="isReady" class="hideDiv"></div>
     <MainTitle />
     <Transition mode="out-in" :duration="500">
       <div v-if="!slotName">
@@ -21,7 +21,7 @@ const { $webgl, $tweakpane } = useNuxtApp()
 
 const router = useRouter()
 
-useCleanup(watchEffect(() => console.log($webgl?.state.isReady)))
+const isReady = computed(() => !$webgl?.state.isReady)
 
 const slotAssoc: Record<string, string> = {
   '/': 'projects',
