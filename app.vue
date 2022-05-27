@@ -21,9 +21,7 @@ const { $webgl, $tweakpane } = useNuxtApp()
 
 const router = useRouter()
 
-watchEffect(() => {
-  console.log($webgl?.state.isReady)
-})
+useCleanup(watchEffect(() => console.log($webgl?.state.isReady)))
 
 const slotAssoc: Record<string, string> = {
   '/': 'projects',
