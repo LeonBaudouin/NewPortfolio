@@ -141,7 +141,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     watch(
       () => this.context.nuxtApp.$router.currentRoute.value.name === 'about',
       (inPlain, previousValue) => {
-        const isImmediate = !previousValue
+        const isImmediate = typeof previousValue === 'undefined'
         const params: gsap.TweenVars = {
           duration: isImmediate ? 0 : 1,
         }

@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div v-show="isReady" class="hideDiv"></div>
+    <Loader />
     <MainTitle />
     <Transition mode="out-in" :duration="500">
       <div v-if="!slotName">
@@ -20,8 +20,6 @@
 const { $webgl, $tweakpane } = useNuxtApp()
 
 const router = useRouter()
-
-const isReady = computed(() => !$webgl?.state.isReady)
 
 const slotAssoc: Record<string, string> = {
   '/': 'projects',
@@ -100,16 +98,5 @@ body > canvas {
 .tp-fldv_c > .tp-cntv,
 .tp-tabv_c .tp-brkv > .tp-cntv {
   margin-left: 0 !important;
-}
-</style>
-
-<style lang="scss" scoped>
-.hideDiv {
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  inset: 0;
-  background-color: white;
-  z-index: 100;
 }
 </style>

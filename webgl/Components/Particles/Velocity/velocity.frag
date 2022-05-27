@@ -3,7 +3,6 @@ uniform sampler2D uFbo;
 uniform sampler2D uPositionFbo;
 uniform sampler2D uRandomForces;
 uniform sampler2D uAttractorsTexture;
-uniform sampler2D uAttractorsNormalTexture;
 uniform vec3 uAttractor;
 uniform bool uUseTexture;
 uniform bool uRotateAround;

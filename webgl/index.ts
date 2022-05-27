@@ -5,6 +5,7 @@ import MainScene from './Scenes/MainScene'
 import Ressources from './Ressources'
 import GPGPU from '~~/utils/GPGPU'
 import RenderTargetDebugger from './Components/RenderTargetDebugger'
+import Stats from './Stats'
 
 type Scenes = {
   main: MainScene
@@ -13,8 +14,9 @@ type NuxtApp = ReturnType<typeof useNuxtApp> & { $router: ReturnType<typeof useR
 export default class WebGL extends LifeCycle {
   public renderer: THREE.WebGLRenderer
 
-  private ressources: Ressources
+  public ressources: Ressources
 
+  private stats: Stats | null
   public scenes: Scenes
   private currentScene: keyof Scenes
   private clock: THREE.Clock
@@ -34,6 +36,7 @@ export default class WebGL extends LifeCycle {
     super()
     this.nuxtApp = nuxtApp
 
+    if (this.nuxtApp.$params.debug) this.stats = new Stats(true)
     this.tweakpane = this.nuxtApp.$tweakpane!
     this.ressources = new Ressources()
     this.setupRenderer()
@@ -89,6 +92,7 @@ export default class WebGL extends LifeCycle {
     })
     this.renderer.outputEncoding = THREE.LinearEncoding
     this.renderer.debug.checkShaderErrors = true
+    this.stats?.setRenderPanel(this.renderer.getContext())
     const resize = () => {
       this.renderer.setSize(window.innerWidth, window.innerHeight)
     }
@@ -123,9 +127,11 @@ export default class WebGL extends LifeCycle {
   }
 
   public tick() {
+    this.stats?.update()
+
     if (this.ressources.state.isLoaded && !this.state.isReady) {
       this.prepFramesCounter++
-      if (this.prepFramesCounter > 9) this.state.isReady = true
+      if (this.prepFramesCounter > 19) this.state.isReady = true
     }
 
     const deltaTime = this.clock.getDelta()
@@ -134,6 +140,8 @@ export default class WebGL extends LifeCycle {
     const currentScene = this.scenes[this.currentScene]
 
     currentScene.tick(elapsedTime, deltaTime)
+
+    this.stats?.beforeRender()
     this.renderer.render(currentScene.scene, currentScene.camera)
 
     if (this.renderTargetDebugger.object.visible) {
@@ -142,6 +150,7 @@ export default class WebGL extends LifeCycle {
       this.renderer.render(this.renderTargetDebugger.object, currentScene.camera)
       this.renderer.autoClear = true
     }
+    this.stats?.afterRender()
   }
 }
 

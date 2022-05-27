@@ -17,6 +17,7 @@
     "easing-functions": "^1.0.1",
     "gsap": "^3.10.3",
     "sass": "^1.49.9",
+    "stats.js": "^0.17.0",
     "three": "^0.138.2",
     "tweakpane": "^3.0.7",
     "tweakpane-image-plugin": "^1.1.3"

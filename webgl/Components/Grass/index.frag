@@ -32,10 +32,11 @@ void main() {
 
   // gl_FragColor = vec4(vec3((vDisplace.yz + 1.) / 2., 0.), alpha);
   // gl_FragColor = vec4(vec3(vDisplace.yz, 0.), texture.r);
-  float alphaTest = cremap(vWorldPosition.x, -20., 30., 0.2, 0.5);
+  float alphaTest = cremap(vWorldPosition.x, 5., 15., 0.1, 0.5);
+
+  // gl_FragColor = vec4(vec3(alphaTest), alpha);
 
   if (gl_FragColor.a < alphaTest) discard;
-  // if (gl_FragColor.a < 0.2) discard;
 
   #include <fog_fragment>
 
