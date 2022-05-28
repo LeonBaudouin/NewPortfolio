@@ -1,16 +1,24 @@
 <template>
   <NuxtLink :to="projectSlug" class="projectTitle" @mouseenter="mouseEnter" @mouseleave="mouseLeave">
-    <SlidingText tag="h4" class="projectTitle__name" :show="MainStore.state.isFullyLoaded">
+    <RevealingText tag="h4" class="projectTitle__name" :show="show" :delay="show ? 0.2 : 0">
       {{ props.name }}
-    </SlidingText>
-    <SlidingText class="projectTitle__subtitle" :show="MainStore.state.isFullyLoaded">
+    </RevealingText>
+    <!-- <RevealingText class="projectTitle__subtitle" :show="show" :delay="show ? 0 : 0.2">
       {{ props.subtitle }}
-    </SlidingText>
+    </RevealingText> -->
+    <Transition name="fade">
+      <span class="projectTitle__subtitle" v-if="show" :style="{ '--delay': '0.2s' }">
+        {{ props.subtitle }}
+      </span>
+    </Transition>
   </NuxtLink>
 </template>
 
 <script lang="ts" setup>
 import MainStore from '~~/stores/MainStore'
+
+const show = useShow('index')
+// const style = computed(() => ())
 
 const props = defineProps({
   name: { required: true, type: String },
@@ -31,9 +39,26 @@ const projectSlug = computed(() => `/project/${props.slug}`)
 </script>
 
 <style lang="scss" scoped>
+.projectTitle__subtitle {
+  .page-enter-active & {
+    transition: opacity 0.5s ease 0.2s;
+  }
+  .page-leave-active & {
+    transition: opacity 0.5s ease 0s;
+  }
+
+  .page-enter-from &,
+  .page-leave-to & {
+    opacity: 0;
+  }
+}
+
 .projectTitle {
   line-height: 1.1;
   padding: 0 5rem 1.8rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   @include lowerHeight {
     padding: 0 4rem 1.5rem 0;
   }

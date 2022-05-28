@@ -1,21 +1,22 @@
 <template>
-  <component :is="tag" class="wrapper">
+  <component :is="tag" class="wrapper" :style="style">
     <span class="shim">
       <slot></slot>
     </span>
-    <span class="animated" :class="{ show: show }" :style="style">
+    <span class="animated" :class="{ show: show }">
       <slot></slot>
     </span>
   </component>
 </template>
 
 <script lang="ts" setup>
-const { show, tag, delay } = defineProps({
+const { show, tag, delay, padding } = defineProps({
   show: { type: Boolean, default: true },
   tag: { type: String, default: 'div' },
   delay: { type: Number, default: 0 },
+  padding: { type: Number, default: 2 },
 })
-const style = computed(() => ({ '--delay': delay + 's' }))
+const style = computed(() => ({ '--delay': delay + 's', '--spread': padding + 'px' }))
 </script>
 
 <style lang="scss" scoped>
@@ -26,8 +27,6 @@ const style = computed(() => ({ '--delay': delay + 's' }))
 .animated {
   position: absolute;
   left: 0;
-  animation-name: diseapper;
-  animation-timing-function: cubic-bezier(0.69, 0, 1, 0.44);
   animation-duration: 0.5s;
   animation-fill-mode: both;
   animation-delay: var(--delay, 0);
@@ -35,6 +34,11 @@ const style = computed(() => ({ '--delay': delay + 's' }))
   &.show {
     animation-name: appear;
     animation-timing-function: cubic-bezier(0, 0.76, 0.48, 1);
+  }
+
+  .page-leave-to & {
+    animation-name: diseapper;
+    animation-timing-function: cubic-bezier(0.69, 0, 1, 0.44);
   }
 }
 
@@ -59,7 +63,7 @@ const style = computed(() => ({ '--delay': delay + 's' }))
 .wrapper {
   overflow: hidden;
   position: relative;
-  margin: -5px 0;
-  padding: 5px 0;
+  margin: calc(var(--spread) * -2) 0;
+  padding: var(--spread) 0;
 }
 </style>

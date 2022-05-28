@@ -98,4 +98,13 @@ body > canvas {
 .tp-tabv_c .tp-brkv > .tp-cntv {
   margin-left: 0 !important;
 }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease var(--delay, 0);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>
