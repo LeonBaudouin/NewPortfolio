@@ -1,7 +1,11 @@
 <template>
   <NuxtLink :to="projectSlug" class="projectTitle" @mouseenter="mouseEnter" @mouseleave="mouseLeave">
-    <h4 class="projectTitle__name">{{ props.name }}</h4>
-    <div class="projectTitle__subtitle">{{ props.subtitle }}</div>
+    <SlidingText tag="h4" class="projectTitle__name" :show="MainStore.state.isFullyLoaded">
+      {{ props.name }}
+    </SlidingText>
+    <SlidingText class="projectTitle__subtitle" :show="MainStore.state.isFullyLoaded">
+      {{ props.subtitle }}
+    </SlidingText>
   </NuxtLink>
 </template>
 

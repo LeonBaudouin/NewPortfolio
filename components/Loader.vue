@@ -1,5 +1,5 @@
 <template>
-  <transition name="fade">
+  <transition name="fade" @after-leave="MainStore.state.isFullyLoaded = true">
     <div v-if="!$webgl?.state.isReady" class="loader" :style="{ '--prog': prog }">
       <div class="loader__bar"></div>
     </div>
@@ -7,6 +7,8 @@
 </template>
 
 <script lang="ts" setup>
+import MainStore from '~~/stores/MainStore'
+
 const { $webgl } = useNuxtApp()
 
 const prog = computed(() => $webgl?.ressources.state.progress || 0)

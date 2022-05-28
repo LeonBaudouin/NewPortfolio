@@ -1,14 +1,18 @@
 <template>
   <div class="list">
     <div class="list__titles">
-      <MainLink text="About" to="/about" />
-      <MainLink text="Projects" to="/" />
+      <MainLink text="About" to="/about" :delay="0" :show="show" />
+      <MainLink text="Projects" to="/" :delay="0.3" :show="show" />
     </div>
     <div class="list__section">
       <slot></slot>
     </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+const show = useShow(['index', 'about'])
+</script>
 
 <style lang="scss">
 .list {

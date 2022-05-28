@@ -41,7 +41,7 @@ export default class WebGL extends LifeCycle {
     this.ressources = new Ressources()
     this.setupRenderer()
 
-    watchEffect(() => console.log(this.ressources.state.progress))
+    // watchEffect(() => console.log(this.ressources.state.progress))
 
     this.setupSimulation()
     this.clock = new THREE.Clock(true)

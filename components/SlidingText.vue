@@ -1,7 +1,11 @@
 <template>
   <component :is="tag" class="wrapper">
-    <span class="shim"><slot></slot></span
-    ><span class="animated" :class="{ show: show }" :style="style"><slot></slot></span>
+    <span class="shim">
+      <slot></slot>
+    </span>
+    <span class="animated" :class="{ show: show }" :style="style">
+      <slot></slot>
+    </span>
   </component>
 </template>
 

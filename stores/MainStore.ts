@@ -1,13 +1,14 @@
-const MainState = reactive<{ hoveredProject: null | string; imageToShow: null | string }>({
+const MainState = reactive<{ hoveredProject: null | string; imageToShow: null | string; isFullyLoaded: boolean }>({
   hoveredProject: null,
   imageToShow: null,
+  isFullyLoaded: false,
 })
 
-const MainComputed = {}
+const MainGetters = {}
 
 const MainStore = {
   state: MainState,
-  computed: MainComputed,
+  getters: MainGetters,
 }
 
 export default MainStore

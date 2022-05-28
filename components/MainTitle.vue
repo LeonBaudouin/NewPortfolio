@@ -6,11 +6,11 @@
 </template>
 
 <script lang="ts" setup>
-const { $webgl } = useNuxtApp()
-const show = computed(() => $webgl?.state.isReady)
-const baseDelay = 3.5
-const nameDelay = computed(() => baseDelay + (show.value ? 0.3 : 0))
-const jobDelay = computed(() => baseDelay + (show.value ? 0 : 0.3))
+import MainStore from '~~/stores/MainStore'
+
+const show = computed(() => MainStore.state.isFullyLoaded)
+const nameDelay = computed(() => (show.value ? 0.3 : 0))
+const jobDelay = computed(() => (show.value ? 0 : 0.3))
 </script>
 
 <style lang="scss">

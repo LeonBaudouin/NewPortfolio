@@ -1,6 +1,6 @@
 <template>
   <NuxtLink :to="props.to" class="title__link">
-    <SlidingText tag="h3" class="title" :delay="5">
+    <SlidingText tag="h3" class="title" :delay="props.delay" :show="props.show">
       <span class="title__text">
         {{ props.text }}
       </span>
@@ -12,6 +12,8 @@
 const props = defineProps({
   text: { type: String, required: true },
   to: { type: String, required: true },
+  delay: { type: Number, default: 5 },
+  show: { type: Boolean, default: true },
 })
 </script>
 
