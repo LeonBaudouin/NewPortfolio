@@ -1,8 +1,10 @@
 <template>
   <NuxtLink :to="props.to" class="title__link">
-    <h3 class="title">
-      {{ props.text }}
-    </h3>
+    <SlidingText tag="h3" class="title" :delay="5">
+      <span class="title__text">
+        {{ props.text }}
+      </span>
+    </SlidingText>
   </NuxtLink>
 </template>
 
@@ -15,20 +17,22 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .title {
-  font-size: 1.8rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin: 1rem 0 0 0;
-  font-weight: 700;
-  display: inline-block;
+  &__text {
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 1rem 0 0 0;
+    font-weight: 700;
+    display: inline-block;
 
-  @include lowerHeight {
-    font-size: 1.6rem;
-  }
+    @include lowerHeight {
+      font-size: 1.6rem;
+    }
 
-  &::before {
-    content: '\\.';
-    padding-right: 6px;
+    &::before {
+      content: '\\.';
+      padding-right: 6px;
+    }
   }
 
   &__link {
