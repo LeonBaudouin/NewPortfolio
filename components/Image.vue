@@ -7,6 +7,7 @@
       'image__container--width': fill === 'width',
       'image__container--height': fill === 'height',
     }"
+    :style="style"
   >
     <canvas class="image__shim" :width="width" :height="height"></canvas>
     <img
@@ -34,18 +35,18 @@ const { src, alt, width, height, delay, fill } = defineProps({
   fill: { type: String as PropType<'width' | 'height'>, default: 'height' },
 })
 
-const delayWithUnit = computed(() => delay + 's')
 const effectiveSrc = ref('/placeholder/1_1.png')
 const loaded = ref(false)
 const show = ref(false)
 
+const style = computed(() => ({ '--delay': delay + 's' }))
 const invertedRatio = computed(() => height / width)
 
-// const shimFillStyle = computed(() => ({ [fill]: '100%' }))
-
 onMounted(() => {
-  show.value = true
-  effectiveSrc.value = src
+  setTimeout(() => {
+    show.value = true
+    effectiveSrc.value = src
+  })
 })
 
 let timeout: ReturnType<typeof setTimeout>
@@ -53,7 +54,7 @@ let timeout: ReturnType<typeof setTimeout>
 const handleLoad = () => {
   timeout = setTimeout(() => {
     loaded.value = true
-  }, 1000 + delay * 800)
+  }, 1000 * delay + 800)
 }
 
 const startPos = { x: 0, y: 0 }
@@ -82,6 +83,11 @@ onUnmounted(() => {
   height: 100%;
   visibility: hidden;
   cursor: pointer;
+
+  .layout-leave-to &,
+  .page-leave-to & {
+    animation: hide-image 0.5s var(--delay, 0s) ease both;
+  }
 
   &__shim {
     height: 100%;
@@ -120,9 +126,14 @@ onUnmounted(() => {
       transition: transform 0.8s cubic-bezier(0.48, 0, 0.16, 1);
     }
 
+    *.layout-leave-to &::before,
+    *.page-leave-to &::before {
+      animation: anim-box 0.5s var(--delay, 0s) ease both;
+    }
+
     &--show::before {
       transform: scale3d(1, 1, 1);
-      transition-delay: v-bind(delayWithUnit);
+      transition-delay: var(--delay);
     }
 
     &--loaded {
@@ -132,9 +143,41 @@ onUnmounted(() => {
       &::before {
         transform-origin: bottom center;
         transform: scale3d(1, 0, 1);
-        transition-delay: v-bind(delayWithUnit);
+        transition-delay: var(--delay);
       }
     }
+  }
+}
+@keyframes anim-box {
+  0% {
+    transform-origin: top center;
+    transform: scale3d(1, 0, 1);
+  }
+  50% {
+    transform-origin: top center;
+    transform: scale3d(1, 1, 1);
+  }
+  50.0001% {
+    transform-origin: bottom center;
+    transform: scale3d(1, 1, 1);
+  }
+  100% {
+    transform-origin: bottom center;
+    transform: scale3d(1, 0, 1);
+  }
+}
+@keyframes hide-image {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  50.0001% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
   }
 }
 </style>

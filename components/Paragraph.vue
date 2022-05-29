@@ -1,29 +1,29 @@
 <template>
-  <!-- <RevealingText tag="p" class="paragraph">
-    <span v-html="content" />
-  </RevealingText> -->
-  <Transition appear name="fade">
-    <p v-if="show" class="paragraph" v-html="content" />
-  </Transition>
+  <p class="paragraph" v-html="content" />
 </template>
 
 <script lang="ts" setup>
 const { content } = defineProps({
   content: { type: String, required: true },
 })
-
-const show = useShow('about')
 </script>
 
 <style lang="scss" scoped>
 .paragraph {
+  transition: opacity 0.5s ease;
+  .loading &,
   .page-enter-active &,
-  .page-leave-active & {
+  .page-leave-active &,
+  .layout-enter-active &,
+  .layout-leave-active & {
     transition: opacity 0.5s ease;
   }
 
+  .loading &,
   .page-enter-from &,
-  .page-leave-to & {
+  .page-leave-to &,
+  .layout-enter-from &,
+  .layout-leave-to & {
     opacity: 0;
   }
 }

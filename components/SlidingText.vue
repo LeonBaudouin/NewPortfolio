@@ -3,13 +3,15 @@
     <span class="shim">
       <slot></slot>
     </span>
-    <span class="animated" :class="{ show: show }">
+    <span class="animated" :class="{ show: showAndLoaded }">
       <slot></slot>
     </span>
   </component>
 </template>
 
 <script lang="ts" setup>
+import MainStore from '~~/stores/MainStore'
+
 const { show, tag, delay, padding } = defineProps({
   show: { type: Boolean, default: true },
   tag: { type: String, default: 'div' },
@@ -17,6 +19,7 @@ const { show, tag, delay, padding } = defineProps({
   padding: { type: Number, default: 2 },
 })
 const style = computed(() => ({ '--delay': delay + 's', '--spread': padding + 'px' }))
+const showAndLoaded = computed(() => show && MainStore.state.isFullyLoaded)
 </script>
 
 <style lang="scss" scoped>
@@ -36,7 +39,9 @@ const style = computed(() => ({ '--delay': delay + 's', '--spread': padding + 'p
     animation-timing-function: cubic-bezier(0, 0.76, 0.48, 1);
   }
 
-  .page-leave-to & {
+  .loading &,
+  .page-leave-to &,
+  .layout-leave-to & {
     animation-name: diseapper;
     animation-timing-function: cubic-bezier(0.69, 0, 1, 0.44);
   }

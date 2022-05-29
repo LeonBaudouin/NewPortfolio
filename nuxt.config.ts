@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   publicRuntimeConfig: {
     BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
   },
+  layoutTransitions: true,
   vite: {
     css: {
       preprocessorOptions: {

@@ -1,5 +1,11 @@
 <template>
-  <TextContent :title="title" :texts="texts" />
+  <div class="about">
+    <ParagraphTitle :title="title" class="about__title" />
+    <div class="about__paragraphs">
+      <Paragraph v-for="text in texts" :content="text" />
+    </div>
+    <!-- <TextContent :title="title" :texts="texts" /> -->
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -10,10 +16,37 @@ const texts = [
 ]
 
 definePageMeta({
+  layout: 'custom',
   pageTransition: {
     name: 'page',
     mode: 'out-in',
-    duration: 700,
+    duration: 500,
   },
 })
 </script>
+
+<style lang="scss" scoped>
+.about {
+  margin-top: 1rem;
+
+  &__title {
+    margin-bottom: 1.5rem;
+  }
+
+  &__paragraphs {
+    display: flex;
+    gap: 4rem;
+  }
+}
+</style>
+
+<!-- .content {
+  margin: 1rem 0;
+  &__title {
+  }
+
+  &__texts {
+    display: flex;
+    gap: 4rem;
+  }
+} -->

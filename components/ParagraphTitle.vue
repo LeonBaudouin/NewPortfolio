@@ -1,5 +1,5 @@
 <template>
-  <RevealingText v-if="title" tag="h4" class="paragraphTitle" :show="true">{{ title }}</RevealingText>
+  <RevealingText v-if="title" tag="h4" class="paragraphTitle">{{ title }}</RevealingText>
   <div class="paragraphTitle" v-else style="user-select: none">&nbsp;</div>
 </template>
 

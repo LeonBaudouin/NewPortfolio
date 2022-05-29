@@ -8,6 +8,7 @@
       class="project__image"
       :width="587"
       :height="318"
+      :delay="0"
       fill="height"
     />
     <Carousel class="project__carousel" :images="images" />
@@ -15,6 +16,15 @@
 </template>
 
 <script lang="ts" setup>
+definePageMeta({
+  layout: 'none',
+  pageTransition: {
+    name: 'page',
+    mode: 'out-in',
+    duration: 900,
+  },
+})
+
 const title = 'What is Lorem Ipsum?'
 const text1 = [
   'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem <strong>dummy text ever</strong> since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',

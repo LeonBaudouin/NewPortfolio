@@ -1,8 +1,8 @@
 <template>
   <div class="list">
     <div class="list__titles">
-      <MainLink text="Projects" to="/" :delay="0.3" :show="show" />
-      <MainLink text="About" to="/about" :delay="0" :show="show" />
+      <MainLink text="Projects" to="/" :delay="0.1" />
+      <MainLink text="About" to="/about" :delay="0" />
     </div>
     <div class="list__section">
       <slot></slot>
@@ -10,9 +10,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-const show = useShow(['index', 'about'])
-</script>
+<script lang="ts" setup></script>
 
 <style lang="scss">
 .list {

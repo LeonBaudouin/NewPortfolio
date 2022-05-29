@@ -1,5 +1,5 @@
 <template>
-  <component :is="props.tag" class="text" :class="{ show: props.show }" :style="style">
+  <component :is="props.tag" class="text" :class="{ show: showAndLoaded }" :style="style">
     <span class="text__content">
       <slot></slot>
     </span>
@@ -7,6 +7,8 @@
 </template>
 
 <script lang="ts" setup>
+import MainStore from '~~/stores/MainStore'
+
 const props = defineProps({
   tag: { type: String, default: 'div' },
   show: { type: Boolean, default: true },
@@ -14,6 +16,7 @@ const props = defineProps({
 })
 
 const style = computed(() => ({ '--delay': props.delay + 's' }))
+const showAndLoaded = computed(() => props.show && MainStore.state.isFullyLoaded)
 </script>
 
 <style lang="scss" scoped>
@@ -44,11 +47,20 @@ const style = computed(() => ({ '--delay': props.delay + 's' }))
     animation-fill-mode: both;
   }
 
-  *.page-leave-to &::before {
-    animation-name: anim-box-2 !important;
+  &::before {
+    *.loading &,
+    *.layout-leave-to &,
+    *.page-leave-to & {
+      animation-name: anim-box-2 !important;
+    }
   }
-  *.page-leave-to &__content {
-    animation-name: hide-text !important;
+
+  &__content {
+    *.loading &,
+    *.layout-leave-to &,
+    *.page-leave-to & {
+      animation-name: hide-text !important;
+    }
   }
 
   &.show &__content {

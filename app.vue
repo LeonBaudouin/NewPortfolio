@@ -1,30 +1,19 @@
 <template>
-  <div class="content">
+  <div class="content" :class="{ loading: !MainStore.state.isFullyLoaded, loaded: MainStore.state.isFullyLoaded }">
     <Loader />
     <MainTitle />
-    <Transition mode="out-in" :duration="500">
-      <div v-if="!slotName">
-        <NuxtPage />
-      </div>
-      <List v-else="slotName">
-        <NuxtPage />
-      </List>
-    </Transition>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
     <ImageShow />
   </div>
 </template>
 
 <script setup lang="ts">
+import MainStore from './stores/MainStore'
+
 const { $webgl, $tweakpane } = useNuxtApp()
 
-const router = useRouter()
-
-const slotAssoc: Record<string, string> = {
-  '/': 'projects',
-  '/about': 'about',
-}
-
-const slotName = computed(() => slotAssoc[router.currentRoute.value.path])
 useCleanup(() => {
   let rafId: ReturnType<typeof requestAnimationFrame>
   const fpsGraph = $tweakpane.addBlade({
@@ -106,5 +95,15 @@ body > canvas {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.layout-enter-active,
+.layout-leave-active {
+  transition: opacity 0.7s ease;
+}
+
+.layout-enter-from,
+.layout-leave-to {
+  opacity: 0.999;
 }
 </style>

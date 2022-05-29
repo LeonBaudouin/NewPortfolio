@@ -1,13 +1,13 @@
 <template>
   <NuxtLink :to="projectSlug" class="projectTitle" @mouseenter="mouseEnter" @mouseleave="mouseLeave">
-    <RevealingText tag="h4" class="projectTitle__name" :show="show" :delay="show ? 0.2 : 0">
+    <RevealingText tag="h4" class="projectTitle__name" :delay="show ? 0.4 : 0.2">
       {{ props.name }}
     </RevealingText>
     <!-- <RevealingText class="projectTitle__subtitle" :show="show" :delay="show ? 0 : 0.2">
       {{ props.subtitle }}
     </RevealingText> -->
     <Transition name="fade">
-      <span class="projectTitle__subtitle" v-if="show" :style="{ '--delay': '0.2s' }">
+      <span class="projectTitle__subtitle" :style="{ '--delay': '0.4s' }">
         {{ props.subtitle }}
       </span>
     </Transition>
@@ -40,13 +40,21 @@ const projectSlug = computed(() => `/project/${props.slug}`)
 
 <style lang="scss" scoped>
 .projectTitle__subtitle {
+  transition: opacity 0.5s ease 0.4s;
+
+  .loading &,
+  .layout-enter-active &,
   .page-enter-active & {
+    transition: opacity 0.5s ease 0.4s;
+  }
+  .layout-leave-active &,
+  .page-leave-active & {
     transition: opacity 0.5s ease 0.2s;
   }
-  .page-leave-active & {
-    transition: opacity 0.5s ease 0s;
-  }
 
+  .loading &,
+  .layout-enter-from &,
+  .layout-leave-to &,
   .page-enter-from &,
   .page-leave-to & {
     opacity: 0;

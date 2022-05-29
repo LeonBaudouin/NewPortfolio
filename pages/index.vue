@@ -4,10 +4,11 @@
 
 <script lang="ts" setup>
 definePageMeta({
+  layout: 'custom',
   pageTransition: {
     name: 'page',
     mode: 'out-in',
-    duration: 700,
+    duration: 900,
   },
 })
 </script>

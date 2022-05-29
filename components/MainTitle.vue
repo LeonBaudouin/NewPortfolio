@@ -1,7 +1,7 @@
 <template>
   <NuxtLink to="/" class="mainTitle">
-    <SlidingText tag="h1" :show="show" class="mainTitle__name" :delay="nameDelay"> Léon Baudouin </SlidingText>
-    <SlidingText tag="h2" :show="show" class="mainTitle__job" :delay="jobDelay"> Creative developer </SlidingText>
+    <SlidingText tag="h1" class="mainTitle__name" :delay="nameDelay"> Léon Baudouin </SlidingText>
+    <SlidingText tag="h2" class="mainTitle__job" :delay="jobDelay"> Creative developer </SlidingText>
   </NuxtLink>
 </template>
 
