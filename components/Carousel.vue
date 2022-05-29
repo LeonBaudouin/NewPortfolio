@@ -5,6 +5,7 @@
     @pointerup="handleMouseUp"
     @pointermove="handleMouseMove"
     @wheel.prevent="handleWheel"
+    @scroll.prevent
     @pointerenter="inCarousel = true"
     @pointerleave="inCarousel = false"
   >
