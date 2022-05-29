@@ -1,8 +1,8 @@
 <template>
   <div class="content">
-    <ParagraphTitle class="content__title" :title="title" />
+    <ParagraphTitle class="content__title" :title="props.title" />
     <div class="content__texts">
-      <Paragraph v-for="text in texts" :content="text" />
+      <Paragraph v-for="text in props.texts" :content="text" />
     </div>
   </div>
 </template>
@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 import { PropType } from 'vue'
 
-const { texts, title } = defineProps({
+const props = defineProps({
   texts: { type: Array as PropType<string[]>, required: true },
   title: { type: String },
 })

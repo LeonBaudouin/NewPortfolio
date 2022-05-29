@@ -1,9 +1,9 @@
 <template>
-  <p class="paragraph" v-html="content" />
+  <p class="paragraph" v-html="props.content" />
 </template>
 
 <script lang="ts" setup>
-const { content } = defineProps({
+const props = defineProps({
   content: { type: String, required: true },
 })
 </script>

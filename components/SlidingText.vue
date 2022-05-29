@@ -1,5 +1,5 @@
 <template>
-  <component :is="tag" class="wrapper" :style="style">
+  <component :is="props.tag" class="wrapper" :style="style">
     <span class="shim">
       <slot></slot>
     </span>
@@ -12,14 +12,17 @@
 <script lang="ts" setup>
 import MainStore from '~~/stores/MainStore'
 
-const { show, tag, delay, padding } = defineProps({
+const props = defineProps({
   show: { type: Boolean, default: true },
   tag: { type: String, default: 'div' },
   delay: { type: Number, default: 0 },
   padding: { type: Number, default: 2 },
 })
-const style = computed(() => ({ '--delay': delay + 's', '--spread': padding + 'px' }))
-const showAndLoaded = computed(() => show && MainStore.state.isFullyLoaded)
+if (props.tag === 'h2') {
+  watchEffect(() => console.log(props.show))
+}
+const style = computed(() => ({ '--delay': props.delay + 's', '--spread': props.padding + 'px' }))
+const showAndLoaded = computed(() => props.show && MainStore.state.isFullyLoaded)
 </script>
 
 <style lang="scss" scoped>

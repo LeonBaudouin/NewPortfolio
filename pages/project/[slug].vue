@@ -30,7 +30,7 @@ const { data } = await useAsyncData('project', () => queryContent<ProjectApiData
 
 <style lang="scss" scoped>
 .project {
-  max-height: 83vh;
+  max-height: 85vh;
   overflow-y: auto;
 
   display: grid;

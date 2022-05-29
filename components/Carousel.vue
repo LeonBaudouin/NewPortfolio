@@ -2,8 +2,6 @@
   <div
     class="carousel__wrapper"
     @pointerdown="handleMouseDown"
-    @pointerup="handleMouseUp"
-    @pointermove="handleMouseMove"
     @wheel.prevent="handleWheel"
     @scroll.prevent
     @pointerenter="inCarousel = true"
@@ -57,6 +55,15 @@ const handleMouseUp = () => {
   if (cursorOrigin.value === null) return
   cursorOrigin.value = null
 }
+
+useCleanup(() => {
+  window.addEventListener('pointerup', handleMouseUp)
+  window.addEventListener('pointermove', handleMouseMove)
+  return () => {
+    window.removeEventListener('pointerup', handleMouseUp)
+    window.removeEventListener('pointermove', handleMouseMove)
+  }
+})
 
 const handleWheel = (e: WheelEvent) => {
   const { pixelX, pixelY } = normalizeWheel(e)

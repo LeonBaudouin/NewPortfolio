@@ -1,10 +1,10 @@
 <template>
-  <RevealingText v-if="title" tag="h4" class="paragraphTitle">{{ title }}</RevealingText>
+  <RevealingText v-if="props.title" tag="h4" class="paragraphTitle">{{ props.title }}</RevealingText>
   <div class="paragraphTitle" v-else style="user-select: none">&nbsp;</div>
 </template>
 
 <script lang="ts" setup>
-const { title } = defineProps({ title: { type: String } })
+const props = defineProps({ title: { type: String } })
 </script>
 
 <style lang="scss" scoped>

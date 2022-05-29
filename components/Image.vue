@@ -4,15 +4,15 @@
     :class="{
       'image__container--loaded': loaded,
       'image__container--show': show,
-      'image__container--width': fill === 'width',
-      'image__container--height': fill === 'height',
+      'image__container--width': props.fill === 'width',
+      'image__container--height': props.fill === 'height',
     }"
     :style="style"
   >
-    <canvas class="image__shim" :width="width" :height="height"></canvas>
+    <canvas class="image__shim" :width="props.width" :height="props.height"></canvas>
     <img
       :src="effectiveSrc"
-      :alt="alt"
+      :alt="props.alt"
       @dragstart.prevent
       @load="handleLoad"
       @pointerdown="pointerDown"
@@ -26,7 +26,7 @@
 import { PropType } from 'vue'
 import MainStore from '~~/stores/MainStore'
 
-const { src, alt, width, height, delay, fill } = defineProps({
+const props = defineProps({
   src: { type: String, required: true },
   alt: { type: String, required: true },
   width: { type: Number, required: true },
@@ -39,13 +39,13 @@ const effectiveSrc = ref('/placeholder/1_1.png')
 const loaded = ref(false)
 const show = ref(false)
 
-const style = computed(() => ({ '--delay': delay + 's' }))
-const invertedRatio = computed(() => height / width)
+const style = computed(() => ({ '--delay': props.delay + 's' }))
+const invertedRatio = computed(() => props.height / props.width)
 
 onMounted(() => {
   setTimeout(() => {
     show.value = true
-    effectiveSrc.value = src
+    effectiveSrc.value = props.src
   })
 })
 
@@ -54,7 +54,7 @@ let timeout: ReturnType<typeof setTimeout>
 const handleLoad = () => {
   timeout = setTimeout(() => {
     loaded.value = true
-  }, 1000 * delay + 800)
+  }, 1000 * props.delay + 800)
 }
 
 const startPos = { x: 0, y: 0 }
@@ -66,7 +66,7 @@ const pointerDown = (e: PointerEvent) => {
 
 const pointerUp = ({ clientX: x2, clientY: y2 }: PointerEvent) => {
   const { x: x1, y: y1 } = startPos
-  if (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) < 10) if (loaded.value) MainStore.state.imageToShow = src
+  if (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) < 10) if (loaded.value) MainStore.state.imageToShow = props.src
 }
 
 onUnmounted(() => {
