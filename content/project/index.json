@@ -1,0 +1,57 @@
+{
+  "name": "Safe Place",
+  "sections": [
+    {
+      "title": "Safe Place",
+      "text": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem <strong>dummy text ever</strong> since the 1500s, when an unknown printer."
+    },
+    {
+      "title": "Mon travail",
+      "text": "Etiam vulputate neque risus, sit amet fermentum nulla faucibus quis. Mauris placerat nisi et felis commodo, eget auctor tellus pellentesque. "
+    },
+    {
+      "title": "L'equipe",
+      "text": "Maecenas condimentum sem arcu, sed faucibus urna tempus id. Donec pretium lorem tellus, at ornare ipsum euismod vel. "
+    },
+    {
+      "title": "Contexte",
+      "text": "Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean turpis erat, pulvinar non nulla et. "
+    },
+    {
+      "title": "Techno",
+      "text": "Nullam convallis enim quis lacus dignissim, nec egestas orci convallis. "
+    }
+  ],
+  "image": {
+    "src": "/projects/safeplace/2.png",
+    "alt": "Safeplace",
+    "width": 587,
+    "height": 318
+  },
+  "carousel": [
+    {
+      "src": "/projects/safeplace/1.png",
+      "alt": "",
+      "width": 587,
+      "height": 318
+    },
+    {
+      "src": "/projects/safeplace/3.png",
+      "alt": "",
+      "width": 587,
+      "height": 318
+    },
+    {
+      "src": "/projects/safeplace/4.png",
+      "alt": "",
+      "width": 587,
+      "height": 318
+    },
+    {
+      "src": "/projects/safeplace/5.png",
+      "alt": "",
+      "width": 587,
+      "height": 318
+    }
+  ]
+}

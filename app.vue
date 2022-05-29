@@ -53,6 +53,20 @@ useCleanup(() => {
   -moz-osx-font-smoothing: grayscale;
 }
 
+::-webkit-scrollbar {
+  width: 3px;
+  background: #ffffff3d;
+}
+
+/* Track */
+// ::-webkit-scrollbar-track {
+// }
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: white;
+}
+
 a {
   display: block;
   text-decoration: none;

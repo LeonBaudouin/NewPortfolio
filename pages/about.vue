@@ -36,6 +36,10 @@ definePageMeta({
   &__paragraphs {
     display: flex;
     gap: 4rem;
+
+    p {
+      max-width: 400px;
+    }
   }
 }
 </style>

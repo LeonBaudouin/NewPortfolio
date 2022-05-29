@@ -1,21 +1,21 @@
 <template>
   <div class="project">
-    <TextContent class="project__text project__text--first" :title="title" :texts="text1" />
-    <TextContent class="project__text project__text--second" :texts="text2" />
-    <Image
-      src="/projects/safeplace/2.png"
-      alt="Safeplace"
-      class="project__image"
-      :width="587"
-      :height="318"
-      :delay="0"
-      fill="height"
-    />
-    <Carousel class="project__carousel" :images="images" />
+    <div class="project__sections">
+      <TextContent
+        class="project__section"
+        v-for="section in data.sections"
+        :title="section.title"
+        :texts="[section.text]"
+      />
+    </div>
+    <Image class="project__image" v-bind="data.image" :delay="0" fill="width" />
+    <Carousel class="project__carousel" :images="data.carousel" />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ProjectApiData } from '~~/types/api'
+
 definePageMeta({
   layout: 'none',
   pageTransition: {
@@ -25,68 +25,41 @@ definePageMeta({
   },
 })
 
-const title = 'What is Lorem Ipsum?'
-const text1 = [
-  'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem <strong>dummy text ever</strong> since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-]
-const text2 = [
-  'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem <strong>dummy text ever</strong> since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-]
-
-const images = [
-  {
-    src: '/projects/safeplace/1.png',
-    alt: '',
-    width: 587,
-    height: 318,
-  },
-  {
-    src: '/projects/safeplace/3.png',
-    alt: '',
-    width: 587,
-    height: 318,
-  },
-  {
-    src: '/projects/safeplace/4.png',
-    alt: '',
-    width: 587,
-    height: 318,
-  },
-  {
-    src: '/projects/safeplace/5.png',
-    alt: '',
-    width: 587,
-    height: 318,
-  },
-]
+const { data } = await useAsyncData('project', () => queryContent<ProjectApiData>('/project').findOne())
 </script>
 
 <style lang="scss" scoped>
 .project {
+  max-height: 83vh;
+  overflow-y: auto;
+
   display: grid;
   grid-template:
-    'text1 text2 image' auto
-    'carousel carousel carousel' auto / 1fr 1fr 40vw;
+    'sections image' auto
+    'carousel carousel' minmax(20vh, 250px) / 2.1fr 1fr;
 
   position: absolute;
   bottom: 0;
+  row-gap: 3rem;
+  column-gap: 3vw;
 
-  &__text {
-    &--first {
-      margin-left: var(--x-page-margin);
+  &__section {
+    width: 47%;
+  }
 
-      grid-area: text1;
-    }
-    &--second {
-      grid-area: text2;
-    }
+  &__sections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    grid-area: sections;
+    margin-left: var(--x-page-margin);
   }
   &__image {
     grid-area: image;
     justify-self: end;
+    align-self: center;
     // display: block;
-    // max-width: 100%;
-    // height: auto;
+    max-width: 100%;
     // max-height: 40vh;
     // justify-self: end;
     // width: 100%;
@@ -94,8 +67,6 @@ const images = [
 
   &__carousel {
     grid-area: carousel;
-    height: 30vh;
-    margin-top: 2rem;
   }
 }
 </style>
