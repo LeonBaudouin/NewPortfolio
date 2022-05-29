@@ -31,7 +31,7 @@ export default class Cloud extends AbstractObject<
     this.object = new THREE.Mesh(
       new THREE.PlaneGeometry(1, 1),
       new THREE.MeshBasicMaterial({
-        map: this.context.ressources.textures[params.texture],
+        alphaMap: this.context.ressources.textures[params.texture],
         transparent: true,
         fog: false,
         opacity: defaultParams.opacity || 1,
@@ -75,7 +75,7 @@ export default class Cloud extends AbstractObject<
     })
 
     watchEffect(() => {
-      this.object.material.map = this.context.ressources.textures[params.texture]
+      this.object.material.alphaMap = this.context.ressources.textures[params.texture]
     })
 
     watchEffect((onCleanup) => {
