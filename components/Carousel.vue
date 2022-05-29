@@ -4,7 +4,7 @@
     @pointerdown="handleMouseDown"
     @pointerup="handleMouseUp"
     @pointermove="handleMouseMove"
-    @wheel="handleWheel"
+    @wheel.prevent="handleWheel"
     @pointerenter="inCarousel = true"
     @pointerleave="inCarousel = false"
   >
