@@ -108,7 +108,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     })
 
     this.mainCamera.object.rotation.set(0, 0, 0)
-    this.mainCamera.object.position.set(0, 0.2, 21)
+    this.mainCamera.object.position.set(0, 0.2, window.innerWidth < 700 ? 25 : 21)
 
     watch(
       () => this.context.nuxtApp.$router.currentRoute.value.name === 'project-slug',
@@ -118,7 +118,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       { immediate: true }
     )
 
-    this.mainCamera.object.fov = 30
+    this.mainCamera.object.fov = window.innerWidth < 700 ? 35 : 30
     this.mainCamera.object.updateProjectionMatrix()
     this.cameraHelper.update()
 

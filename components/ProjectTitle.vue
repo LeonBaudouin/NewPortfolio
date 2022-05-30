@@ -67,8 +67,13 @@ const projectSlug = computed(() => `/project/${props.slug}`)
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
   @include lowerHeight {
     padding: 0 4rem 1.5rem 0;
+  }
+
+  @include mobile {
+    padding: 0 4rem 2rem 0;
   }
 
   &__name {

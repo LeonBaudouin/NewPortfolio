@@ -36,6 +36,11 @@ definePageMeta({
   &__paragraphs {
     display: flex;
     gap: 4rem;
+    @include mobile {
+      gap: 2rem;
+      flex-direction: column;
+      padding-bottom: 4rem;
+    }
 
     p {
       max-width: 400px;

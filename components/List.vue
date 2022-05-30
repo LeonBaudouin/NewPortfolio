@@ -16,6 +16,14 @@
 .list {
   position: absolute;
   left: var(--x-page-margin);
+
+  @include mobile {
+    left: 0;
+    padding: 0 var(--x-page-margin);
+    width: 100%;
+    overflow: auto;
+  }
+
   $top: 51.5vh;
   top: $top;
   height: 100vh - $top;
@@ -26,11 +34,21 @@
   &__titles {
     display: flex;
     gap: 2rem;
+    @include mobile {
+      gap: 0;
+      justify-content: space-between;
+    }
   }
 
   &__section {
     margin-left: 2.8rem;
     margin-top: 1.5rem;
+
+    @include mobile {
+      margin-left: 0.8rem;
+      margin-top: 2.5rem;
+    }
+
     min-height: 0;
     display: flex;
     flex-direction: column;

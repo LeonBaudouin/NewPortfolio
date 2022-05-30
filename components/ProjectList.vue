@@ -65,8 +65,11 @@ const projects = [
   padding: 0;
   min-height: 0;
   display: grid;
-  grid-template-rows: repeat(4, auto);
-  grid-template-columns: repeat(2, auto);
+
+  @include desktop {
+    grid-template-rows: repeat(4, auto);
+    grid-template-columns: repeat(2, auto);
+  }
 
   &__item {
     margin: 0;

@@ -81,6 +81,11 @@ html {
   --main-color: #ffffff;
   --x-page-margin: 5rem;
   --y-page-margin: 3rem;
+
+  @include mobile {
+    --x-page-margin: 2rem;
+    --y-page-margin: 2rem;
+  }
 }
 
 body {
