@@ -90,12 +90,12 @@ const projectSlug = computed(() => `/project/${props.slug}`)
 
   &__subtitle {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 200;
     letter-spacing: 2px;
 
     @include lowerHeight {
-      font-size: 1.2rem;
+      font-size: 0.9rem;
     }
   }
 }

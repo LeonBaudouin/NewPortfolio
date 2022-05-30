@@ -20,14 +20,18 @@ const prog = computed(() => $webgl?.ressources.state.progress || 0)
   height: 100vh;
   position: fixed;
   inset: 0;
-  background-color: white;
+  background: linear-gradient(0.15turn, #174d86, #2c71b1);
   z-index: 100;
   display: flex;
   align-items: center;
 
   &__bar {
-    background: linear-gradient(0.15turn, #1f5792, #569ed5);
-    height: 2px;
+    .fade-leave-to & {
+      transition: transform 0.5s 0.3s ease-in;
+      transform: scale3d(var(--prog, 0), 0, 1) translateZ(0);
+    }
+    background-color: white;
+    height: 3px;
     width: 100%;
     top: 2px;
     position: relative;

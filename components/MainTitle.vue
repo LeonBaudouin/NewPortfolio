@@ -91,8 +91,8 @@ h2.wrapper {
 
   &__job {
     display: inline-block;
-    font-size: 1.5rem;
-    letter-spacing: 2px;
+    font-size: 1.4rem;
+    letter-spacing: 3.4px;
     margin: 0;
     font-weight: 200;
   }

@@ -143,7 +143,8 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       (inPlain, previousValue) => {
         const isImmediate = typeof previousValue === 'undefined'
         const params: gsap.TweenVars = {
-          duration: isImmediate ? 0 : 1,
+          duration: isImmediate ? 0 : 2,
+          ease: 'Power3.easeInOut',
         }
         gsap.to(this.plain.data, {
           showPlain: inPlain ? 1 : 0,
