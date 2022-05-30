@@ -19,49 +19,6 @@ const jobDelay = computed(() => (show.value ? 0 : 0.3))
 </script>
 
 <style lang="scss">
-.shim {
-  visibility: hidden;
-}
-
-.animated {
-  position: absolute;
-  left: 0;
-  animation-name: diseapper;
-  animation-timing-function: cubic-bezier(0, 0.76, 0.48, 1);
-  animation-duration: 0.5s;
-  animation-fill-mode: both;
-
-  &.show {
-    animation-name: appear;
-  }
-}
-
-@keyframes appear {
-  0% {
-    transform: translate3d(0, -135%, 0) skewY(-3deg);
-  }
-  100% {
-    transform: translate3d(0, 0, 0) skewY(0deg);
-  }
-}
-
-@keyframes diseapper {
-  0% {
-    transform: translate3d(0, 0, 0) skewY(0deg);
-  }
-  100% {
-    transform: translate3d(0, 135%, 0) skewY(-3deg);
-  }
-}
-
-h1.wrapper,
-h2.wrapper {
-  overflow: hidden;
-  position: relative;
-  margin: -5px 0;
-  padding: 5px 0;
-}
-
 .mainTitle {
   display: inline-flex;
   line-height: 1.1;

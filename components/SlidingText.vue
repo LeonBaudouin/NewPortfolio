@@ -17,11 +17,16 @@ const props = defineProps({
   tag: { type: String, default: 'div' },
   delay: { type: Number, default: 0 },
   padding: { type: Number, default: 2 },
+  skew: { type: Number, default: -3 },
 })
 if (props.tag === 'h2') {
   watchEffect(() => console.log(props.show))
 }
-const style = computed(() => ({ '--delay': props.delay + 's', '--spread': props.padding + 'px' }))
+const style = computed(() => ({
+  '--delay': props.delay + 's',
+  '--spread': props.padding + 'px',
+  '--skew': props.skew + 'deg',
+}))
 const showAndLoaded = computed(() => props.show && MainStore.state.isFullyLoaded)
 </script>
 
@@ -33,6 +38,8 @@ const showAndLoaded = computed(() => props.show && MainStore.state.isFullyLoaded
 .animated {
   position: absolute;
   left: 0;
+  top: 0;
+  animation-name: diseapper;
   animation-duration: 0.5s;
   animation-fill-mode: both;
   animation-delay: var(--delay, 0);
@@ -52,7 +59,7 @@ const showAndLoaded = computed(() => props.show && MainStore.state.isFullyLoaded
 
 @keyframes appear {
   0% {
-    transform: translate3d(0, -135%, 0) skewY(-3deg);
+    transform: translate3d(0, -135%, 0) skewY(var(--skew));
   }
   100% {
     transform: translate3d(0, 0, 0) skewY(0deg);
@@ -64,7 +71,7 @@ const showAndLoaded = computed(() => props.show && MainStore.state.isFullyLoaded
     transform: translate3d(0, 0, 0) skewY(0deg);
   }
   100% {
-    transform: translate3d(0, 135%, 0) skewY(-3deg);
+    transform: translate3d(0, 135%, 0) skewY(var(--skew));
   }
 }
 

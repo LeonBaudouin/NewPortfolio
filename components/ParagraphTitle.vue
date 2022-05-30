@@ -12,7 +12,7 @@ const props = defineProps({ title: { type: String } })
   font-size: 1.1rem;
   margin: 0;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   line-height: 1.4;
   text-transform: uppercase;
 }

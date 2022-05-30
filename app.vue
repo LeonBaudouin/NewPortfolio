@@ -6,6 +6,8 @@
       <NuxtPage />
     </NuxtLayout>
     <ImageShow />
+    <CopyRight />
+    <Contact />
   </div>
 </template>
 
@@ -108,7 +110,7 @@ body > canvas {
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease var(--delay, 0);
+  transition: opacity 0.5s ease var(--delay, 0s);
 }
 
 .fade-enter-from,
