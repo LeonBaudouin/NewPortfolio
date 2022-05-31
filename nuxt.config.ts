@@ -5,7 +5,9 @@ export default defineNuxtConfig({
   modules: ['@nuxt/content'],
   content: {
     highlight: false,
-    mdc: false,
+    markdown: {
+      mdc: false,
+    },
   },
   publicRuntimeConfig: {
     BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
