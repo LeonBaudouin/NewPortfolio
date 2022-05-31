@@ -4,12 +4,15 @@
 
 <style lang="scss" scoped>
 .copyRight {
-  position: absolute;
-  bottom: 17px;
-  left: 22px;
-  transform: rotate3d(0, 0, 1, -180deg);
+  @include desktop {
+    position: absolute;
+    bottom: 17px;
+    left: 22px;
+    transform: rotate3d(0, 0, 1, -180deg);
+    writing-mode: tb-rl;
+  }
+
   transform-origin: center left;
-  writing-mode: tb-rl;
   font-size: 0.8rem;
   letter-spacing: 1px;
   font-weight: 200;

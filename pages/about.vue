@@ -11,7 +11,6 @@
         </NuxtLink>
       </span>
     </div>
-    <!-- <TextContent :title="title" :texts="texts" /> -->
   </div>
 </template>
 
@@ -45,6 +44,11 @@ definePageMeta({
   min-height: 33vh;
   position: relative;
 
+  @include mobile {
+    margin-top: 0;
+    min-height: auto;
+  }
+
   &__title {
     margin-bottom: 1.5rem;
   }
@@ -53,6 +57,12 @@ definePageMeta({
     display: flex;
     position: absolute;
     bottom: 0;
+
+    @include mobile {
+      position: static;
+      flex-wrap: wrap;
+      padding-top: 2rem;
+    }
 
     transition: opacity 0.5s ease;
     .loading &,
@@ -95,7 +105,6 @@ definePageMeta({
     @include mobile {
       gap: 2rem;
       flex-direction: column;
-      padding-bottom: 4rem;
     }
 
     p {

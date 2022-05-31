@@ -4,7 +4,7 @@
       Contact
     </button>
     <transition name="fade">
-      <SlidingText :show="enable" :skew="-1" :padding="0">
+      <SlidingText v-if="enable" :show="enable" :skew="-1" :padding="0">
         <div class="contact__content">
           <NuxtLink to="mailto:leondedouin@gmail.com" class="contact__link"> leondedouin@gmail.com </NuxtLink>
           <span class="separator"> - </span>

@@ -6,8 +6,8 @@
       <NuxtPage />
     </NuxtLayout>
     <ImageShow />
-    <CopyRight />
-    <Contact />
+    <CopyRight v-if="showSide" />
+    <Contact v-if="showSide" />
   </div>
 </template>
 
@@ -16,7 +16,10 @@ import MainStore from './stores/MainStore'
 
 const { $webgl, $tweakpane } = useNuxtApp()
 
+const showSide = ref(true)
+
 useCleanup(() => {
+  if (window.innerWidth < 700) showSide.value = false
   let rafId: ReturnType<typeof requestAnimationFrame>
   const fpsGraph = $tweakpane.addBlade({
     view: 'fpsgraph',
