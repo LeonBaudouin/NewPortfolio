@@ -70,6 +70,9 @@ export default class PaperPlanes extends AbstractBehaviour {
     return state
   }
 
+  private current: THREE.Vector3
+  private target: THREE.Vector3
+
   constructor({ tweakpane, ...context }: BehaviourContext) {
     super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Plane Behaviour', index: 1, expanded: false }) })
     pseudoDeepAssign(this.context.particleParams, particlesData)
@@ -139,22 +142,39 @@ export default class PaperPlanes extends AbstractBehaviour {
       return intersection
     }
 
-    const mouseMove = (e: MouseEvent) => {
+    const track = (e: MouseEvent) => {
       if (this.state === 'project') return
       const intersect = raycast(e)
 
-      const shouldFollow = !!intersect && intersect.object.name !== 'Cylinder'
+      if (!intersect) return
 
-      this.isFollowing.value = shouldFollow
-      if (shouldFollow) this.context.particleParams.attractor.copy(intersect.point)
+      if (!this.target) this.target = intersect.point.clone()
+      if (!this.current) this.current = intersect.point.clone()
+
+      this.target.copy(intersect.point)
+      if (this.isFollowing.value) this.context.particleParams.attractor.copy(intersect.point)
+    }
+
+    const mouseMove = (e: MouseEvent) => {
+      track(e)
     }
 
     const mouseLeave = () => {
       this.isFollowing.value = false
     }
+    const mousedown = (e) => {
+      this.isFollowing.value = true
 
-    this.context.renderer.domElement.addEventListener('mousemove', mouseMove)
-    this.context.renderer.domElement.addEventListener('mouseleave', mouseLeave)
+      track(e)
+    }
+    const mouseup = () => {
+      this.isFollowing.value = false
+    }
+
+    this.context.renderer.domElement.addEventListener('mousedown', mousedown)
+    window.addEventListener('mouseup', mouseup)
+    window.addEventListener('mousemove', mouseMove)
+    window.addEventListener('mouseleave', mouseLeave)
 
     this.context.scene.add(planeHelper)
     this.context.scene.add(boxHelper)
@@ -175,8 +195,10 @@ export default class PaperPlanes extends AbstractBehaviour {
       planeHelper.geometry.dispose()
       boxHelper.geometry.dispose()
       ;(this.context.tweakpane as FolderApi).dispose()
-      this.context.renderer.domElement.removeEventListener('mousemove', mouseMove)
-      this.context.renderer.domElement.removeEventListener('mouseleave', mouseLeave)
+      this.context.renderer.domElement.removeEventListener('mousedown', mousedown)
+      window.removeEventListener('mouseup', mouseup)
+      window.removeEventListener('mousemove', mouseMove)
+      window.removeEventListener('mouseleave', mouseLeave)
       unbind2()
     })
 
@@ -194,8 +216,14 @@ export default class PaperPlanes extends AbstractBehaviour {
     }
   }
 
+  private fac = new THREE.Vector3(0, 1.5, 0.75)
   public tick(time: number, delta: number): void {
     if (this.state !== 'rest') return
+    if (this.current) {
+      const prev = this.current.clone()
+      this.current.lerpVectors(this.current, this.target, 0.1)
+      this.context.particleParams.gravity.copy(prev.sub(this.current).multiplyScalar(-delta).multiply(this.fac))
+    }
     this.context.particleParams.attractor.y = remap(
       Math.sin(time * this.params.oscillation.freq),
       [-1, 1],

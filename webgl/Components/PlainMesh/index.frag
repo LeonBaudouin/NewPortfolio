@@ -69,7 +69,7 @@ void main() {
   grass *= isNorm(fract(coords)) * smoothstep(0., 1., rand(floor(coords) + 0.1));
 
   float mixV = remap(vNoise, -1., 1., 0., 1.);
-  mixV = mix(mixV, 1.-mixV, grass * 5.);
+  mixV = mix(mixV, 1.-mixV, grass * 2.);
 
   vec3 color = mix(uColor1, uColor2, mixV);
   float darkFloor = smoothstep(0., 10., vWorldPosition.x);

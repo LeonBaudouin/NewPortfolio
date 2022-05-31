@@ -6,9 +6,11 @@ import positionFragment from './position.frag?raw'
 import { inSphere } from '~~/utils/math/inSphere'
 import { WebGLAppContext } from '~~/webgl'
 import AbstractComponent from '~~/webgl/abstract/AbstractComponent'
+import lerp from '~~/utils/math/lerp'
 
 export default class Position extends AbstractComponent<WebGLAppContext> {
   private position: GPGPU
+  private delta: number = 0.016
 
   constructor(
     context: WebGLAppContext,
@@ -27,6 +29,8 @@ export default class Position extends AbstractComponent<WebGLAppContext> {
       uniforms: {
         uFbo: { value: null },
         uVelocityFbo: { value: null },
+        uSpeed: { value: 0.25 * 60 },
+        uDelta: { value: this.delta },
       },
     })
     this.position = new GPGPU({
@@ -35,6 +39,8 @@ export default class Position extends AbstractComponent<WebGLAppContext> {
       shader: positionShader,
       initTexture: posInitTexture,
     })
+
+    this.context.tweakpane.addInput(positionShader.uniforms.uSpeed, 'value', { label: 'Speed' })
 
     this.toUnbind(() => {
       this.position.dispose()
@@ -54,6 +60,9 @@ export default class Position extends AbstractComponent<WebGLAppContext> {
   }
 
   public tick(time: number, delta: number): void {
+    this.delta = lerp(this.delta, delta, 0.01)
+
+    console.log(this.delta)
     this.position.render()
   }
 }
