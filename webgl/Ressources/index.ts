@@ -21,7 +21,7 @@ export default class Ressources {
     cloud_3: this.textureLoader.load('/clouds/cloud_3.jpg'),
     cloud_4: this.textureLoader.load('/clouds/cloud_4.jpg'),
     grass: this.textureLoader.load('/grass/grass_1_2.png'),
-    grassNearestFilter: this.textureLoader.load('/grass/grass_1.png', (t) => (t.minFilter = THREE.NearestFilter)),
+    grassNearestFilter: this.textureLoader.load('/grass/grass_1_2.png', (t) => (t.minFilter = THREE.NearestFilter)),
     lightMatcap: this.textureLoader.load('https://makio135.com/matcaps/64/EAEAEA_B5B5B5_CCCCCC_D4D4D4-64px.png'),
   }
 
