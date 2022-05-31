@@ -5,7 +5,6 @@ import { FolderApi } from 'tweakpane'
 import remap from '~~/utils/math/remap'
 import pixelToScreenCoords from '~~/utils/webgl/pixelToScreenCoords'
 import MainStore from '~~/stores/MainStore'
-import { FALSE } from 'sass'
 
 const particlesData = {
   useTexture: false,
