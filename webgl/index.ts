@@ -21,7 +21,7 @@ export default class WebGL extends LifeCycle {
   private currentScene: keyof Scenes
   private clock: THREE.Clock
   private tweakpane: FolderApi
-  public state = reactive({ isReady: false })
+  public state = reactive({ isReady: false, pixelSize: new THREE.Vector2(), pixelRatio: 1 })
   private prepFramesCounter = 0
   private nuxtApp: NuxtApp
   private simulation: GPGPU
@@ -39,8 +39,15 @@ export default class WebGL extends LifeCycle {
     if (this.nuxtApp.$params.debug) this.stats = new Stats(true)
     this.tweakpane = this.nuxtApp.$tweakpane!
     this.ressources = new Ressources()
-    this.setupRenderer()
 
+    this.state.pixelRatio = Math.min(window.devicePixelRatio, 1.4)
+
+    const setStateSize = () => {
+      this.state.pixelSize.set(window.innerWidth * this.state.pixelRatio, window.innerHeight * this.state.pixelRatio)
+    }
+    setStateSize()
+
+    this.setupRenderer()
     // watchEffect(() => console.log(this.ressources.state.progress))
 
     this.setupSimulation()
@@ -104,11 +111,9 @@ export default class WebGL extends LifeCycle {
     this.renderer.outputEncoding = THREE.LinearEncoding
     this.renderer.debug.checkShaderErrors = true
     this.stats?.setRenderPanel(this.renderer.getContext())
-    const resize = () => {
-      this.renderer.setSize(window.innerWidth, window.innerHeight)
-    }
-    resize()
-    window.addEventListener('resize', resize)
+    watchEffect(() => {
+      this.renderer.setSize(this.state.pixelSize.x, this.state.pixelSize.y)
+    })
   }
 
   private setupSimulation() {

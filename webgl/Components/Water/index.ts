@@ -74,6 +74,10 @@ export default class Water extends AbstractObject<MainSceneContext> {
     this.material.uniforms = { ...this.material.uniforms, ...this.context.globalUniforms }
     this.material.uniforms.color.value.set(this.params.color)
 
+    watchEffect(() => {
+      plane.getRenderTarget().setSize(this.context.state.pixelSize.x, this.context.state.pixelSize.y)
+    })
+
     reactiveUniforms(this.material.uniforms, this.params)
 
     this.context.tweakpane.addInput(this.material.uniforms.uDebug, 'value', {

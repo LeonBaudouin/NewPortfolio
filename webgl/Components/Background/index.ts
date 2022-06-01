@@ -49,9 +49,7 @@ export default class Background extends AbstractObject<SceneContext> {
       uGradientStart: { value: this.data.gradientStart },
       uGradientEnd: { value: this.data.gradientEnd },
       uCameraPosition: { value: this.context.camera.position },
-      uScreenResolution: {
-        value: new THREE.Vector2(window.innerWidth, window.innerHeight),
-      },
+      uScreenResolution: { value: this.context.state.pixelSize },
     }
 
     this.object = new THREE.Mesh(

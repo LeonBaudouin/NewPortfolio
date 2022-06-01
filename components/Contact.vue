@@ -60,6 +60,11 @@ useCleanup(() => {
       color: var(--main-color);
       -webkit-text-stroke: 0.5px transparent;
     }
+
+    @include hover {
+      color: var(--main-color);
+      -webkit-text-stroke: 0.5px transparent;
+    }
   }
 
   &__content {

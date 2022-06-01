@@ -17,7 +17,7 @@ export default class RenderTargetDebugger extends AbstractObject<
         vertexShader,
         uniforms: {
           uTexture: { value: null },
-          uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+          uResolution: { value: this.context.state.pixelSize },
         },
         depthTest: false,
       })
