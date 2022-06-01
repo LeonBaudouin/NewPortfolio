@@ -10,7 +10,7 @@ import lerp from '~~/utils/math/lerp'
 
 export default class Position extends AbstractComponent<WebGLAppContext> {
   private position: GPGPU
-  private delta: number = 0.016
+  private positionShader: THREE.ShaderMaterial
 
   constructor(
     context: WebGLAppContext,
@@ -23,24 +23,24 @@ export default class Position extends AbstractComponent<WebGLAppContext> {
     const posInitTexture = new THREE.DataTexture(positionArray, size.x, size.y, THREE.RGBAFormat, THREE.FloatType)
     posInitTexture.needsUpdate = true
 
-    const positionShader = new THREE.ShaderMaterial({
+    this.positionShader = new THREE.ShaderMaterial({
       fragmentShader: positionFragment,
       vertexShader: vertex,
       uniforms: {
         uFbo: { value: null },
         uVelocityFbo: { value: null },
         uSpeed: { value: 0.25 * 60 },
-        uDelta: { value: this.delta },
+        uDelta: { value: 0.016 },
       },
     })
     this.position = new GPGPU({
       size,
       renderer: this.context.renderer,
-      shader: positionShader,
+      shader: this.positionShader,
       initTexture: posInitTexture,
     })
 
-    this.context.tweakpane.addInput(positionShader.uniforms.uSpeed, 'value', { label: 'Speed' })
+    this.context.tweakpane.addInput(this.positionShader.uniforms.uSpeed, 'value', { label: 'Speed' })
 
     this.toUnbind(() => {
       this.position.dispose()
@@ -60,9 +60,8 @@ export default class Position extends AbstractComponent<WebGLAppContext> {
   }
 
   public tick(time: number, delta: number): void {
-    this.delta = lerp(this.delta, delta, 0.01)
+    this.positionShader.uniforms.uDelta.value = lerp(this.positionShader.uniforms.uDelta.value, delta, 0.01)
 
-    console.log(this.delta)
     this.position.render()
   }
 }
