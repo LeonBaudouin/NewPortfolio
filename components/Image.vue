@@ -82,7 +82,6 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   visibility: hidden;
-  cursor: pointer;
 
   .layout-leave-to &,
   .page-leave-to & {

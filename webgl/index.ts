@@ -62,6 +62,17 @@ export default class WebGL extends LifeCycle {
 
     sceneBlade.on('change', ({ value }) => (this.currentScene = value as keyof Scenes))
     this.toUnbind(sceneBlade.dispose)
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') this.clock.start()
+      if (document.visibilityState === 'hidden') this.clock.stop()
+    }
+
+    window.addEventListener('visibilitychange', onVisibilityChange)
+
+    this.toUnbind(() => {
+      window.removeEventListener('visibilitychange', onVisibilityChange)
+    })
   }
 
   private genContext = (tweakpane: FolderApi | TabPageApi | null = null) => ({

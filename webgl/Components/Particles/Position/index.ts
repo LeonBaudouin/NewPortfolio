@@ -60,7 +60,8 @@ export default class Position extends AbstractComponent<WebGLAppContext> {
   }
 
   public tick(time: number, delta: number): void {
-    this.positionShader.uniforms.uDelta.value = lerp(this.positionShader.uniforms.uDelta.value, delta, 0.01)
+    // console.log(this.positionShader.uniforms.uDelta.value)
+    this.positionShader.uniforms.uDelta.value = lerp(this.positionShader.uniforms.uDelta.value, delta, 0.05)
 
     this.position.render()
   }

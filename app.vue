@@ -6,8 +6,9 @@
       <NuxtPage />
     </NuxtLayout>
     <ImageShow />
-    <CopyRight v-if="showSide" />
-    <Contact v-if="showSide" />
+    <CopyRight v-if="isDesktop" />
+    <Contact v-if="isDesktop" />
+    <Cursor v-if="isDesktop" />
   </div>
 </template>
 
@@ -16,10 +17,10 @@ import MainStore from './stores/MainStore'
 
 const { $webgl, $tweakpane } = useNuxtApp()
 
-const showSide = ref(true)
+const isDesktop = ref(true)
 
 useCleanup(() => {
-  if (window.innerWidth < 700) showSide.value = false
+  if (window.innerWidth < 700) isDesktop.value = false
   let rafId: ReturnType<typeof requestAnimationFrame>
   const fpsGraph = $tweakpane.addBlade({
     view: 'fpsgraph',
@@ -56,6 +57,7 @@ useCleanup(() => {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  cursor: none;
 }
 
 ::-webkit-scrollbar {
@@ -99,6 +101,7 @@ body {
   color: var(--main-color);
   margin: 0;
   background-color: black;
+  cursor: none;
 }
 
 body > canvas {

@@ -4,7 +4,7 @@
       Contact
     </button>
     <transition name="fade">
-      <SlidingText v-if="enable" :show="enable" :skew="-1" :padding="0">
+      <SlidingText v-if="enable" :show="enable" :skew="-1" :padding="2">
         <div class="contact__content">
           <NuxtLink to="mailto:leondedouin@gmail.com" class="contact__link"> leondedouin@gmail.com </NuxtLink>
           <span class="separator"> - </span>
@@ -52,7 +52,6 @@ useCleanup(() => {
     background: none;
     margin: none;
     border: none;
-    cursor: pointer;
     transition: all 0.3s linear;
     color: transparent;
     -webkit-text-stroke: 0.3px var(--main-color);
