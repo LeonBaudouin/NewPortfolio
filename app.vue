@@ -109,6 +109,8 @@ body > canvas {
   inset: 0;
   z-index: -1;
   background-color: white;
+  width: 100% !important;
+  height: 100% !important;
 }
 .tp-fldv_c > .tp-cntv,
 .tp-tabv_c .tp-brkv > .tp-cntv {
