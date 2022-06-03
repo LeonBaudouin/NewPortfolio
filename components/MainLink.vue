@@ -41,7 +41,7 @@ const props = defineProps({
     color: inherit;
     text-decoration: none;
     align-self: flex-start;
-    -webkit-text-stroke: 0.5px white;
+    -webkit-text-stroke: 1px white;
     color: transparent;
     transition: all 0.5s ease;
 

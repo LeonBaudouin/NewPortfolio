@@ -51,7 +51,7 @@ useCleanup(() => {
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
 
 * {
   box-sizing: border-box;
@@ -128,7 +128,7 @@ body > canvas {
 
 .layout-enter-active,
 .layout-leave-active {
-  transition: opacity 0.7s ease;
+  transition: opacity 0.9s ease;
 }
 
 .layout-enter-from,

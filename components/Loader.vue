@@ -20,29 +20,34 @@ const prog = computed(() => $webgl?.ressources.state.progress || 0)
   height: 100vh;
   position: fixed;
   inset: 0;
-  background: linear-gradient(0.15turn, #174d86, #2c71b1);
+  background: white;
   z-index: 100;
   display: flex;
   align-items: center;
 
   &__bar {
     .fade-leave-to & {
-      transition: transform 0.5s 0.3s ease-in;
-      transform: scale3d(var(--prog, 0), 0, 1) translateZ(0);
+      transition: transform 0.7s ease-in;
+      --height: 0;
     }
-    background-color: white;
-    height: 3px;
-    width: 100%;
-    top: 2px;
+    background: linear-gradient(54deg, #1a49ad 10%, #d4e5ff 65%, #012a83 100%);
+    height: 4px;
     position: relative;
+    top: 2px;
+    transform: scale3d(var(--prog, 0), var(--height, 1), 1) translateZ(0);
     transform-origin: left center;
     transition: transform 0.5s ease-in;
-    transform: scale3d(var(--prog, 0), 1, 1) translateZ(0);
+    width: 100%;
+
+    border-top-left-radius: 0;
+    border-top-right-radius: 30%;
+    border-bottom-right-radius: 30%;
+    border-bottom-left-radius: 0;
   }
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s 0.5s ease;
+  transition: opacity 0.7s 0.7s ease;
 }
 
 .fade-enter-from,

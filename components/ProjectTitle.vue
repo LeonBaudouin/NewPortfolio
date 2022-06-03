@@ -86,8 +86,18 @@ const projectSlug = computed(() => `/project/${props.slug}`)
     @include lowerHeight {
       font-size: 1.2rem;
     }
+
+    transition: all 0.1s linear;
   }
 
+  @include hover {
+    .projectTitle__subtitle {
+      transform: skewX(-15deg);
+    }
+    .projectTitle__name {
+      font-weight: 600;
+    }
+  }
   &__subtitle {
     margin: 0;
     font-size: 1rem;
@@ -97,6 +107,9 @@ const projectSlug = computed(() => `/project/${props.slug}`)
     @include lowerHeight {
       font-size: 0.9rem;
     }
+
+    transition: all 0.1s linear;
+    transform: skewX(0);
   }
 }
 </style>
