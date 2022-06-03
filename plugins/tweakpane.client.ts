@@ -4,8 +4,9 @@ import * as TweakpaneRotationInputPlugin from '@0b5vr/tweakpane-plugin-rotation'
 import * as TweakpaneImagePlugin from 'tweakpane-image-plugin'
 
 export default defineNuxtPlugin((nuxtApp) => {
-  const tweakpane = new Pane({ title: 'Last One' })
-  tweakpane.hidden = !nuxtApp.$params.debug
+  const element = document.querySelector<HTMLElement>('.tweakpane')!
+  const tweakpane = new Pane({ title: 'Last One', container: element })
+  tweakpane.disabled = !nuxtApp.$params.debug
   tweakpane.registerPlugin(TweakpaneRotationInputPlugin)
   tweakpane.registerPlugin(EssentialsPlugin)
   tweakpane.registerPlugin(TweakpaneImagePlugin)

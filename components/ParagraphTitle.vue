@@ -1,10 +1,12 @@
 <template>
-  <RevealingText v-if="props.title" tag="h4" class="paragraphTitle">{{ props.title }}</RevealingText>
+  <RevealingText v-if="props.title" tag="h4" class="paragraphTitle" :delay="props.delay">{{
+    props.title
+  }}</RevealingText>
   <div class="paragraphTitle" v-else style="user-select: none">&nbsp;</div>
 </template>
 
 <script lang="ts" setup>
-const props = defineProps({ title: { type: String } })
+const props = defineProps({ title: { type: String }, delay: { type: Number, default: 0 } })
 </script>
 
 <style lang="scss" scoped>

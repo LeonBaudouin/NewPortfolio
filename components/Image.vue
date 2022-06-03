@@ -120,7 +120,7 @@ onUnmounted(() => {
 
       background-color: #a49c54;
 
-      transform-origin: top center;
+      transform-origin: bottom center;
       transform: scale3d(1, 0, 1);
       transition: transform 0.8s cubic-bezier(0.48, 0, 0.16, 1);
     }
@@ -140,7 +140,7 @@ onUnmounted(() => {
         visibility: visible;
       }
       &::before {
-        transform-origin: bottom center;
+        transform-origin: top center;
         transform: scale3d(1, 0, 1);
         transition-delay: var(--delay);
       }
@@ -149,19 +149,19 @@ onUnmounted(() => {
 }
 @keyframes anim-box {
   0% {
-    transform-origin: top center;
+    transform-origin: bottom center;
     transform: scale3d(1, 0, 1);
   }
   50% {
-    transform-origin: top center;
+    transform-origin: bottom center;
     transform: scale3d(1, 1, 1);
   }
   50.0001% {
-    transform-origin: bottom center;
+    transform-origin: top center;
     transform: scale3d(1, 1, 1);
   }
   100% {
-    transform-origin: bottom center;
+    transform-origin: top center;
     transform: scale3d(1, 0, 1);
   }
 }

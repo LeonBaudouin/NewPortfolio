@@ -10,13 +10,13 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .paragraph {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease var(--delay, 0s);
   .loading &,
   .page-enter-active &,
   .page-leave-active &,
   .layout-enter-active &,
   .layout-leave-active & {
-    transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease var(--delay, 0s);
   }
 
   .loading &,

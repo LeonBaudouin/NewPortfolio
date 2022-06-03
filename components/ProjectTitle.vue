@@ -1,13 +1,10 @@
 <template>
   <NuxtLink :to="projectSlug" class="projectTitle" @mouseenter="mouseEnter" @mouseleave="mouseLeave">
-    <RevealingText tag="h4" class="projectTitle__name" :delay="show ? 0.4 : 0.2">
+    <RevealingText tag="h4" class="projectTitle__name" :delay="props.delay + (show ? 0.2 : 0)">
       {{ props.name }}
     </RevealingText>
-    <!-- <RevealingText class="projectTitle__subtitle" :show="show" :delay="show ? 0 : 0.2">
-      {{ props.subtitle }}
-    </RevealingText> -->
     <Transition name="fade">
-      <span class="projectTitle__subtitle" :style="{ '--delay': '0.4s' }">
+      <span class="projectTitle__subtitle" :style="{ '--delay': 0.2 + props.delay + 's' }">
         {{ props.subtitle }}
       </span>
     </Transition>
@@ -25,6 +22,7 @@ const props = defineProps({
   subtitle: { required: true, type: String },
   imageUrl: { required: true, type: String },
   slug: { required: true, type: String },
+  delay: { default: 0, type: Number },
 })
 
 const mouseEnter = () => {
@@ -40,16 +38,16 @@ const projectSlug = computed(() => `/project/${props.slug}`)
 
 <style lang="scss" scoped>
 .projectTitle__subtitle {
-  transition: opacity 0.5s ease 0.4s;
+  transition: opacity 0.5s ease var(--delay, 0s);
 
   .loading &,
   .layout-enter-active &,
   .page-enter-active & {
-    transition: opacity 0.5s ease 0.4s;
+    transition: opacity 0.5s ease var(--delay, 0s);
   }
   .layout-leave-active &,
   .page-leave-active & {
-    transition: opacity 0.5s ease 0.2s;
+    transition: opacity 0.5s ease var(--delay, 0s);
   }
 
   .loading &,
@@ -63,17 +61,20 @@ const projectSlug = computed(() => `/project/${props.slug}`)
 
 .projectTitle {
   line-height: 1.1;
-  padding: 0 5rem 1.8rem 0;
+  padding: 0 0 1.8rem 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  width: 290px;
 
   @include lowerHeight {
-    padding: 0 4rem 1.5rem 0;
+    padding: 0 0 1.5rem 0;
+    width: 270px;
   }
 
   @include mobile {
-    padding: 0 4rem 2rem 0;
+    padding: 0 0 2rem 0;
+    width: 270px;
   }
 
   &__name {
@@ -87,7 +88,7 @@ const projectSlug = computed(() => `/project/${props.slug}`)
       font-size: 1.2rem;
     }
 
-    transition: all 0.1s linear;
+    transition: transform 0.1s linear;
   }
 
   @include hover {
@@ -108,7 +109,7 @@ const projectSlug = computed(() => `/project/${props.slug}`)
       font-size: 0.9rem;
     }
 
-    transition: all 0.1s linear;
+    transition: transform 0.1s linear, opacity 0.5s ease var(--delay, 0s);
     transform: skewX(0);
   }
 }

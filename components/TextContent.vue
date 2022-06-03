@@ -1,8 +1,8 @@
 <template>
   <div class="content">
-    <ParagraphTitle class="content__title" :title="props.title" />
+    <ParagraphTitle class="content__title" :title="props.title" :delay="props.delay" />
     <div class="content__texts">
-      <Paragraph v-for="text in props.texts" :content="text" />
+      <Paragraph v-for="text in props.texts" :content="text" :style="{ '--delay': props.delay + 's' }" />
     </div>
   </div>
 </template>
@@ -13,6 +13,7 @@ import { PropType } from 'vue'
 const props = defineProps({
   texts: { type: Array as PropType<string[]>, required: true },
   title: { type: String },
+  delay: { type: Number, default: 0 },
 })
 </script>
 

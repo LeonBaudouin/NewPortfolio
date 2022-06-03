@@ -1,11 +1,12 @@
 <template>
   <li class="projectList">
-    <ul v-for="project in projects" class="projectList__item">
+    <ul v-for="(project, i) in projects" class="projectList__item">
       <ProjectTitle
         :name="project.name"
         :subtitle="project.subtitle"
         :imageUrl="project.imageUrl"
         :slug="project.slug"
+        :delay="i * 0.04"
       />
     </ul>
   </li>

@@ -13,7 +13,7 @@
   }
 
   transform-origin: center left;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   letter-spacing: 1px;
   font-weight: 200;
 

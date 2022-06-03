@@ -38,7 +38,7 @@ const showAndLoaded = computed(() => props.show && MainStore.state.isFullyLoaded
 .animated {
   position: absolute;
   left: 0;
-  top: 0;
+  top: var(--spread);
   animation-name: diseapper;
   animation-duration: 0.5s;
   animation-fill-mode: both;

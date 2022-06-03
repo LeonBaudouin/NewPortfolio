@@ -6,7 +6,6 @@
       <circle class="cursor__inner" cx="36" cy="36" r="13.2" />
     </svg>
     <div class="tips" :class="{ 'tips--show': showTips && canShowTips }">hold</div>
-    <!-- <div class="cursor--main cursor" :style="mainStyle"></div> -->
   </div>
 </template>
 
@@ -103,7 +102,7 @@ useCleanup(() => {
 <style lang="scss" scoped>
 .container {
   left: 0;
-  position: absolute;
+  position: fixed;
   top: 0;
   transform: translate3d(calc(-50% + var(--x, 0px)), calc(-50% + var(--y, 0px)), 0);
   pointer-events: none;

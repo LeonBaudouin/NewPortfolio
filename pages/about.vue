@@ -113,14 +113,3 @@ definePageMeta({
   }
 }
 </style>
-
-<!-- .content {
-  margin: 1rem 0;
-  &__title {
-  }
-
-  &__texts {
-    display: flex;
-    gap: 4rem;
-  }
-} -->
