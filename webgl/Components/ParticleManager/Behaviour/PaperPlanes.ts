@@ -27,6 +27,7 @@ const states = {
     forceCap: { min: 0.07, max: 0.09 },
     rotationDirection: new THREE.Euler(-1.56, -1.57, 1.56),
     gravity: new THREE.Vector3(0, 0, 0),
+    G: 10,
   },
   positioning: {
     attractor: new THREE.Vector3(0, 4, 0),
@@ -35,14 +36,20 @@ const states = {
     forceCap: { min: 0.04, max: 0.05 },
     rotationDirection: new THREE.Euler(-1.56, -1.57, 1.56),
     gravity: new THREE.Vector3(0, 0, 0),
+    G: 10,
+  },
+  impulse: {
+    inertia: { min: 0.4, max: 0.6 },
+    G: -0.000005,
   },
   rest: {
     attractor: new THREE.Vector3(0, 5, 0),
-    inertia: { min: 0.2, max: 0.25 },
+    inertia: { min: 0.1, max: 0.4 },
     rotationStrength: new THREE.Vector2(0.02, 0.05),
     forceCap: { min: 0.07, max: 0.09 },
     rotationDirection: new THREE.Euler(-1.56, -1.57, 1.56),
     gravity: new THREE.Vector3(0, 0, 0),
+    G: 10,
   },
   follow: {
     // inertia: { min: 0.45, max: 0.67 },
@@ -55,6 +62,7 @@ const states = {
     forceCap: { min: 0.1, max: 0.1 },
     rotationDirection: new THREE.Euler(-1.56, -1.57, 1.56),
     gravity: new THREE.Vector3(0, 0, 0),
+    G: 10,
   },
   project: {
     // attractor: new THREE.Vector3(0, 4, 0),
@@ -67,6 +75,7 @@ const states = {
     forceCap: { min: 0.07, max: 0.09 },
     rotationDirection: new THREE.Euler(-1.56, -1.57, 1.56),
     gravity: new THREE.Vector3(0, 0, 0),
+    G: 10,
   },
 }
 
@@ -79,11 +88,14 @@ export default class PaperPlanes extends AbstractBehaviour {
   }
   private isFollowing = ref(false)
   private positioning = ref(false)
+  private clickTime = ref(0)
+  private impulse = ref(10)
 
   private get state(): keyof typeof states {
     let state: keyof typeof states = 'rest'
     if (!!MainStore.state.hoveredProject) state = 'project'
     if (this.isFollowing.value) state = 'follow'
+    if (this.impulse.value > 0) state = 'impulse'
     if (!MainStore.state.isFullyLoaded) state = 'wait'
     if (this.positioning.value) state = 'positioning'
     return state
@@ -172,6 +184,7 @@ export default class PaperPlanes extends AbstractBehaviour {
 
       this.target.copy(intersect.point)
       if (this.isFollowing.value) this.context.particleParams.attractor.copy(intersect.point)
+      return intersect
     }
 
     const mouseMove = (e: MouseEvent) => {
@@ -184,10 +197,12 @@ export default class PaperPlanes extends AbstractBehaviour {
     const mousedown = (e) => {
       this.isFollowing.value = true
 
-      track(e)
+      const result = track(e)
+      if (result && result.object.name === 'Cylinder') this.clickTime.value = this.context.clock.elapsedTime
     }
     const mouseup = () => {
       this.isFollowing.value = false
+      if (this.context.clock.elapsedTime - this.clickTime.value < 0.2) this.impulse.value = 10
     }
 
     this.context.renderer.domElement.addEventListener('mousedown', mousedown)
@@ -249,6 +264,8 @@ export default class PaperPlanes extends AbstractBehaviour {
 
   private fac = new THREE.Vector3(0, 1.5, 0.75)
   public tick(time: number, delta: number): void {
+    if (this.impulse.value) this.impulse.value--
+
     if (this.state !== 'rest') return
     if (this.current) {
       const prev = this.current.clone()
