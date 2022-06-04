@@ -1,7 +1,12 @@
 <template>
   <transition name="imageFade">
     <div class="globalImage__wrapper" v-if="currentImage" @click="handleClick">
-      <img :src="currentImage" class="globalImage" @dragstart.prevent />
+      <img
+        :src="currentImage.fullScreen || currentImage.src"
+        class="globalImage"
+        @dragstart.prevent
+        :style="{ backgroundImage: `url(${currentImage.src})` }"
+      />
     </div>
   </transition>
 </template>
@@ -34,6 +39,10 @@ const handleClick = (e: PointerEvent) => {
   object-fit: contain;
   filter: drop-shadow(0px 0px 30px black);
   user-select: none;
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
 
 .imageFade-enter-active,

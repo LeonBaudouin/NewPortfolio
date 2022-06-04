@@ -2,7 +2,6 @@
   <RevealingText v-if="props.title" tag="h4" class="paragraphTitle" :delay="props.delay">{{
     props.title
   }}</RevealingText>
-  <div class="paragraphTitle" v-else style="user-select: none">&nbsp;</div>
 </template>
 
 <script lang="ts" setup>

@@ -1,8 +1,8 @@
 {
   "name": "Safe Place",
+  "link": "https://safe-place.vercel.app/",
   "sections": [
     {
-      "title": "Safe Place",
       "text": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem <strong>dummy text ever</strong> since the 1500s, when an unknown printer."
     },
     {
@@ -23,35 +23,45 @@
     }
   ],
   "image": {
-    "src": "/projects/safeplace/2.png",
+    "src": "/projects/safeplace/2_S.jpg",
+    "fullScreen": "/projects/safeplace/2_F.jpg",
     "alt": "Safeplace",
     "width": 587,
-    "height": 318
+    "height": 318,
+    "color": "#E2D0BC"
   },
   "carousel": [
     {
-      "src": "/projects/safeplace/1.png",
+      "src": "/projects/safeplace/1_S.jpg",
+      "fullScreen": "/projects/safeplace/1_F.jpg",
       "alt": "",
       "width": 587,
-      "height": 318
+      "height": 318,
+      "color": "#6E879B"
     },
     {
-      "src": "/projects/safeplace/3.png",
+      "src": "/projects/safeplace/3_S.jpg",
+      "fullScreen": "/projects/safeplace/3_F.jpg",
       "alt": "",
       "width": 587,
-      "height": 318
+      "height": 318,
+      "color": "#8C865A"
     },
     {
-      "src": "/projects/safeplace/4.png",
+      "src": "/projects/safeplace/4_S.jpg",
+      "fullScreen": "/projects/safeplace/4_F.jpg",
       "alt": "",
       "width": 587,
-      "height": 318
+      "height": 318,
+      "color": "#6B7048"
     },
     {
-      "src": "/projects/safeplace/5.png",
+      "src": "/projects/safeplace/5_S.jpg",
+      "fullScreen": "/projects/safeplace/5_F.jpg",
       "alt": "",
       "width": 587,
-      "height": 318
+      "height": 318,
+      "color": "#C39C8D"
     }
   ]
 }

@@ -33,13 +33,15 @@ const props = defineProps({
   height: { type: Number, required: true },
   delay: { type: Number, default: 0 },
   fill: { type: String as PropType<'width' | 'height'>, default: 'height' },
+  color: { type: String, default: '#a49c54' },
+  fullScreen: { type: String },
 })
 
 const effectiveSrc = ref('/placeholder/1_1.png')
 const loaded = ref(false)
 const show = ref(false)
 
-const style = computed(() => ({ '--delay': props.delay + 's' }))
+const style = computed(() => ({ '--delay': props.delay + 's', '--color': props.color }))
 const invertedRatio = computed(() => props.height / props.width)
 
 onMounted(() => {
@@ -66,7 +68,7 @@ const pointerDown = (e: PointerEvent) => {
 
 const pointerUp = ({ clientX: x2, clientY: y2 }: PointerEvent) => {
   const { x: x1, y: y1 } = startPos
-  if (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) < 10) if (loaded.value) MainStore.state.imageToShow = props.src
+  if (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) < 10) if (loaded.value) MainStore.state.imageToShow = props
 }
 
 onUnmounted(() => {
@@ -118,7 +120,7 @@ onUnmounted(() => {
       height: 100%;
       z-index: 1;
 
-      background-color: #a49c54;
+      background-color: var(--color);
 
       transform-origin: bottom center;
       transform: scale3d(1, 0, 1);

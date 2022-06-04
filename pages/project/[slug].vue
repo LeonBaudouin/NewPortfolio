@@ -2,7 +2,7 @@
   <div class="project">
     <div class="project__content">
       <div class="project__title">
-        <SlidingText tag="h1"> Safe place </SlidingText>
+        <SlidingText tag="h1"> {{ data.name }} </SlidingText>
       </div>
       <div class="project__sections">
         <TextContent
@@ -17,7 +17,7 @@
     <div class="project__aside">
       <NuxtLink class="project__next">Mamie Danger</NuxtLink>
       <Image class="project__image" v-bind="data.image" :delay="0" fill="width" />
-      <NuxtLink class="project__link">See it live</NuxtLink>
+      <NuxtLink class="project__link" :to="data.link" target="__blank">See it live</NuxtLink>
     </div>
     <Carousel class="project__carousel" :images="data.carousel" />
   </div>
@@ -86,8 +86,10 @@ const { data } = await useAsyncData('project', () => queryContent<ProjectApiData
   &__sections {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
     gap: 1rem;
     margin-left: var(--x-page-margin);
+    max-height: 500px;
     @include mobile {
       margin-right: var(--x-page-margin);
     }
