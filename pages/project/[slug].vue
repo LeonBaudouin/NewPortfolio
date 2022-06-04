@@ -44,7 +44,7 @@ const { data } = await useAsyncData('project', () => queryContent<ProjectApiData
   column-gap: 1rem;
   display: grid;
   grid-template:
-    'content image' auto
+    'content aside' auto
     'carousel carousel' minmax(20vh, 250px) / 60vw auto;
   max-height: 90vh;
   overflow-y: auto;
@@ -52,8 +52,18 @@ const { data } = await useAsyncData('project', () => queryContent<ProjectApiData
   row-gap: 3rem;
   padding-top: 13vh;
 
+  @include mobile {
+    grid-template:
+      'aside' auto
+      'content' auto
+      'carousel' minmax(20vh, 250px) / auto;
+  }
+
   &__section {
     width: calc(50% - 0.5rem);
+    @include mobile {
+      width: auto;
+    }
   }
 
   &__title {
@@ -78,10 +88,13 @@ const { data } = await useAsyncData('project', () => queryContent<ProjectApiData
     flex-wrap: wrap;
     gap: 1rem;
     margin-left: var(--x-page-margin);
+    @include mobile {
+      margin-right: var(--x-page-margin);
+    }
   }
 
   &__aside {
-    grid-area: image;
+    grid-area: aside;
     justify-self: end;
     align-self: center;
     width: 100%;
