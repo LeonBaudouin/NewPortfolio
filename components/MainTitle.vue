@@ -26,6 +26,7 @@ const jobDelay = computed(() => (show.value ? 0 : 0.3))
   margin-top: var(--y-page-margin);
   position: relative;
   flex-direction: column;
+  z-index: 1;
   &__name {
     display: inline-block;
     font-size: 1.8rem;

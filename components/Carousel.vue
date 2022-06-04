@@ -101,6 +101,8 @@ watchEffect(() => {
 
   &__wrapper {
     overflow: hidden;
+    z-index: 1;
+    position: relative;
   }
 
   &__image {

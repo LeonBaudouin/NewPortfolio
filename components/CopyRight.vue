@@ -16,6 +16,8 @@
   font-size: 0.75rem;
   letter-spacing: 1px;
   font-weight: 200;
+  position: relative;
+  z-index: 1;
 
   transition: opacity 0.5s ease;
   .loading &,
