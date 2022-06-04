@@ -33,9 +33,10 @@ onMounted(() => (showContact.value = window.innerWidth < 700))
     overflow: auto;
   }
 
-  $top: 51.5vh;
-  top: $top;
-  height: 100vh - $top;
+  $top: 51.5;
+  top: calc($top * var(--vh));
+  $bottom: 100 - $top;
+  height: calc($bottom * var(--vh));
 
   display: flex;
   flex-direction: column;

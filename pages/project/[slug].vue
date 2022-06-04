@@ -14,17 +14,23 @@
         />
       </div>
     </div>
-    <div class="project__aside">
-      <NuxtLink class="project__next">Mamie Danger</NuxtLink>
-      <Image class="project__image" v-bind="data.image" :delay="0" fill="width" />
-      <NuxtLink class="project__link" :to="data.link" target="__blank">See it live</NuxtLink>
-    </div>
+    <!-- <div class="project__aside"> -->
+    <NuxtLink class="project__next">Mamie Danger</NuxtLink>
+    <Image class="project__image" v-bind="data.image" :delay="0" fill="width" />
+    <NuxtLink class="project__link" :to="data.link" target="__blank">See it live</NuxtLink>
+    <!-- </div> -->
     <Carousel class="project__carousel" :images="data.carousel" />
+    <CopyRight v-if="!isDesktop" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ProjectApiData } from '~~/types/api'
+
+const isDesktop = ref(true)
+onMounted(() => {
+  if (window.innerWidth < 700) isDesktop.value = false
+})
 
 definePageMeta({
   layout: 'none',
@@ -36,27 +42,33 @@ definePageMeta({
 })
 
 const { data } = await useAsyncData('project', () => queryContent<ProjectApiData>('/project').findOne())
+const v = await useAsyncData('all-projects', () => queryContent<ProjectApiData>('/project').find())
+console.log(v.data.value)
 </script>
 
 <style lang="scss" scoped>
 .project {
   bottom: 0;
-  column-gap: 1rem;
   display: grid;
   grid-template:
-    'content aside' auto
+    'content next' auto
+    'content image' auto
+    'content link' auto
     'carousel carousel' minmax(20vh, 250px) / 60vw auto;
   max-height: 90vh;
   overflow-y: auto;
   position: absolute;
-  row-gap: 3rem;
+  column-gap: 1rem;
   padding-top: 13vh;
 
   @include mobile {
+    row-gap: 2rem;
     grid-template:
-      'aside' auto
+      'image' auto
       'content' auto
-      'carousel' minmax(20vh, 250px) / auto;
+      'link' auto
+      'carousel' minmax(20vh, 250px)
+      'next' auto / auto;
   }
 
   &__section {
@@ -81,6 +93,11 @@ const { data } = await useAsyncData('project', () => queryContent<ProjectApiData
 
   &__content {
     grid-area: content;
+    margin-bottom: 3rem;
+
+    @include mobile {
+      margin-bottom: 0rem;
+    }
   }
 
   &__sections {
@@ -92,26 +109,44 @@ const { data } = await useAsyncData('project', () => queryContent<ProjectApiData
     max-height: 500px;
     @include mobile {
       margin-right: var(--x-page-margin);
+      max-height: none;
     }
   }
 
-  &__aside {
-    grid-area: aside;
-    justify-self: end;
-    align-self: center;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+  // &__aside {
+  //   grid-area: aside;
+  //   justify-self: end;
+  //   align-self: center;
+  //   width: 100%;
+  //   display: flex;
+  //   flex-direction: column;
+  // }
+
+  &__image {
+    grid-area: image;
   }
 
   &__next {
     font-weight: 700;
-    align-self: flex-end;
+    justify-self: end;
+    align-self: end;
     margin: 0 1.5rem 2.5rem 0;
     text-transform: uppercase;
     font-size: 1.1rem;
     letter-spacing: 2px;
     position: relative;
+
+    grid-area: next;
+
+    @include mobile {
+      justify-self: start;
+      margin-left: var(--x-page-margin);
+
+      &::before {
+        right: none;
+        left: 0;
+      }
+    }
 
     &::before {
       content: 'Next Project';
@@ -152,10 +187,18 @@ const { data } = await useAsyncData('project', () => queryContent<ProjectApiData
     letter-spacing: 3px;
     word-spacing: 1px;
     color: transparent;
-    margin: 2px 0;
+    margin: 2px 0 3rem 0;
     align-self: start;
+    justify-self: start;
+
+    grid-area: link;
 
     -webkit-text-stroke: 0.5px white;
+
+    @include mobile {
+      margin-bottom: 0rem;
+      margin-left: var(--x-page-margin);
+    }
 
     @include hover {
       color: white;

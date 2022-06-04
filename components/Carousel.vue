@@ -45,9 +45,10 @@ const handleMouseDown = (cursor: { x: number; y: number }) => {
   scrollOrigin.value = x.value
 }
 
-const handleMouseMove = (cursor: { x: number; y: number }) => {
+const handleMouseMove = (cursor: PointerEvent | TouchEvent) => {
+  const cursorX = 'touches' in cursor ? cursor.touches[0].clientX : cursor.x
   if (cursorOrigin.value === null) return
-  let newX = -cursor.x + cursorOrigin.value.x - scrollOrigin.value
+  let newX = -cursorX + cursorOrigin.value.x - scrollOrigin.value
   x.value = -newX
 }
 
@@ -58,10 +59,14 @@ const handleMouseUp = () => {
 
 useCleanup(() => {
   window.addEventListener('pointerup', handleMouseUp)
+  window.addEventListener('touchend', handleMouseUp)
   window.addEventListener('pointermove', handleMouseMove)
+  window.addEventListener('touchmove', handleMouseMove)
   return () => {
     window.removeEventListener('pointerup', handleMouseUp)
+    window.removeEventListener('touchend', handleMouseUp)
     window.removeEventListener('pointermove', handleMouseMove)
+    window.removeEventListener('touchmove', handleMouseMove)
   }
 })
 

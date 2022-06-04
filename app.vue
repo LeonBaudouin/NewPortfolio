@@ -1,5 +1,9 @@
 <template>
-  <div class="content" :class="{ loading: !MainStore.state.isFullyLoaded, loaded: MainStore.state.isFullyLoaded }">
+  <div
+    class="content"
+    :class="{ loading: !MainStore.state.isFullyLoaded, loaded: MainStore.state.isFullyLoaded }"
+    :style="{ '--vh': vh }"
+  >
     <Loader />
     <MainTitle />
     <NuxtLayout>
@@ -20,6 +24,8 @@ const { $webgl, $tweakpane } = useNuxtApp()
 
 const isDesktop = ref(true)
 const showTweakpane = ref(true)
+
+const vh = ref('0px')
 
 useCleanup(() => {
   if (window.innerWidth < 700) isDesktop.value = false
@@ -45,10 +51,18 @@ useCleanup(() => {
   document.body.append($webgl.renderer.domElement)
   raf()
 
+  const setVh = () => {
+    vh.value = window.innerHeight * 0.01 + 'px'
+  }
+  setVh()
+
+  window.addEventListener('resize', setVh)
+
   return () => {
     window.cancelAnimationFrame(rafId)
     fpsGraph.dispose()
     refreshButton.dispose()
+    window.removeEventListener('resize', setVh)
   }
 })
 </script>
