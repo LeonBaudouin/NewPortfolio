@@ -15,10 +15,10 @@
 </template>
 
 <script lang="ts" setup>
-const title = 'What is Lorem Ipsum?'
+const title = 'Who am I?'
 const texts = [
-  'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem <strong>dummy text ever</strong> since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-  'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem <strong>dummy text ever</strong> since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+  'I’m a french <strong>creative developer</strong> based in Paris specialized in front-end development and <strong>webgl / realtime 3D on the web</strong>. I love to create memorable experiences and <strong>bring digital worlds to life.</strong>',
+  'I’m currently on my last year at <strong>Gobelins</strong> l’école de l’image and <strong>I’m looking for a job as a creative developer.</strong>',
 ]
 
 const socials = {
