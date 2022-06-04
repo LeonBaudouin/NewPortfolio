@@ -20,8 +20,24 @@ const particlesData = {
 }
 
 const states = {
+  wait: {
+    attractor: new THREE.Vector3(0, 10, 0),
+    inertia: { min: 0.2, max: 0.4 },
+    rotationStrength: new THREE.Vector2(0.05, 0.05),
+    forceCap: { min: 0.07, max: 0.09 },
+    rotationDirection: new THREE.Euler(-1.56, -1.57, 1.56),
+    gravity: new THREE.Vector3(0, 0, 0),
+  },
+  positioning: {
+    attractor: new THREE.Vector3(0, 4, 0),
+    inertia: { min: 0.3, max: 0.4 },
+    rotationStrength: new THREE.Vector2(0.02, 0.05),
+    forceCap: { min: 0.04, max: 0.05 },
+    rotationDirection: new THREE.Euler(-1.56, -1.57, 1.56),
+    gravity: new THREE.Vector3(0, 0, 0),
+  },
   rest: {
-    attractor: new THREE.Vector3(0, 2, 0),
+    attractor: new THREE.Vector3(0, 5, 0),
     inertia: { min: 0.2, max: 0.25 },
     rotationStrength: new THREE.Vector2(0.02, 0.05),
     forceCap: { min: 0.07, max: 0.09 },
@@ -62,11 +78,14 @@ export default class PaperPlanes extends AbstractBehaviour {
     },
   }
   private isFollowing = ref(false)
+  private positioning = ref(false)
 
   private get state(): keyof typeof states {
     let state: keyof typeof states = 'rest'
     if (!!MainStore.state.hoveredProject) state = 'project'
     if (this.isFollowing.value) state = 'follow'
+    if (!MainStore.state.isFullyLoaded) state = 'wait'
+    if (this.positioning.value) state = 'positioning'
     return state
   }
 
@@ -76,7 +95,7 @@ export default class PaperPlanes extends AbstractBehaviour {
   constructor({ tweakpane, ...context }: BehaviourContext) {
     super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Plane Behaviour', index: 1, expanded: false }) })
     pseudoDeepAssign(this.context.particleParams, particlesData)
-    pseudoDeepAssign(this.context.particleParams, states.rest)
+    pseudoDeepAssign(this.context.particleParams, states.wait)
 
     const freqInput = this.context.tweakpane.addInput(this.params.oscillation, 'freq', {
       label: 'Frequency',
@@ -178,6 +197,18 @@ export default class PaperPlanes extends AbstractBehaviour {
 
     this.context.scene.add(planeHelper)
     this.context.scene.add(boxHelper)
+
+    watch(
+      () => MainStore.state.isFullyLoaded,
+      (isLoaded) => {
+        if (isLoaded) {
+          this.positioning.value = true
+          setTimeout(() => {
+            this.positioning.value = false
+          }, 2000)
+        }
+      }
+    )
 
     const unbind2 = watch(
       () => this.state,

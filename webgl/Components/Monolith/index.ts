@@ -37,8 +37,26 @@ export default class Monolith extends AbstractObject<
         },
       })
     )
-    this.object.rotateY(Math.PI / 2 - 0.3)
-    this.object.position.y = 1.25
+    this.object.rotation.y = -Math.PI
+    this.object.position.y = context.nuxtApp.$router.currentRoute.value.name == 'index' ? -4 : -5
+    const defaultRotation = Math.PI / 2 - 0.3
+    watch(
+      () => this.context.state.isReady,
+      (isReady) => {
+        if (!isReady) return
+        gsap.to(this.object.rotation, { y: defaultRotation, delay: 0.5, duration: 2, ease: 'Power2.easeInOut' })
+        gsap.to(this.object.position, {
+          y: 1.25,
+          delay: 0.5,
+          duration: 2,
+          ease: 'Power2.easeInOut',
+        })
+        setTimeout(() => {
+          MainStore.state.isFullyLoaded = true
+        }, 1700)
+      }
+    )
+
     this.context.tweakpane.addInput(this.object.rotation, 'y', { label: 'Monolith Rotation' })
     this.context.tweakpane.addInput(this.object.material.uniforms.uShadowRemap, 'value', {
       label: 'Shadow Remap',
@@ -67,11 +85,12 @@ export default class Monolith extends AbstractObject<
     ]
     this.object.add(...this.planesGroups.map((p) => p.object))
 
-    let targetRotation = this.object.rotation.y
+    let targetRotation = defaultRotation
     this.toUnbind(
       watch(
         () => MainStore.state.hoveredProject,
         (newValue) => {
+          if (!MainStore.state.isFullyLoaded) return
           if (this.currentIndex !== null) this.planesGroups[this.currentIndex].hide()
           if (!newValue) return
           targetRotation -= Math.PI / 2

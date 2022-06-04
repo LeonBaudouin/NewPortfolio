@@ -138,8 +138,7 @@ const { data } = await useAsyncData('project', () => queryContent<ProjectApiData
     word-spacing: 1px;
     color: transparent;
     margin: 2px 0;
-
-    transition: all 0.5s ease;
+    align-self: start;
 
     -webkit-text-stroke: 0.5px white;
 
@@ -152,7 +151,7 @@ const { data } = await useAsyncData('project', () => queryContent<ProjectApiData
       -webkit-text-stroke: 1px white;
     }
 
-    transition: opacity 0.5s ease var(--delay, 0s);
+    transition: all 0.5s ease var(--delay, 0s);
     .loading &,
     .page-enter-active &,
     .page-leave-active &,

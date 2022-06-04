@@ -1,5 +1,5 @@
 <template>
-  <transition name="fade" @after-leave="MainStore.state.isFullyLoaded = true">
+  <transition name="fade">
     <div v-if="!$webgl?.state.isReady" class="loader" :style="{ '--prog': prog }">
       <div class="loader__bar"></div>
     </div>

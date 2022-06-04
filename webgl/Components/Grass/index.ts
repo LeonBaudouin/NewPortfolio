@@ -18,8 +18,8 @@ export default class Grass extends AbstractObject<
       noiseSpeed: -0.5,
       noiseScale: 0.35,
       noiseStrength: 0.15,
-      color1: '#021503',
-      color2: '#07b128',
+      color1: '#000000',
+      color2: '#039b21',
       scale: new THREE.Vector2(2, 2),
       highlightStrength: -0.12,
     })
