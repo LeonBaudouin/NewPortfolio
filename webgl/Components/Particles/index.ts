@@ -4,8 +4,7 @@ import { WebGLAppContext } from '~~/webgl'
 import Velocity, { VelocityParams } from './Velocity'
 import Position from './Position'
 import Cubes, { CubesParams } from './Cubes'
-import { getPositionTextureFromMesh } from '~~/utils/buffer/positionTextureFromMesh'
-import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
+import RenderTargetDebugger from '../RenderTargetDebugger'
 
 export type ParticlesParams = {
   run?: boolean

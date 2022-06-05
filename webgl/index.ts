@@ -91,6 +91,7 @@ export default class WebGL extends LifeCycle {
     ressources: this.ressources,
     simulation: this.simulation,
     nuxtApp: this.nuxtApp,
+    renderTargetDebugger: this.renderTargetDebugger,
   })
 
   private setupScenes() {
@@ -138,8 +139,8 @@ export default class WebGL extends LifeCycle {
     })
 
     this.renderTargetDebugger = new RenderTargetDebugger(this.genContext())
-    this.renderTargetDebugger.object.visible = false
-    this.tweakpane.addInput(this.renderTargetDebugger.object, 'visible', { label: 'Render Target Debugger' })
+    // this.renderTargetDebugger.object.visible = false
+    // this.tweakpane.addInput(this.renderTargetDebugger.object, 'visible', { label: 'Render Target Debugger' })
   }
 
   public tick() {
@@ -160,12 +161,7 @@ export default class WebGL extends LifeCycle {
     this.stats?.beforeRender()
     this.renderer.render(currentScene.scene, currentScene.camera)
 
-    if (this.renderTargetDebugger.object.visible) {
-      this.renderer.autoClear = false
-      this.renderTargetDebugger.object.material.uniforms.uTexture.value = this.simulation.outputTexture
-      this.renderer.render(this.renderTargetDebugger.object, currentScene.camera)
-      this.renderer.autoClear = true
-    }
+    this.renderTargetDebugger.tick()
     this.stats?.afterRender()
   }
 }

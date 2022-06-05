@@ -84,12 +84,14 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
         uUseTexture: { value: false },
         uRotateAround: { value: true },
         uFixOnAttractor: { value: false },
+        uUseSelection: { value: false },
         uG: { value: 1 },
         uInertia: { value: new THREE.Vector2() },
         uForceCap: { value: new THREE.Vector2() },
         uRotationStrength: { value: new THREE.Vector2() },
         uGravity: { value: new THREE.Vector3() },
         uRotationDirection: { value: new THREE.Vector3() },
+        uTextureSize: { value: params.textureSize },
       },
     })
 
@@ -107,6 +109,11 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
     })
 
     this.toUnbind(...unbindArray)
+
+    watchEffect(
+      () =>
+        (velocityShader.uniforms.uUseSelection.value = this.context.nuxtApp.$router.currentRoute.value.name === 'about')
+    )
 
     this.context.tweakpane.addInput(this.data, 'useTexture', { label: 'Follow Texture' })
     this.context.tweakpane.addInput(this.data, 'rotateAround', { label: 'Rotate Around' })

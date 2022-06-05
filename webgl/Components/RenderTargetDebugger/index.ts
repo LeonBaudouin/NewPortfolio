@@ -8,6 +8,9 @@ export default class RenderTargetDebugger extends AbstractObject<
   WebGLAppContext,
   THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
 > {
+  private renderTarget: THREE.WebGLRenderTarget | null = null
+  private uselessCamera: THREE.Camera = new THREE.OrthographicCamera()
+
   constructor(context: WebGLAppContext) {
     super(context)
     this.object = new THREE.Mesh(
@@ -23,5 +26,18 @@ export default class RenderTargetDebugger extends AbstractObject<
       })
     )
     this.object.frustumCulled = false
+  }
+
+  public setRenderTarget(renderTarget: THREE.WebGLRenderTarget | null) {
+    this.renderTarget = renderTarget
+  }
+
+  public tick() {
+    if (this.object.visible && this.renderTarget) {
+      this.context.renderer.autoClear = false
+      this.object.material.uniforms.uTexture.value = this.renderTarget.texture
+      this.context.renderer.render(this.object, this.uselessCamera)
+      this.context.renderer.autoClear = true
+    }
   }
 }

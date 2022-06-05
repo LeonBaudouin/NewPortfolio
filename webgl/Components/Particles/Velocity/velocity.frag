@@ -7,6 +7,7 @@ uniform vec3 uAttractor;
 uniform bool uUseTexture;
 uniform bool uRotateAround;
 uniform bool uFixOnAttractor;
+uniform bool uUseSelection;
 uniform float uG;
 uniform vec2 uInertia;
 uniform vec2 uRotationStrength;
@@ -75,6 +76,8 @@ void main() {
     ? texture2D(uAttractorsTexture, vUv).xyz
     : uAttractor;
 
+  bool selection = gl_FragCoord.x < 1. && gl_FragCoord.y < 5.;
+  if (!selection && uUseSelection) attractor = vec3(0., 9., 0.);
 
   // ------ ATTRACTION
   if (length(position - attractor) == 0.) attractor.x += 0.1;
