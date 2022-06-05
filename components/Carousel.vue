@@ -31,9 +31,9 @@ const x = ref(0)
 const lastX = ref(0)
 const speed = ref(0)
 
-const carousel = ref<HTMLElement>()
+const [carousel, boundingRect] = useBoundingRect()
 
-const width = computed(() => (carousel.value?.getBoundingClientRect().width || 100000) / 3)
+const width = computed(() => (boundingRect.value?.width || 1000) / 3)
 
 const style = computed(() => {
   const offset = x.value > 0 ? -width.value : 0

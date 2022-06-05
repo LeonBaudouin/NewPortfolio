@@ -21,11 +21,16 @@
 import MainStore from './stores/MainStore'
 
 const { $webgl, $tweakpane } = useNuxtApp()
+const router = useRouter()
 
 const isDesktop = ref(true)
 const showTweakpane = ref(true)
 
 const vh = ref('0px')
+
+watch(router.currentRoute, () => {
+  MainStore.state.hoveredProject = null
+})
 
 useCleanup(() => {
   if (window.innerWidth < 700) isDesktop.value = false

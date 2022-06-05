@@ -1,5 +1,9 @@
 <template>
-  <NuxtLink :to="props.to" class="title__link">
+  <NuxtLink
+    :to="props.to"
+    class="title__link"
+    :style="{ pointerEvents: MainStore.state.inTransition ? 'none' : 'auto' }"
+  >
     <SlidingText tag="h3" class="title" :delay="props.delay" :show="props.show">
       <span class="title__text">
         {{ props.text }}
@@ -9,6 +13,8 @@
 </template>
 
 <script lang="ts" setup>
+import MainStore from '~~/stores/MainStore'
+
 const props = defineProps({
   text: { type: String, required: true },
   to: { type: String, required: true },
@@ -41,11 +47,7 @@ const props = defineProps({
     color: inherit;
     text-decoration: none;
     align-self: flex-start;
-    -webkit-text-stroke: 0.5px white;
-
-    @media (-webkit-min-device-pixel-ratio: 1.25) {
-      -webkit-text-stroke: 1px white;
-    }
+    -webkit-text-stroke: 1px white;
 
     color: transparent;
     transition: all 0.5s ease;

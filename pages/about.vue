@@ -15,6 +15,8 @@
 </template>
 
 <script lang="ts" setup>
+import MainStore from '~~/stores/MainStore'
+
 const title = 'Who am I?'
 const texts = [
   'I’m a french <strong>creative developer</strong> based in Paris specialized in front-end development and <strong>webgl / realtime 3D on the web</strong>. I love to create memorable experiences and <strong>bring digital worlds to life.</strong>',
@@ -34,6 +36,8 @@ definePageMeta({
     name: 'page',
     mode: 'out-in',
     duration: 500,
+    onLeave: () => (MainStore.state.inTransition = true),
+    onAfterEnter: () => (MainStore.state.inTransition = false),
   },
 })
 </script>

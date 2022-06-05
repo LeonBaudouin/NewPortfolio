@@ -4,12 +4,10 @@
     :class="{
       'image__container--loaded': loaded,
       'image__container--show': show,
-      'image__container--width': props.fill === 'width',
-      'image__container--height': props.fill === 'height',
     }"
     :style="style"
+    ref="container"
   >
-    <canvas class="image__shim" :width="props.width" :height="props.height"></canvas>
     <img
       :src="effectiveSrc"
       :alt="props.alt"
@@ -18,6 +16,9 @@
       @pointerdown="pointerDown"
       @pointerup="pointerUp"
       class="image"
+      :style="{ width: objectSize.width + 'px', height: objectSize.height + 'px' }"
+      :width="props.width"
+      :height="props.height"
     />
   </div>
 </template>
@@ -25,7 +26,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue'
 import MainStore from '~~/stores/MainStore'
-
 const props = defineProps({
   src: { type: String, required: true },
   alt: { type: String, required: true },
@@ -41,8 +41,30 @@ const effectiveSrc = ref('/placeholder/1_1.png')
 const loaded = ref(false)
 const show = ref(false)
 
-const style = computed(() => ({ '--delay': props.delay + 's', '--color': props.color }))
-const invertedRatio = computed(() => props.height / props.width)
+const [container, boundingRect] = useBoundingRect()
+
+const objectSize = computed(() => {
+  const rect = boundingRect.value
+  let ratio = props.width / props.height
+  if (!rect) return { width: 0, height: 0 }
+  if (props.fill === 'width') {
+    const width = rect.width
+    const height = width * (1 / ratio)
+    return { width, height }
+  } else {
+    const height = rect.height
+    const width = height * ratio
+    return { width, height }
+  }
+})
+
+const oppositeSide = computed(() => (props.fill === 'width' ? 'height' : 'width'))
+
+const style = computed(() => ({
+  '--delay': props.delay + 's',
+  '--color': props.color,
+  [oppositeSide.value]: objectSize.value[oppositeSide.value] + 'px',
+}))
 
 onMounted(() => {
   setTimeout(() => {
@@ -78,38 +100,25 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  // position: absolute;
+  // top: 0;
+  // left: 0;
+  // width: 100%;
+  // height: 100%;
   visibility: hidden;
+  display: block;
+  position: absolute;
 
   .layout-leave-to &,
   .page-leave-to & {
     animation: hide-image 0.5s var(--delay, 0s) ease both;
   }
 
-  &__shim {
-    height: 100%;
-  }
-
   &__container {
+    display: block;
     position: relative;
-
-    &--height {
-      display: table-cell;
-      width: auto;
-    }
-
-    &--width {
-      padding-top: calc(v-bind(invertedRatio) * 100%);
-      width: 100%;
-
-      .image__shim {
-        display: none;
-      }
-    }
+    width: 100%;
+    height: 100%;
 
     &::before {
       content: '';

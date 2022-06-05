@@ -60,6 +60,7 @@ console.log(v.data.value)
   position: absolute;
   column-gap: 1rem;
   padding-top: 13vh;
+  width: 100%;
 
   @include mobile {
     row-gap: 2rem;
@@ -107,6 +108,11 @@ console.log(v.data.value)
     gap: 1rem;
     margin-left: var(--x-page-margin);
     max-height: 500px;
+
+    @media (max-width: 1300px) {
+      max-height: 800px;
+    }
+
     @include mobile {
       margin-right: var(--x-page-margin);
       max-height: none;
@@ -124,6 +130,7 @@ console.log(v.data.value)
 
   &__image {
     grid-area: image;
+    align-self: end;
   }
 
   &__next {
