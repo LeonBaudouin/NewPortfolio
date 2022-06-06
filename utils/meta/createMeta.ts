@@ -30,5 +30,7 @@ export default function createMeta({
     { hid: 'og:locale', name: 'og:locale', content: 'en' },
     { hid: 'og:image', name: 'og:image', content: facebookImage(APP_URL) },
     { hid: 'twitter:image', name: 'twitter:image', content: twitterImage(APP_URL) },
+    { hid: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
+    { hid: 'twitter:creator', name: 'twitter:creator', content: '@BaudouinLeon' },
   ]
 }
