@@ -1,4 +1,4 @@
-const APP_URL = 'https://new.leonbaudouin.fr'
+const APP_URL = 'http://new.leonbaudouin.fr'
 
 const defaultMetas = {
   title: '',
