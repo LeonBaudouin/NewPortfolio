@@ -40,5 +40,6 @@ export default defineNuxtConfig({
       { name: 'color-scheme', content: 'light dark' },
       ...createMeta(),
     ],
+    script: [{ async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-15PP57YC9X' }],
   },
 })
