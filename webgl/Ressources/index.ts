@@ -26,9 +26,10 @@ export default class Ressources {
       (t) => (t.minFilter = THREE.NearestFilter)
     ),
     // lightMatcap: this.textureLoader.load('https://makio135.com/matcaps/64/EAEAEA_B5B5B5_CCCCCC_D4D4D4-64px.png'),
-    blueMatcap: this.textureLoader.load('/textures/matcap/matcap_blue.png'),
-    planeMatcap: this.textureLoader.load('/textures/matcap/matcap_plane.png'),
-    greenMatcap: this.textureLoader.load('/textures/matcap/matcap_green.png'),
+    monolithMatcapBlue: this.textureLoader.load('/textures/matcap/matcap_blue.jpg'),
+    planeMatcapBlue: this.textureLoader.load('/textures/matcap/matcap_plane_blue.jpg'),
+    planeMatcapGreen: this.textureLoader.load('/textures/matcap/matcap_plane_blue.jpg'),
+    monolithMatcapGreen: this.textureLoader.load('/textures/matcap/matcap_green.jpg'),
   }
 
   constructor() {

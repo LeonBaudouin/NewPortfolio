@@ -26,10 +26,10 @@ export default class Monolith extends AbstractObject<
         fog: true,
         uniforms: {
           uBlueMatcap: {
-            value: this.context.ressources.textures.blueMatcap,
+            value: this.context.ressources.textures.monolithMatcapBlue,
           },
           uGreenMatcap: {
-            value: this.context.ressources.textures.greenMatcap,
+            value: this.context.ressources.textures.monolithMatcapGreen,
           },
           uPlaneMatrix: { value: [new THREE.Matrix4(), new THREE.Matrix4()] },
           uShadowRemap: { value: new THREE.Vector4(-0.04, 0.03, 0.71, 1) },

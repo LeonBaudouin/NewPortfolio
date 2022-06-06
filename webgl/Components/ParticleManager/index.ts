@@ -42,7 +42,6 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
     // matcap: 'https://makio135.com/matcaps/64/F79686_FCCBD4_E76644_E76B56-64px.png',
     // matcap: 'https://makio135.com/matcaps/64/3F3A2F_91D0A5_7D876A_94977B-64px.png',
     // matcap: 'https://makio135.com/matcaps/64/CCF6FA_9DD9EB_82C5D9_ACD4E4-64px.png',
-    matcap: this.context.ressources.textures.planeMatcap,
     // matcap: './queen_256px.png',
     attractor: new THREE.Vector3(0, 0, -3),
     run: true,

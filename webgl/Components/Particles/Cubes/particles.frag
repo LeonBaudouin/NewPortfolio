@@ -1,20 +1,13 @@
-uniform sampler2D uTexture;
-uniform sampler2D uMatcap;
+uniform sampler2D uBlueMatcap;
+uniform sampler2D uGreenMatcap;
 uniform bool uInReflection;
+uniform float uTransitionProg;
+uniform float uTransitionForward;
 
 varying vec3 vViewPosition;
 varying vec3 vNormal;
-varying vec2 vUv;
-varying vec2 vImageUv;
-varying float vImageAlpha;
 
 #include <fog_pars_fragment>
-
-float isNorm(vec2 _st) {
-  if (_st.x > 1. || _st.y > 1. || _st.x < 0. || _st.y < 0.)
-    return 0.;
-  return 1.;
-}
 
 void main() {
 	vec3 normal = normalize( vNormal );
@@ -25,15 +18,10 @@ void main() {
 	vec2 matcapUv = vec2( dot( x, normal ), dot( y, normal ) ) * 0.495 + 0.5;
   if (uInReflection) matcapUv.x = 1. - matcapUv.x;
 
-  // vec2 uv = vec2(gl_PointCoord.x, 1.0 - gl_PointCoord.y);
-  // float alpha = step(length(uv - vec2(.5)), .5);
-
-  // if (alpha < 0.01) discard;
-
-
-
-  vec3 color = texture2D(uMatcap, matcapUv).rgb;
-  color = mix(color, texture2D(uTexture, vImageUv).rgb, isNorm(vUv) * vImageAlpha);
+  vec3 greenColor = texture2D(uGreenMatcap, matcapUv).rgb;
+  vec3 blueColor = texture2D(uBlueMatcap, matcapUv).rgb;
+  float mixValue = uTransitionForward > 0. ? 1. - uTransitionProg : uTransitionProg;
+  vec3 color = mix(greenColor, blueColor, mixValue);
 
   gl_FragColor = vec4(color, 1.);
 

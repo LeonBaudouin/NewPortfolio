@@ -8,7 +8,6 @@ import reactiveUniforms, { CustomWatch } from '~~/utils/uniforms/reactiveUniform
 export type CubesParams = {
   sizeVariation?: THREE.Vector4
   size?: number
-  matcap?: string | THREE.Texture
   textureSize: THREE.Vector2
   normalTexture?: null | THREE.Texture
 }
@@ -49,9 +48,8 @@ export default class Cubes extends AbstractObject<
         uTextureEdges: { value: new THREE.Vector4(4.7, 0.7, -0.15, -0.7) },
         uTexture: { value: null },
         uTextureAlpha: { value: 0 },
-        uMatcap: {
-          value: null,
-        },
+        uBlueMatcap: { value: null },
+        uGreenMatcap: { value: null },
         uSize: {
           value: 0,
         },
@@ -62,6 +60,9 @@ export default class Cubes extends AbstractObject<
         ...this.context.globalUniforms,
       },
     })
+
+    watchEffect(() => (mat.uniforms.uGreenMatcap.value = this.context.ressources.textures.monolithMatcapGreen))
+    watchEffect(() => (mat.uniforms.uBlueMatcap.value = this.context.ressources.textures.monolithMatcapBlue))
 
     const textureWatch: CustomWatch<string | HTMLImageElement | THREE.Texture> = (uniform, object, key) =>
       watchEffect(() => {
