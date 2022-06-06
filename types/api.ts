@@ -10,3 +10,9 @@ export type ProjectApiData = {
   subtitle: string
   slug: string
 }
+
+export type AboutData = {
+  title: string
+  texts: string[]
+  socials: Record<string, string>
+}

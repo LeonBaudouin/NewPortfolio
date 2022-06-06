@@ -5,6 +5,7 @@
 <script lang="ts" setup>
 import MainStore from '~~/stores/MainStore'
 import { ProjectApiData } from '~~/types/api'
+import createMeta from '~~/utils/meta/createMeta'
 
 definePageMeta({
   layout: 'custom',
@@ -15,6 +16,11 @@ definePageMeta({
     onLeave: () => (MainStore.state.inTransition = true),
     onAfterEnter: () => (MainStore.state.inTransition = false),
   },
+})
+
+useHead({
+  title: 'Creative Developer',
+  meta: createMeta({ title: 'Creative Developer' }),
 })
 
 const { data } = await useAsyncData('all-projects', () =>

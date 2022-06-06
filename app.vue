@@ -32,6 +32,10 @@ watch(router.currentRoute, () => {
   MainStore.state.hoveredProject = null
 })
 
+useHead({
+  titleTemplate: (title) => `Léon Baudouin - ${title}`,
+})
+
 useCleanup(() => {
   if (window.innerWidth < 700) isDesktop.value = false
   if ($tweakpane.disabled) showTweakpane.value = false

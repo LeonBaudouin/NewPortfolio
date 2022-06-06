@@ -39,8 +39,7 @@ export default class Cubes extends AbstractObject<
     const mat = new THREE.ShaderMaterial({
       vertexShader: particlesVertex,
       fragmentShader: particlesFragment,
-      // side: THREE.BackSide,
-      side: THREE.DoubleSide,
+      side: THREE.BackSide,
       fog: true,
       uniforms: {
         uPosTexture: { value: null },

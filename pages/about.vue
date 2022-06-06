@@ -1,11 +1,11 @@
 <template>
   <div class="about">
-    <ParagraphTitle :title="title" class="about__title" />
+    <ParagraphTitle :title="data.title" class="about__title" />
     <div class="about__paragraphs">
-      <Paragraph v-for="text in texts" :content="text" />
+      <Paragraph v-for="text in data.texts" :content="text" />
     </div>
     <div class="about__socials">
-      <span v-for="(value, key) in socials" class="about__linkWrapper">
+      <span v-for="(value, key) in data.socials" class="about__linkWrapper">
         <NuxtLink class="about__link" :to="value" target="__blank">
           {{ key }}
         </NuxtLink>
@@ -16,19 +16,10 @@
 
 <script lang="ts" setup>
 import MainStore from '~~/stores/MainStore'
+import { AboutData } from '~~/types/api'
+import createMeta from '~~/utils/meta/createMeta'
 
-const title = 'Who am I?'
-const texts = [
-  'I’m a french <strong>creative developer</strong> based in Paris specialized in front-end development and <strong>webgl / realtime 3D on the web</strong>. I love to create memorable experiences and <strong>bring digital worlds to life.</strong>',
-  'I’m currently on my last year at <strong>Gobelins</strong> l’école de l’image and <strong>I’m looking for a job as a creative developer.</strong>',
-]
-
-const socials = {
-  Linkedin: 'https://www.linkedin.com/in/l%C3%A9onbaudouin/',
-  Github: 'https://github.com/LeonBaudouin',
-  Instagram: 'https://www.instagram.com/leon2motion/',
-  Twitter: 'https://twitter.com/BaudouinLeon',
-}
+const { data } = await useAsyncData('about', () => queryContent<AboutData>('/about').findOne())
 
 definePageMeta({
   layout: 'custom',
@@ -39,6 +30,15 @@ definePageMeta({
     onLeave: () => (MainStore.state.inTransition = true),
     onAfterEnter: () => (MainStore.state.inTransition = false),
   },
+})
+
+useHead({
+  title: 'About',
+  meta: createMeta({
+    title: 'About',
+    facebookImage: (APP_URL) => `${APP_URL}/socials/facebook_about.png`,
+    twitterImage: (APP_URL) => `${APP_URL}/socials/twitter_about.png`,
+  }),
 })
 </script>
 

@@ -25,8 +25,11 @@ export default class Monolith extends AbstractObject<
         vertexShader,
         fog: true,
         uniforms: {
-          uMatcap: {
-            value: this.context.ressources.textures.lightMatcap,
+          uBlueMatcap: {
+            value: this.context.ressources.textures.blueMatcap,
+          },
+          uGreenMatcap: {
+            value: this.context.ressources.textures.greenMatcap,
           },
           uPlaneMatrix: { value: [new THREE.Matrix4(), new THREE.Matrix4()] },
           uShadowRemap: { value: new THREE.Vector4(-0.04, 0.03, 0.71, 1) },

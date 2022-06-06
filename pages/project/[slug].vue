@@ -27,6 +27,7 @@
 
 <script lang="ts" setup>
 import { ProjectApiData } from '~~/types/api'
+import createMeta from '~~/utils/meta/createMeta'
 
 const isDesktop = ref(true)
 onMounted(() => {
@@ -43,9 +44,14 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { data } = await useAsyncData(route.params.slug as string, ($nuxtApp) =>
+const { data } = await useAsyncData(route.params.slug as string, () =>
   queryContent<ProjectApiData>('/project').where({ slug: route.params.slug }).findOne()
 )
+
+useHead({
+  title: data.value.name,
+  meta: createMeta({ description: data.value.sections[0].text, title: data.value.name }),
+})
 </script>
 
 <style lang="scss" scoped>

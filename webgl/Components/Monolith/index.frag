@@ -1,8 +1,11 @@
-uniform sampler2D uMatcap;
+uniform sampler2D uBlueMatcap;
+uniform sampler2D uGreenMatcap;
 uniform bool uInReflection;
 uniform vec4 uShadowRemap;
 uniform float uShadowDilate;
 uniform vec2 uShadowOffset;
+uniform float uTransitionProg;
+uniform float uTransitionForward;
 varying vec3 vTextureCoords[2];
 
 
@@ -52,7 +55,10 @@ void main() {
     d = cremap(d, uShadowRemap.x, uShadowRemap.y, uShadowRemap.z, uShadowRemap.w);
     v = min(d, v);
   }
-  vec3 color = texture2D(uMatcap, matcapUv).rgb * v;
+  vec3 greenColor = texture2D(uGreenMatcap, matcapUv).rgb;
+  vec3 blueColor = texture2D(uBlueMatcap, matcapUv).rgb;
+  float mixValue = uTransitionForward > 0. ? 1. - uTransitionProg : uTransitionProg;
+  vec3 color = mix(greenColor, blueColor, mixValue) * v;
 
   // float v2 = step(sdBox(vTextureCoords[0].zy - 0.5, vec2(0.5)), 0.);
   // float v2 = max(isNorm(vTextureCoords[0].zy), isNorm(vTextureCoords[1].zy));

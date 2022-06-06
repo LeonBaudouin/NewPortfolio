@@ -16,13 +16,19 @@ export default class Ressources {
   })
 
   public textures = {
-    cloud_1: this.textureLoader.load('/clouds/cloud_1.jpg'),
-    cloud_2: this.textureLoader.load('/clouds/cloud_2.jpg'),
-    cloud_3: this.textureLoader.load('/clouds/cloud_3.jpg'),
-    cloud_4: this.textureLoader.load('/clouds/cloud_4.jpg'),
-    grass: this.textureLoader.load('/grass/grass_1_2.png'),
-    grassNearestFilter: this.textureLoader.load('/grass/grass_1_2.png', (t) => (t.minFilter = THREE.NearestFilter)),
-    lightMatcap: this.textureLoader.load('https://makio135.com/matcaps/64/EAEAEA_B5B5B5_CCCCCC_D4D4D4-64px.png'),
+    cloud_1: this.textureLoader.load('/textures/clouds/cloud_1.jpg'),
+    cloud_2: this.textureLoader.load('/textures/clouds/cloud_2.jpg'),
+    cloud_3: this.textureLoader.load('/textures/clouds/cloud_3.jpg'),
+    cloud_4: this.textureLoader.load('/textures/clouds/cloud_4.jpg'),
+    grass: this.textureLoader.load('/textures/grass/grass_1_2.png'),
+    grassNearestFilter: this.textureLoader.load(
+      '/textures/grass/grass_1_2.png',
+      (t) => (t.minFilter = THREE.NearestFilter)
+    ),
+    // lightMatcap: this.textureLoader.load('https://makio135.com/matcaps/64/EAEAEA_B5B5B5_CCCCCC_D4D4D4-64px.png'),
+    blueMatcap: this.textureLoader.load('/textures/matcap/matcap_blue.png'),
+    planeMatcap: this.textureLoader.load('/textures/matcap/matcap_plane.png'),
+    greenMatcap: this.textureLoader.load('/textures/matcap/matcap_green.png'),
   }
 
   constructor() {
