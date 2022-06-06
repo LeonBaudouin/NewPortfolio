@@ -54,16 +54,16 @@ useCleanup(() => {
     border: none;
     transition: all 0.3s linear;
     color: transparent;
-    -webkit-text-stroke: 0.3px var(--main-color);
+    -webkit-text-stroke: 1px var(--main-color);
 
     &--enable {
       color: var(--main-color);
-      -webkit-text-stroke: 0.5px transparent;
+      -webkit-text-stroke: 1px transparent;
     }
 
     @include hover {
       color: var(--main-color);
-      -webkit-text-stroke: 0.5px transparent;
+      -webkit-text-stroke: 1px transparent;
     }
   }
 

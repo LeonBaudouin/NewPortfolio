@@ -74,7 +74,7 @@ const handleWheel = (e: WheelEvent) => {
   const { pixelX, pixelY } = normalizeWheel(e)
   const scrollSpeed = pixelX + pixelY
   const sign = Math.sign(scrollSpeed + speed.value)
-  speed.value = Math.max(Math.abs(scrollSpeed), Math.abs(speed.value)) * sign
+  speed.value = Math.max(Math.abs(scrollSpeed), Math.abs(speed.value)) * sign * 0.4
 }
 
 useRaf(() => {
