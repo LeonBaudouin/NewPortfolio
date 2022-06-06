@@ -1,11 +1,11 @@
-const APP_URL = 'https://new.leonbaudouin.fr/'
+const APP_URL = 'https://new.leonbaudouin.fr'
 
 const defaultMetas = {
   title: '',
   description:
     'I’m a french creative developer based in Paris specialized in webgl / realtime 3D on the web and front-end development.',
-  twitterImage: (APP_URL) => `${APP_URL}/socials/twitter.png`,
-  facebookImage: (APP_URL) => `${APP_URL}/socials/twitter.png`,
+  twitterImage: (APP_URL) => `${APP_URL}/socials/twitter.jpg`,
+  facebookImage: (APP_URL) => `${APP_URL}/socials/facebook.jpg`,
 }
 
 export default function createMeta({

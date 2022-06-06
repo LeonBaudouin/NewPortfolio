@@ -36,8 +36,8 @@ useHead({
   title: 'About',
   meta: createMeta({
     title: 'About',
-    facebookImage: (APP_URL) => `${APP_URL}/socials/facebook_about.png`,
-    twitterImage: (APP_URL) => `${APP_URL}/socials/twitter_about.png`,
+    facebookImage: (APP_URL) => `${APP_URL}/socials/facebook_about.jpg`,
+    twitterImage: (APP_URL) => `${APP_URL}/socials/twitter_about.jpg`,
   }),
 })
 </script>
