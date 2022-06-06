@@ -1,0 +1,75 @@
+{
+  "name": "Le souvenir perdu",
+  "subtitle": "Digital Escape Game",
+  "link": "https://safe-place.vercel.app/",
+  "preview": "/projects/x-perience.png",
+  "slug": "sante-social",
+  "order": 3,
+  "sections": [
+    {
+      "text": "<i>This November day started quietly, with my weekly visit to the doctor. However, on my way home, I had a revelation: today is not a day like the others, I have the feeling that it is an important date! But I can't remember why... Come with me on this day, maybe it will come back.</i>"
+    },
+    {
+      "title": "What is it ?",
+      "text": "Le souvenir perdu is a digital escape game in which your helping Madeleine in her daily life, by discovering 8 jobs in the health and social sector."
+    },
+    {
+      "title": "Context",
+      "text": "This project was commissioned by the Normandy region to the agency Lost Mechanics. I was in charge of the integration and front-end development of this project as a freelancer."
+    },
+    {
+      "title": "Tech",
+      "text": "This project is the first of in a series of other digital escape games on various other work areas. As such I had to design each puzzle to fit a wide range of different scenarios."
+    }
+  ],
+  "image": {
+    "src": "/projects/normandie/1_S.jpg",
+    "fullScreen": "/projects/normandie/1_F.jpg",
+    "alt": "normandie",
+    "width": 1920,
+    "height": 1080,
+    "color": "#CC4E48"
+  },
+  "carousel": [
+    {
+      "src": "/projects/normandie/2_S.jpg",
+      "fullScreen": "/projects/normandie/2_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#FCA84C"
+    },
+    {
+      "src": "/projects/normandie/3_S.jpg",
+      "fullScreen": "/projects/normandie/3_F.jpg",
+      "alt": "",
+      "width": 469,
+      "height": 832,
+      "color": "#B3DBF4"
+    },
+    {
+      "src": "/projects/normandie/4_S.jpg",
+      "fullScreen": "/projects/normandie/4_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#65B8B8"
+    },
+    {
+      "src": "/projects/normandie/5_S.jpg",
+      "fullScreen": "/projects/normandie/5_F.jpg",
+      "alt": "",
+      "width": 469,
+      "height": 832,
+      "color": "#362F58"
+    },
+    {
+      "src": "/projects/normandie/6_S.jpg",
+      "fullScreen": "/projects/normandie/6_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#BC9171"
+    }
+  ]
+}

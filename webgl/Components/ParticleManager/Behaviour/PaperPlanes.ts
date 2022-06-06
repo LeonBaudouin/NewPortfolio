@@ -96,8 +96,10 @@ export default class PaperPlanes extends AbstractBehaviour {
     if (!!MainStore.state.hoveredProject) state = 'project'
     if (this.isFollowing.value) state = 'follow'
     if (this.impulse.value > 0) state = 'impulse'
-    if (!MainStore.state.isFullyLoaded) state = 'wait'
-    if (this.positioning.value) state = 'positioning'
+    if (this.context.nuxtApp.$router.currentRoute.value.name !== 'project-slug') {
+      if (!MainStore.state.isFullyLoaded) state = 'wait'
+      if (this.positioning.value) state = 'positioning'
+    }
     return state
   }
 
@@ -262,7 +264,7 @@ export default class PaperPlanes extends AbstractBehaviour {
     }
   }
 
-  private fac = new THREE.Vector3(0, 1.5, 0.75)
+  private fac = new THREE.Vector3(0, 0.3, 0.75)
   public tick(time: number, delta: number): void {
     if (this.impulse.value) this.impulse.value--
 

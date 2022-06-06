@@ -1,0 +1,79 @@
+{
+  "name": "Portfolio V1",
+  "subtitle": "Personal Website",
+  "link": "https://leonbaudouin.fr/",
+  "preview": "/projects/portfolio.jpg",
+  "slug": "portfolio",
+  "order": 1,
+  "sections": [
+    {
+      "text": "When I graduated from my multimedia diploma, I had to do an internship and I planned to go to <b>Gobelins l'école de l'image</b>. So I made my first real portfolio. I created this website completely by myself and <b>from scratch from design to back-end.</b>"
+    },
+    {
+      "title": "Design",
+      "text": "It was important to me that the website represent my profile at the time. And as I was into <b>motion design</b>, I tried to bring some elements from this world into the design. I also wanted the website to be very animated."
+    },
+    {
+      "title": "Development",
+      "text": "As I said, I did this this website from scratch. The frontend is <b>vanilla javascript with typescript</b> and Canvas 2D. The backend is a <b>hand made MVC pattern</b> in PHP, with Alto Router and Twig templater."
+    }
+  ],
+  "image": {
+    "src": "/projects/portfolio/0_S.jpg",
+    "fullScreen": "/projects/portfolio/0_F.jpg",
+    "alt": "Portfolio",
+    "width": 1920,
+    "height": 1080,
+    "color": "#3E3E3E"
+  },
+  "carousel": [
+    {
+      "src": "/projects/portfolio/1_S.jpg",
+      "fullScreen": "/projects/portfolio/1_F.jpg",
+      "alt": "",
+      "width": 469,
+      "height": 832,
+      "color": "#2F2F2F"
+    },
+    {
+      "src": "/projects/portfolio/2_S.jpg",
+      "fullScreen": "/projects/portfolio/2_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#C3C3C3"
+    },
+    {
+      "src": "/projects/portfolio/3_S.jpg",
+      "fullScreen": "/projects/portfolio/3_F.jpg",
+      "alt": "",
+      "width": 469,
+      "height": 832,
+      "color": "#FD393C"
+    },
+    {
+      "src": "/projects/portfolio/4_S.jpg",
+      "fullScreen": "/projects/portfolio/4_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#3E3E3E"
+    },
+    {
+      "src": "/projects/portfolio/5_S.jpg",
+      "fullScreen": "/projects/portfolio/5_F.jpg",
+      "alt": "",
+      "width": 469,
+      "height": 832,
+      "color": "#484747"
+    },
+    {
+      "src": "/projects/portfolio/6_S.jpg",
+      "fullScreen": "/projects/portfolio/6_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#C3C3C3"
+    }
+  ]
+}

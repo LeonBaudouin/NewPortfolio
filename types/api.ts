@@ -6,4 +6,7 @@ export type ProjectApiData = {
   image: ImageData
   carousel: ImageData[]
   link: string
+  preview: string
+  subtitle: string
+  slug: string
 }

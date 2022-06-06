@@ -1,10 +1,10 @@
 {
-  "name": "Mamie Danger",
-  "subtitle": "Mobile Game",
+  "name": "Belle Epoque",
+  "subtitle": "Agency Website",
   "link": "https://safe-place.vercel.app/",
-  "preview": "/projects/mamie-danger.png",
-  "slug": "mamie-danger",
-  "order": 4,
+  "preview": "/projects/belle-epoque.jpg",
+  "slug": "belle-epoque",
+  "order": 7,
   "sections": [
     {
       "text": "<i>Allow yourself some time in a calm and serene world: your safe place. Take the time to enjoy the peacefulness of the place, by walking through it. Let yourself be carried away on a narrative journey that will bring you peace and relaxation as you interact.</i>"

@@ -1,33 +1,36 @@
 {
   "name": "Safe Place",
+  "subtitle": "Immersive Website",
   "link": "https://safe-place.vercel.app/",
+  "preview": "/projects/safeplace.png",
+  "slug": "safeplace",
+  "order": 6,
   "sections": [
     {
-      "text": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem <strong>dummy text ever</strong> since the 1500s, when an unknown printer."
+      "text": "<i>Allow yourself some time in a calm and serene world: your safe place. Take the time to enjoy the peacefulness of the place, by walking through it. Let yourself be carried away on a narrative journey that will bring you peace and relaxation as you interact.</i>"
     },
     {
-      "title": "Mon travail",
-      "text": "Etiam vulputate neque risus, sit amet fermentum nulla faucibus quis. Mauris placerat nisi et felis commodo, eget auctor tellus pellentesque. "
+      "title": "What is it ?",
+      "text": "Safe Place is a meditative and immersive experience that offers a moment of relaxation, essential when facing overwork."
     },
     {
-      "title": "L'equipe",
-      "text": "Maecenas condimentum sem arcu, sed faucibus urna tempus id. Donec pretium lorem tellus, at ornare ipsum euismod vel. "
+      "title": "Context",
+      "text": "This experience is a end-of-year student project I worked on with another developer and three designers."
     },
     {
-      "title": "Contexte",
-      "text": "Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean turpis erat, pulvinar non nulla et. "
+      "title": "Tech",
+      "text": "The immersive scenery was made using ThreeJS with React for the user interface. We used React Three Fiber to make those two tools worked together. We also added some useful development tools from Poimandres."
     },
     {
-      "title": "Techno",
-      "text": "Nullam convallis enim quis lacus dignissim, nec egestas orci convallis. "
+      "text": "In this project I took the technical lead and set up the overall architecture of the code base. I was also in charge of the 3D scenes and I worked on advanced webgl strategies for rendering particles, water and grass. "
     }
   ],
   "image": {
     "src": "/projects/safeplace/2_S.jpg",
     "fullScreen": "/projects/safeplace/2_F.jpg",
     "alt": "Safeplace",
-    "width": 587,
-    "height": 318,
+    "width": 1920,
+    "height": 1080,
     "color": "#E2D0BC"
   },
   "carousel": [
@@ -35,32 +38,32 @@
       "src": "/projects/safeplace/1_S.jpg",
       "fullScreen": "/projects/safeplace/1_F.jpg",
       "alt": "",
-      "width": 587,
-      "height": 318,
+      "width": 1920,
+      "height": 1080,
       "color": "#6E879B"
     },
     {
       "src": "/projects/safeplace/3_S.jpg",
       "fullScreen": "/projects/safeplace/3_F.jpg",
       "alt": "",
-      "width": 587,
-      "height": 318,
+      "width": 1920,
+      "height": 1080,
       "color": "#8C865A"
     },
     {
       "src": "/projects/safeplace/4_S.jpg",
       "fullScreen": "/projects/safeplace/4_F.jpg",
       "alt": "",
-      "width": 587,
-      "height": 318,
+      "width": 1920,
+      "height": 1080,
       "color": "#6B7048"
     },
     {
       "src": "/projects/safeplace/5_S.jpg",
       "fullScreen": "/projects/safeplace/5_F.jpg",
       "alt": "",
-      "width": 587,
-      "height": 318,
+      "width": 1920,
+      "height": 1080,
       "color": "#C39C8D"
     }
   ]

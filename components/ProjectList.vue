@@ -4,7 +4,7 @@
       <ProjectTitle
         :name="project.name"
         :subtitle="project.subtitle"
-        :imageUrl="project.imageUrl"
+        :imageUrl="project.preview"
         :slug="project.slug"
         :delay="i * 0.04"
       />
@@ -13,50 +13,12 @@
 </template>
 
 <script lang="ts" setup>
-const projects = [
-  {
-    name: "Figure d'artiste",
-    subtitle: 'Gobelins x Louvre',
-    imageUrl: '/projects/louvre.png',
-    slug: 'slt',
-  },
-  {
-    name: 'Safe Place',
-    subtitle: 'Immersive Website',
-    imageUrl: '/projects/safeplace.png',
-    slug: 'slt',
-  },
-  {
-    name: 'Mamie Danger',
-    subtitle: 'Mobile Game',
-    imageUrl: '/projects/mamie-danger.png',
-    slug: 'slt',
-  },
-  {
-    name: 'Abyss',
-    subtitle: 'Data Visualization',
-    imageUrl: '/projects/abyss.png',
-    slug: 'slt',
-  },
-  {
-    name: 'Belle Epoque',
-    subtitle: 'Agency Website',
-    imageUrl: '/projects/belle-epoque.jpg',
-    slug: 'slt',
-  },
-  {
-    name: 'Portfolio V1',
-    subtitle: 'Personal Website',
-    imageUrl: '/projects/portfolio.jpg',
-    slug: 'slt',
-  },
-  {
-    name: 'Xperience Métier',
-    subtitle: 'Digital Escape Game',
-    imageUrl: '/projects/x-perience.png',
-    slug: 'slt',
-  },
-]
+import { PropType } from 'nuxt/dist/app/compat/capi'
+import { ProjectApiData } from '~~/types/api'
+
+const { projects } = defineProps({
+  projects: { type: Array as PropType<ProjectApiData[]>, required: true },
+})
 </script>
 
 <style lang="scss" scoped>
@@ -65,11 +27,11 @@ const projects = [
   margin: 0;
   padding: 0;
   min-height: 0;
-  display: grid;
+  display: flex;
+  flex-direction: column;
 
   @include desktop {
-    grid-template-rows: repeat(4, auto);
-    grid-template-columns: repeat(2, auto);
+    flex-wrap: wrap;
   }
 
   &__item {

@@ -32,8 +32,8 @@ const props = defineProps({
   font-size: 1.1rem;
   margin: 0;
   font-weight: 300;
-  letter-spacing: 1px;
-  line-height: 1.4;
+  letter-spacing: 1.2px;
+  line-height: 1.5;
 
   strong {
     font-weight: 700;

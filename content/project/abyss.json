@@ -1,0 +1,64 @@
+{
+  "name": "Abyss",
+  "subtitle": "Data Visualization",
+  "link": "https://safe-place.vercel.app/",
+  "preview": "/projects/abyss.png",
+  "slug": "abyss",
+  "order": 2,
+  "sections": [
+    {
+      "title": "Context",
+      "text": "Abyss is the very first project I created with <b>Webgl</b>. It was a one week project of data visualization as part of my course at Gobelins. I worked on it with a classmate designer."
+    },
+    {
+      "title": "The subject",
+      "text": "Rachel Duvauchelle and I choose the abyss as the subject because <b>it's a little-known environment</b> and we were both inspired by it.<br/> It was the first time we designed for 3D for both of us so we had to make some comprises on the content. We couldn't spend much time finding relevants dataset so <b>we focused on some key abyss species.</b>"
+    },
+    {
+      "title": "My work",
+      "text": "I worked on the <b>environment of the scene, particles, light and fog</b> to make it looks like an underwater environment. To reduce the designer load of work, I laid out most of the elements in the 3D scene directly in Javascript. This also helped me sync it with the page scroll."
+    }
+  ],
+  "image": {
+    "src": "/projects/abyss/5_S.jpg",
+    "fullScreen": "/projects/abyss/5_F.jpg",
+    "alt": "abyss",
+    "width": 1920,
+    "height": 1080,
+    "color": "#00131D"
+  },
+  "carousel": [
+    {
+      "src": "/projects/abyss/1_S.jpg",
+      "fullScreen": "/projects/abyss/1_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#1F3E4B"
+    },
+    {
+      "src": "/projects/abyss/3_S.jpg",
+      "fullScreen": "/projects/abyss/3_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#403F1F"
+    },
+    {
+      "src": "/projects/abyss/4_S.jpg",
+      "fullScreen": "/projects/abyss/4_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#001018"
+    },
+    {
+      "src": "/projects/abyss/2_S.jpg",
+      "fullScreen": "/projects/abyss/2_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#001824"
+    }
+  ]
+}

@@ -1,8 +1,9 @@
 <template>
   <div class="project">
     <div class="project__content">
-      <div class="project__title">
-        <SlidingText tag="h1"> {{ data.name }} </SlidingText>
+      <div class="project__titles">
+        <SlidingText tag="h1" class="project__title"> {{ data.name }} </SlidingText>
+        <h2 class="project__subtitle">{{ data.subtitle }}</h2>
       </div>
       <div class="project__sections">
         <TextContent
@@ -41,9 +42,10 @@ definePageMeta({
   },
 })
 
-const { data } = await useAsyncData('project', () => queryContent<ProjectApiData>('/project').findOne())
-const v = await useAsyncData('all-projects', () => queryContent<ProjectApiData>('/project').find())
-console.log(v.data.value)
+const route = useRoute()
+const { data } = await useAsyncData(route.params.slug as string, ($nuxtApp) =>
+  queryContent<ProjectApiData>('/project').where({ slug: route.params.slug }).findOne()
+)
 </script>
 
 <style lang="scss" scoped>
@@ -58,8 +60,8 @@ console.log(v.data.value)
   max-height: 90vh;
   overflow-y: auto;
   position: absolute;
-  column-gap: 1rem;
-  padding-top: 13vh;
+  column-gap: 3rem;
+  padding-top: 10vh;
   width: 100%;
 
   @include mobile {
@@ -73,22 +75,48 @@ console.log(v.data.value)
   }
 
   &__section {
-    width: calc(50% - 0.5rem);
+    width: calc(50% - 1.5rem);
     @include mobile {
       width: auto;
     }
   }
 
+  &__titles {
+    margin-left: var(--x-page-margin);
+    margin-bottom: 2.5rem;
+  }
+
   &__title {
     font-weight: 700;
-    margin-left: var(--x-page-margin);
     text-transform: uppercase;
     letter-spacing: 5px;
     word-spacing: 4px;
-    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+  }
 
-    & > * {
-      font-size: 1.8rem;
+  &__subtitle {
+    font-size: 1.2rem;
+    font-weight: 200;
+    letter-spacing: 3px;
+    line-height: 0;
+    position: relative;
+    bottom: 6px;
+    transition: opacity 0.5s ease var(--delay, 0s);
+
+    .loading &,
+    .page-enter-active &,
+    .page-leave-active &,
+    .layout-enter-active &,
+    .layout-leave-active & {
+      transition: opacity 0.5s ease var(--delay, 0s);
+    }
+
+    .loading &,
+    .page-enter-from &,
+    .page-leave-to &,
+    .layout-enter-from &,
+    .layout-leave-to & {
+      opacity: 0;
     }
   }
 
@@ -105,9 +133,10 @@ console.log(v.data.value)
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
-    gap: 1rem;
+    column-gap: 3rem;
+    row-gap: 1.5rem;
     margin-left: var(--x-page-margin);
-    max-height: 500px;
+    max-height: 600px;
 
     @media (max-width: 1300px) {
       max-height: 800px;
@@ -137,7 +166,7 @@ console.log(v.data.value)
     font-weight: 700;
     justify-self: end;
     align-self: end;
-    margin: 0 1.5rem 2.5rem 0;
+    margin: 0 1.5rem 6.5rem 0;
     text-transform: uppercase;
     font-size: 1.1rem;
     letter-spacing: 2px;
@@ -200,7 +229,7 @@ console.log(v.data.value)
 
     grid-area: link;
 
-    -webkit-text-stroke: 0.5px white;
+    -webkit-text-stroke: 1px white;
 
     @include mobile {
       margin-bottom: 0rem;

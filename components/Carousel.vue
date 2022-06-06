@@ -8,7 +8,7 @@
     @pointerleave="inCarousel = false"
   >
     <div class="carousel" :style="style" ref="carousel">
-      <Image v-for="(image, i) in loopImages" v-bind="image" :delay="i * 0.05" />
+      <Image v-for="(image, i) in loopImages" v-bind="image" :delay="i * 0.05" :key="image.src" />
     </div>
   </div>
 </template>

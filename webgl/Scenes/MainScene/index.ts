@@ -113,7 +113,7 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     watch(
       () => this.context.nuxtApp.$router.currentRoute.value.name === 'project-slug',
       (inProject) => {
-        gsap.to(this.mainCamera.object.rotation, { x: inProject ? 0.43 : 0, ease: 'Power3.easeInOut', duration: 1.5 })
+        gsap.to(this.mainCamera.object.rotation, { x: inProject ? 0.6 : 0, ease: 'Power3.easeInOut', duration: 1.5 })
       },
       { immediate: true }
     )
