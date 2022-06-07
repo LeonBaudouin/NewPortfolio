@@ -28,14 +28,17 @@ const isDesktop = ref(true)
 const showTweakpane = ref(true)
 
 const vh = ref('0px')
-
+const needRecheck = ref(false)
 watch(
-  router.currentRoute,
-  ({ name }, _, onCleanup) => {
+  [router.currentRoute, needRecheck],
+  (__, _, onCleanup) => {
     MainStore.state.hoveredProject = null
 
     let timeout = setTimeout(() => {
-      if ($webgl.state.averageDelta > 0.025) restrictFps.value = true
+      if ($webgl.state.averageDelta > 0.025 && $webgl.state.perfTier < 3) {
+        $webgl.state.perfTier++
+        needRecheck.value = true
+      }
     }, 5000)
 
     onCleanup(() => clearTimeout(timeout))
@@ -46,8 +49,6 @@ watch(
 useHead({
   titleTemplate: (title) => `Léon Baudouin - ${title}`,
 })
-
-const restrictFps = ref(false)
 
 useCleanup(() => {
   if (window.innerWidth < 700) isDesktop.value = false
@@ -66,7 +67,7 @@ useCleanup(() => {
   var basetime = window.performance.now()
 
   function raf() {
-    const fps = restrictFps.value ? 1000 / 30 : 1000 / 240
+    const fps = $webgl.state.perfTier > 2 ? 1000 / 30 : 1000 / 240
     const now = window.performance.now()
     const check = now - basetime
     if (check / fps >= 1) {

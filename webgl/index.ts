@@ -28,6 +28,7 @@ export default class WebGL extends LifeCycle {
     pixelRatio: 1,
     screenSize: new THREE.Vector2(),
     averageDelta: 0.016,
+    perfTier: 1,
   })
   private prepFramesCounter = 0
   private nuxtApp: NuxtApp
@@ -47,13 +48,22 @@ export default class WebGL extends LifeCycle {
     this.tweakpane = this.nuxtApp.$tweakpane!
     this.ressources = new Ressources()
 
-    this.state.pixelRatio = Math.min(window.devicePixelRatio, 1.4)
+    this.state.pixelRatio = Math.min(window.devicePixelRatio, 1.8)
 
     const setStateSize = () => {
       this.state.pixelSize.set(window.innerWidth * this.state.pixelRatio, window.innerHeight * this.state.pixelRatio)
       this.state.screenSize.set(window.innerWidth, window.innerHeight)
     }
     setStateSize()
+
+    watch(() => this.state.pixelRatio, setStateSize)
+    watch(
+      () => this.state.perfTier,
+      (tier) => {
+        console.log(tier)
+        if (this.state.pixelRatio > 1.4 && tier > 1) this.state.pixelRatio = 1.4
+      }
+    )
 
     this.setupRenderer()
     // watchEffect(() => console.log(this.ressources.state.progress))

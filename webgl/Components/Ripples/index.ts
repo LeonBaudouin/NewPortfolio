@@ -93,6 +93,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     temp1.sub(this.raycastMesh.position)
     this.quad.material.uniforms.uPosition.value.copy(temp1)
     temp1.copy(this.raycastMesh.position)
-    if (this.context.state.screenSize.width > 700) this.context.simulation.render({ overrideQuad: this.quad })
+    if (this.context.state.screenSize.width > 700 && this.context.state.perfTier < 2)
+      this.context.simulation.render({ overrideQuad: this.quad })
   }
 }
