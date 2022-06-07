@@ -107,7 +107,7 @@ void main() {
   vec3 contact = texture2D(tContact, contactUv).rgb * isNorm(contactUv);
 
   vec3 newPosition = position;
-  float clampV = cremap(worldPosition.x, 6., 12., 0.3, 0.);
+  float clampV = cremap(worldPosition.x, 6., 12., 0.3, 0.15);
   // float clampV = cremap(worldPosition.x, -70., 20., 1., 0.);
   if (uv.y < 0.5) newPosition.y = clampV;
 
