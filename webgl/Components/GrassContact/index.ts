@@ -106,6 +106,6 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
     temp1.sub(this.raycastMesh.position)
     this.quad.material.uniforms.uPosition.value.copy(temp1)
     temp1.copy(this.raycastMesh.position)
-    this.context.simulation.render({ overrideQuad: this.quad })
+    if (this.context.state.screenSize.width > 700) this.context.simulation.render({ overrideQuad: this.quad })
   }
 }

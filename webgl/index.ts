@@ -21,7 +21,12 @@ export default class WebGL extends LifeCycle {
   private currentScene: keyof Scenes
   private clock: THREE.Clock
   private tweakpane: FolderApi
-  public state = reactive({ isReady: false, pixelSize: new THREE.Vector2(), pixelRatio: 1 })
+  public state = reactive({
+    isReady: false,
+    pixelSize: new THREE.Vector2(),
+    pixelRatio: 1,
+    screenSize: new THREE.Vector2(),
+  })
   private prepFramesCounter = 0
   private nuxtApp: NuxtApp
   private simulation: GPGPU
@@ -44,6 +49,7 @@ export default class WebGL extends LifeCycle {
 
     const setStateSize = () => {
       this.state.pixelSize.set(window.innerWidth * this.state.pixelRatio, window.innerHeight * this.state.pixelRatio)
+      this.state.screenSize.set(window.innerWidth, window.innerHeight)
     }
     setStateSize()
 
