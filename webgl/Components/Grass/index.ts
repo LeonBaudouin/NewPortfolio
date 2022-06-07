@@ -20,7 +20,6 @@ export default class Grass extends AbstractObject<
       noiseStrength: 0.15,
       color1: '#000000',
       color2: '#039b21',
-      scale: new THREE.Vector2(2, 2),
       highlightStrength: -0.12,
     })
     this.context.tweakpane.addInput(params, 'noiseSpeed', { label: 'Noise Speed' })
@@ -28,13 +27,12 @@ export default class Grass extends AbstractObject<
     this.context.tweakpane.addInput(params, 'noiseStrength', { label: 'Noise Strength' })
     this.context.tweakpane.addInput(params, 'color1', { label: 'Color 1' })
     this.context.tweakpane.addInput(params, 'color2', { label: 'Color 2' })
-    this.context.tweakpane.addInput(params, 'scale', { label: 'Scale' })
     this.context.tweakpane.addInput(params, 'highlightStrength', { label: 'HighlightStrength' })
 
     const amount = repartition.length / 3
 
-    // const origGeometry = new THREE.PlaneGeometry(0.3 * 6.17, 0.3, 12).translate(0, 0.15, 0)
-    const origGeometry = new THREE.PlaneGeometry(0.3 * 0.05, 0.3, 1).translate(0, 0.15, 0)
+    const origGeometry = new THREE.PlaneGeometry(0.6 * 6.17, 0.6, 12).translate(0, 0.3, 0)
+    // const origGeometry = new THREE.PlaneGeometry(0.3 * 0.05, 0.3, 1).translate(0, 0.15, 0)
 
     const bufferGeometry = new THREE.InstancedBufferGeometry()
 
@@ -64,7 +62,6 @@ export default class Grass extends AbstractObject<
           uTime: { value: 0 },
           uColor1: { value: new THREE.Color() },
           uColor2: { value: new THREE.Color() },
-          uScale: { value: new THREE.Vector2() },
           uHighlightStrength: { value: 0 },
           uTexture: { value: this.context.ressources.textures.grass },
           uCam: { value: this.context.camera.position },

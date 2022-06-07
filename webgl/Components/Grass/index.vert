@@ -1,5 +1,4 @@
 uniform float uTime;
-uniform vec2 uScale;
 uniform vec3 uCam;
 uniform vec3 uColor1;
 uniform vec3 uColor2;
@@ -96,7 +95,7 @@ float computeAlpha(vec2 pos) {
 
 
 void main() {
-  vec4 worldPosition = instanceMatrix * modelMatrix * vec4(position * uScale.xyx, 1.);
+  vec4 worldPosition = instanceMatrix * modelMatrix * vec4(position, 1.);
   float dist = cremap(length(uCam - worldPosition.xyz), 50., 60., 1., 0.);
 
   vUv = uv;
@@ -107,7 +106,13 @@ void main() {
   contactUv = contactUv * vec2(1., -1.) + .5;
   vec3 contact = texture2D(tContact, contactUv).rgb * isNorm(contactUv);
 
-  vec4 pos = instanceMatrix * modelMatrix * vec4(position * uScale.xyx * dist, 1.);
+  vec3 newPosition = position;
+  float clampV = cremap(worldPosition.x, 6., 12., 0.3, 0.);
+  // float clampV = cremap(worldPosition.x, -70., 20., 1., 0.);
+  if (uv.y < 0.5) newPosition.y = clampV;
+
+  vec4 pos = instanceMatrix * modelMatrix * vec4(newPosition * dist, 1.);
+  vUv.y = (pos.y + 1.) / 0.6;
   vec3 displacement = vec3(
     mix(noise * uNoiseStrength, contact.y, contact.x),
     remap(contact.x, 0., 1., 0., -0.1),
@@ -121,6 +126,8 @@ void main() {
   vColor = mix(uColor1, uColor2, vUv.y);
   vColor *= 1.0 + (noise + contact.x * 3.) * uHighlightStrength;
   vColor = mix(vColor, vec3(0.), shadow * 0.5);
+
+  // vColor = vec3(clampV);
 
   vec4 mvPosition = viewMatrix * pos;
   gl_Position = projectionMatrix * mvPosition;
