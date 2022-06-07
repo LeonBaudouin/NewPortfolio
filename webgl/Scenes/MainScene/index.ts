@@ -161,7 +161,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
           {
             value: 1,
             ...params,
-            // onUpdate: () => console.log(this.context.globalUniforms.uTransitionProg.value),
           }
         )
         gsap.to(this.environment.data, {

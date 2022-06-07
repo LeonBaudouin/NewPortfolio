@@ -19,9 +19,6 @@ const props = defineProps({
   padding: { type: Number, default: 2 },
   skew: { type: Number, default: -3 },
 })
-if (props.tag === 'h2') {
-  watchEffect(() => console.log(props.show))
-}
 const style = computed(() => ({
   '--delay': props.delay + 's',
   '--spread': props.padding + 'px',
