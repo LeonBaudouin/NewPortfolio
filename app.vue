@@ -67,7 +67,7 @@ useCleanup(() => {
   var basetime = window.performance.now()
 
   function raf() {
-    const fps = $webgl.state.perfTier > 2 ? 1000 / 30 : 1000 / 240
+    const fps = $webgl.state.perfTier > 2 ? 1000 / 40 : 1000 / 240
     const now = window.performance.now()
     const check = now - basetime
     if (check / fps >= 1) {
