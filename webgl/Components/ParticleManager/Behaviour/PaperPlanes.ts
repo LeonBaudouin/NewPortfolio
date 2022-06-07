@@ -21,7 +21,7 @@ const particlesData = {
 
 const states = {
   wait: {
-    attractor: new THREE.Vector3(0, 10, 0),
+    attractor: new THREE.Vector3(0, 12, 0),
     inertia: { min: 0.2, max: 0.4 },
     rotationStrength: new THREE.Vector2(0.05, 0.05),
     forceCap: { min: 0.07, max: 0.09 },

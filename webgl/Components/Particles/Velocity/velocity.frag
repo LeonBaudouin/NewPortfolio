@@ -77,7 +77,7 @@ void main() {
     : uAttractor;
 
   bool selection = gl_FragCoord.x < 1. && gl_FragCoord.y < 5.;
-  if (!selection && uUseSelection) attractor = vec3(0., 9., 0.);
+  if (!selection && uUseSelection) attractor = vec3(0., 11., 0.);
 
   // ------ ATTRACTION
   if (length(position - attractor) == 0.) attractor.x += 0.1;
