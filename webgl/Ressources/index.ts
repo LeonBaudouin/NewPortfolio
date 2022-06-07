@@ -35,7 +35,7 @@ export default class Ressources {
   constructor() {
     const gltfLoader = new GLTFLoader(this.manager)
 
-    gltfLoader.load('/models/output.glb', (gltf) => {
+    gltfLoader.load('/models/scatter.glb', (gltf) => {
       this.models.grassPoints = gltf
     })
     gltfLoader.load('/models/paper.glb', (gltf) => {

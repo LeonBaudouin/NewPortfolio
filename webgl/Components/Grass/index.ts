@@ -89,6 +89,14 @@ export default class Grass extends AbstractObject<
       obj.updateMatrix()
       this.object.setMatrixAt(i, obj.matrix)
     }
+
+    const p = {
+      amount,
+    }
+
+    this.context.tweakpane.addInput(p, 'amount', { step: 1 }).on('change', ({ value }) => {
+      this.object.count = value
+    })
   }
 
   public tick(time: number, delta: number): void {
