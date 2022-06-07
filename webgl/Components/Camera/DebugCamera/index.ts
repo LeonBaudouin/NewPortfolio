@@ -14,7 +14,7 @@ export default class DebugCamera extends AbstractObject<WebGLAppContext, THREE.P
     this.controls = new OrbitControls(this.object, this.context.renderer.domElement)
     this.controls.enableDamping = true
 
-    window.addEventListener('resize', this.onResize)
+    window.addEventListener('resize', this.onResize, { passive: true })
 
     this.toUnbind(() => {
       window.removeEventListener('resize', this.onResize)

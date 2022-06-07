@@ -93,7 +93,7 @@ export default class WebGL extends LifeCycle {
       if (document.visibilityState === 'hidden') this.clock.stop()
     }
 
-    window.addEventListener('visibilitychange', onVisibilityChange)
+    window.addEventListener('visibilitychange', onVisibilityChange, { passive: true })
 
     this.toUnbind(() => {
       window.removeEventListener('visibilitychange', onVisibilityChange)

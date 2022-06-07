@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink :to="projectSlug" class="projectTitle" @mouseenter="mouseEnter" @mouseleave="mouseLeave">
+  <NuxtLink :to="projectSlug" class="projectTitle" @mouseenter.passive="mouseEnter" @mouseleave.passive="mouseLeave">
     <RevealingText tag="h4" class="projectTitle__name" :delay="props.delay + (show ? 0.2 : 0)">
       {{ props.name }}
     </RevealingText>

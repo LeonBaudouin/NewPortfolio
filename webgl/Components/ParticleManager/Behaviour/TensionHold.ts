@@ -90,8 +90,8 @@ export default class TensionHold extends AbstractBehaviour {
       tween?.kill()
       tween = gsap.to(data, { factor: 0, ease: Easing.Quadratic.In, duration: 1 })
     }
-    document.addEventListener('pointerdown', pointerdown)
-    document.addEventListener('pointerup', pointerup)
+    document.addEventListener('pointerdown', pointerdown, { passive: true })
+    document.addEventListener('pointerup', pointerup, { passive: true })
     this.toUnbind(() => {
       document.removeEventListener('pointerdown', pointerdown)
       document.removeEventListener('pointerup', pointerup)

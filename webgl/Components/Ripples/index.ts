@@ -22,6 +22,10 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     return this.context.simulation.getBuffer().texture
   }
 
+  public get isEnable(): boolean {
+    return this.context.state.screenSize.width > 700 && this.context.state.perfTier < 2
+  }
+
   private params = {
     debugAnimation: false,
   }
@@ -60,6 +64,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     this.context.scene.add(this.raycastMesh)
 
     const mouseMove = (e: MouseEvent) => {
+      if (!this.isEnable) return
       if (this.context.nuxtApp.$router.currentRoute.value.name === 'about') return
       this.raycaster.setFromCamera(pixelToScreenCoords(e.clientX, e.clientY), this.context.camera)
       const [intersection] = this.raycaster.intersectObject(this.raycastMesh)
@@ -69,7 +74,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     this.context.tweakpane.addInput(this.params, 'debugAnimation', { label: 'Debug Animation' })
     this.context.tweakpane.addInput(this.raycastMesh, 'visible', { label: 'Show Plane' })
 
-    window.addEventListener('mousemove', mouseMove)
+    window.addEventListener('mousemove', mouseMove, { passive: true })
 
     this.toUnbind(() => {
       geom.dispose()
@@ -93,7 +98,6 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     temp1.sub(this.raycastMesh.position)
     this.quad.material.uniforms.uPosition.value.copy(temp1)
     temp1.copy(this.raycastMesh.position)
-    if (this.context.state.screenSize.width > 700 && this.context.state.perfTier < 2)
-      this.context.simulation.render({ overrideQuad: this.quad })
+    if (this.isEnable) this.context.simulation.render({ overrideQuad: this.quad })
   }
 }

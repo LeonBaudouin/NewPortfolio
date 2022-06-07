@@ -12,9 +12,9 @@
       :src="effectiveSrc"
       :alt="props.alt"
       @dragstart.prevent
-      @load="handleLoad"
-      @pointerdown="pointerDown"
-      @pointerup="pointerUp"
+      @load.passive="handleLoad"
+      @pointerdown.passive="pointerDown"
+      @pointerup.passive="pointerUp"
       class="image"
       :style="{ width: objectSize.width + 'px', height: objectSize.height + 'px' }"
       :width="props.width"

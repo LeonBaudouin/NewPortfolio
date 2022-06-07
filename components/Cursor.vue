@@ -86,10 +86,10 @@ useCleanup(() => {
     click.value = false
   }
 
-  window.addEventListener('mousemove', onMouseMove)
-  window.addEventListener('mousedown', onMouseDown)
-  window.addEventListener('mouseup', onMouseUp)
-  window.addEventListener('mouseleave', onMouseUp)
+  window.addEventListener('mousemove', onMouseMove, { passive: true })
+  window.addEventListener('mousedown', onMouseDown, { passive: true })
+  window.addEventListener('mouseup', onMouseUp, { passive: true })
+  window.addEventListener('mouseleave', onMouseUp, { passive: true })
   return () => {
     window.removeEventListener('mousemove', onMouseMove)
     window.removeEventListener('mousedown', onMouseDown)

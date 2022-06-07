@@ -26,8 +26,8 @@ useCleanup(() => {
     if (!isLinkClicked && enable.value) enable.value = false
   }
 
-  window.addEventListener('click', onClick)
-  return () => window.removeEventListener('click', onClick)
+  window.addEventListener('click', onClick, { passive: true })
+  return () => window.removeEventListener('click', onClick, { passive: true })
 })
 </script>
 

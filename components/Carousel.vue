@@ -1,11 +1,11 @@
 <template>
   <div
     class="carousel__wrapper"
-    @pointerdown="handleMouseDown"
+    @pointerdown.passive="handleMouseDown"
     @wheel.prevent="handleWheel"
     @scroll.prevent
-    @pointerenter="inCarousel = true"
-    @pointerleave="inCarousel = false"
+    @pointerenter.passive="inCarousel = true"
+    @pointerleave.passive="inCarousel = false"
   >
     <div class="carousel" :style="style" ref="carousel">
       <Image v-for="(image, i) in loopImages" v-bind="image" :delay="i * 0.05" :key="image.src" />
@@ -58,10 +58,10 @@ const handleMouseUp = () => {
 }
 
 useCleanup(() => {
-  window.addEventListener('pointerup', handleMouseUp)
-  window.addEventListener('touchend', handleMouseUp)
-  window.addEventListener('pointermove', handleMouseMove)
-  window.addEventListener('touchmove', handleMouseMove)
+  window.addEventListener('pointerup', handleMouseUp, { passive: true })
+  window.addEventListener('touchend', handleMouseUp, { passive: true })
+  window.addEventListener('pointermove', handleMouseMove, { passive: true })
+  window.addEventListener('touchmove', handleMouseMove, { passive: true })
   return () => {
     window.removeEventListener('pointerup', handleMouseUp)
     window.removeEventListener('touchend', handleMouseUp)

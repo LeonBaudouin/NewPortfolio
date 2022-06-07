@@ -95,7 +95,7 @@ useCleanup(() => {
   }
   setVh()
 
-  window.addEventListener('resize', setVh)
+  window.addEventListener('resize', setVh, { passive: true })
 
   return () => {
     window.cancelAnimationFrame(rafId)

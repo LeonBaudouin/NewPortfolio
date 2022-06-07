@@ -207,10 +207,10 @@ export default class PaperPlanes extends AbstractBehaviour {
       if (this.context.clock.elapsedTime - this.clickTime.value < 0.2) this.impulse.value = 10
     }
 
-    this.context.renderer.domElement.addEventListener('mousedown', mousedown)
-    window.addEventListener('mouseup', mouseup)
-    window.addEventListener('mousemove', mouseMove)
-    window.addEventListener('mouseleave', mouseLeave)
+    this.context.renderer.domElement.addEventListener('mousedown', mousedown, { passive: true })
+    window.addEventListener('mouseup', mouseup, { passive: true })
+    window.addEventListener('mousemove', mouseMove, { passive: true })
+    window.addEventListener('mouseleave', mouseLeave, { passive: true })
 
     this.context.scene.add(planeHelper)
     this.context.scene.add(boxHelper)
