@@ -69,7 +69,7 @@ export default class Grass extends AbstractObject<
           ...THREE.UniformsLib['fog'],
         },
         fog: true,
-        // transparent: true,
+        transparent: true,
       }),
       amount
     )

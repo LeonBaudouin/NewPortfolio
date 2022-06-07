@@ -24,7 +24,7 @@ void main() {
 
   float alphaTest = cremap(vWorldPosition.x, 5., 15., 0.1, 0.5);
 
-  if (gl_FragColor.a < 0.9) discard;
+  if (gl_FragColor.a < alphaTest) discard;
 
   #include <fog_fragment>
 }

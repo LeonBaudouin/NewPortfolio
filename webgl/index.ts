@@ -45,7 +45,7 @@ export default class WebGL extends LifeCycle {
     this.tweakpane = this.nuxtApp.$tweakpane!
     this.ressources = new Ressources()
 
-    this.state.pixelRatio = Math.min(window.devicePixelRatio, 1.8)
+    this.state.pixelRatio = Math.min(window.devicePixelRatio, 1.4)
 
     const setStateSize = () => {
       this.state.pixelSize.set(window.innerWidth * this.state.pixelRatio, window.innerHeight * this.state.pixelRatio)
