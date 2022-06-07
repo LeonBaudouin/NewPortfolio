@@ -17,9 +17,10 @@ float cremap(float value, float start1, float stop1, float start2, float stop2) 
 }
 
 void main() {
-  vec4 texture = texture2D(uTexture, vUv);
+  // vec4 texture = texture2D(uTexture, vUv);
 
-  float alpha = texture.r;
+  // float alpha = texture.r;
+  float alpha = 1.;
   gl_FragColor = vec4(vColor, alpha);
 
   float alphaTest = cremap(vWorldPosition.x, 5., 15., 0.1, 0.5);

@@ -25,7 +25,7 @@ export default class Plain extends AbstractObject<SceneContext> {
       () => this.context.ressources.models.grassPoints,
       (gltf) => {
         if (gltf === null) return
-        const geometry = (gltf.scene.getObjectByName('500') as THREE.Mesh).geometry
+        const geometry = (gltf.scene.getObjectByName('30000') as THREE.Mesh).geometry
         this.grass = new Grass(this.context, geometry.attributes.position.array)
         if (window.innerWidth < 700) this.grass.object.position.z += 5
         this.object.add(this.grass.object)
