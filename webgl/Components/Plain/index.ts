@@ -11,7 +11,7 @@ export default class Plain extends AbstractObject<SceneContext> {
   private plainMesh: PlainMesh
   private grassContact: GrassContact
 
-  public data = reactive({ showPlain: 0 })
+  public data = reactive({ showPlain: 0, simulation: true })
 
   constructor({ tweakpane, ...context }: SceneContext) {
     super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Plain', expanded: false }) })
@@ -52,11 +52,13 @@ export default class Plain extends AbstractObject<SceneContext> {
       },
       { immediate: true }
     )
+
+    this.context.tweakpane.addInput(this.data, 'simulation', { label: 'Play Simulation' })
   }
 
   public tick(time: number, delta: number): void {
     if (!this.object.visible) return
-    this.grassContact?.tick(time, delta)
+    if (this.data.simulation) this.grassContact?.tick(time, delta)
     if (this.grass && this.grassContact) {
       this.grass.object.material.uniforms.tContact.value = this.grassContact.texture
       this.grass.object.material.uniforms.uContactMatrix.value = temp1.copy(this.grassContact.matrix).invert()
