@@ -22,9 +22,9 @@ void main() {
   float alpha = texture.r;
   gl_FragColor = vec4(vColor, alpha);
 
-  float alphaTest = cremap(vWorldPosition.x, 5., 15., 0.1, 0.5);
+  // float alphaTest = cremap(vWorldPosition.x, 5., 15., 0.1, 0.5);
 
-  if (gl_FragColor.a < alphaTest) discard;
+  if (gl_FragColor.a < 0.1) discard;
 
   #include <fog_fragment>
 }
