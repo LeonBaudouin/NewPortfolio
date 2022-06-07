@@ -35,8 +35,7 @@ watch(
     MainStore.state.hoveredProject = null
 
     let timeout = setTimeout(() => {
-      console.log($webgl.state.averageDelta)
-      // if ($webgl.state.averageDelta > 0.025) restrictFps.value = true
+      if ($webgl.state.averageDelta > 0.025) restrictFps.value = true
     }, 5000)
 
     onCleanup(() => clearTimeout(timeout))
