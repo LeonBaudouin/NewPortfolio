@@ -35,7 +35,8 @@ watch(
     MainStore.state.hoveredProject = null
 
     let timeout = setTimeout(() => {
-      if ($webgl.state.averageDelta > 0.025) restrictFps.value = true
+      console.log($webgl.state.averageDelta)
+      // if ($webgl.state.averageDelta > 0.025) restrictFps.value = true
     }, 5000)
 
     onCleanup(() => clearTimeout(timeout))
@@ -66,7 +67,7 @@ useCleanup(() => {
   var basetime = window.performance.now()
 
   function raf() {
-    const fps = restrictFps ? 1000 / 30 : 1000 / 240
+    const fps = restrictFps.value ? 1000 / 30 : 1000 / 240
     const now = window.performance.now()
     const check = now - basetime
     if (check / fps >= 1) {
