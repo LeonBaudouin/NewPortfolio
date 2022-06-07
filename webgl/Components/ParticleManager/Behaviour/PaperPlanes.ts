@@ -5,6 +5,7 @@ import { FolderApi } from 'tweakpane'
 import remap from '~~/utils/math/remap'
 import pixelToScreenCoords from '~~/utils/webgl/pixelToScreenCoords'
 import MainStore from '~~/stores/MainStore'
+import lerp from '~~/utils/math/lerp'
 
 const particlesData = {
   useTexture: false,
@@ -103,8 +104,8 @@ export default class PaperPlanes extends AbstractBehaviour {
     return state
   }
 
-  private current: THREE.Vector3
-  private target: THREE.Vector3
+  private current: number | null = null
+  private target: number | null = null
 
   constructor({ tweakpane, ...context }: BehaviourContext) {
     super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Plane Behaviour', index: 1, expanded: false }) })
@@ -177,19 +178,20 @@ export default class PaperPlanes extends AbstractBehaviour {
 
     const track = (e: MouseEvent) => {
       if (this.state === 'project') return
-      const intersect = raycast(e)
+      if (this.isFollowing.value) {
+        const intersect = raycast(e)
 
-      if (!intersect) return
-
-      if (!this.target) this.target = intersect.point.clone()
-      if (!this.current) this.current = intersect.point.clone()
-
-      this.target.copy(intersect.point)
-      if (this.isFollowing.value) this.context.particleParams.attractor.copy(intersect.point)
-      return intersect
+        if (!intersect) return
+        this.context.particleParams.attractor.copy(intersect.point)
+        return intersect
+      }
     }
 
     const mouseMove = (e: MouseEvent) => {
+      if (this.target == null) this.target = e.clientX
+      if (this.current == null) this.current = e.clientX
+
+      this.target = e.clientX
       track(e)
     }
 
@@ -264,15 +266,14 @@ export default class PaperPlanes extends AbstractBehaviour {
     }
   }
 
-  private fac = new THREE.Vector3(0, 0.3, 0.75)
   public tick(time: number, delta: number): void {
     if (this.impulse.value) this.impulse.value--
 
     if (this.state !== 'rest') return
-    if (this.current) {
-      const prev = this.current.clone()
-      this.current.lerpVectors(this.current, this.target, 0.1)
-      this.context.particleParams.gravity.copy(prev.sub(this.current).multiplyScalar(-delta).multiply(this.fac))
+    if (this.current !== null) {
+      const prev = this.current
+      this.current = lerp(this.current, this.target!, 0.1)
+      this.context.particleParams.gravity.z = ((prev - this.current) / this.context.state.screenSize.x) * delta * 20
     }
     this.context.particleParams.attractor.y = remap(
       Math.sin(time * this.params.oscillation.freq),
