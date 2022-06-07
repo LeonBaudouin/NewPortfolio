@@ -6,6 +6,7 @@ import Ressources from './Ressources'
 import GPGPU from '~~/utils/GPGPU'
 import RenderTargetDebugger from './Components/RenderTargetDebugger'
 import Stats from './Stats'
+import { lerp } from 'three/src/math/MathUtils'
 
 type Scenes = {
   main: MainScene
@@ -26,6 +27,7 @@ export default class WebGL extends LifeCycle {
     pixelSize: new THREE.Vector2(),
     pixelRatio: 1,
     screenSize: new THREE.Vector2(),
+    averageDelta: 0.016,
   })
   private prepFramesCounter = 0
   private nuxtApp: NuxtApp
@@ -158,6 +160,7 @@ export default class WebGL extends LifeCycle {
     }
 
     const deltaTime = this.clock.getDelta()
+    this.state.averageDelta = lerp(this.state.averageDelta, deltaTime, 0.05)
     const elapsedTime = this.clock.elapsedTime
 
     const currentScene = this.scenes[this.currentScene]

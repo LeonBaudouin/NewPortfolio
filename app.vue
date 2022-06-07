@@ -29,13 +29,25 @@ const showTweakpane = ref(true)
 
 const vh = ref('0px')
 
-watch(router.currentRoute, () => {
-  MainStore.state.hoveredProject = null
-})
+watch(
+  router.currentRoute,
+  ({ name }, _, onCleanup) => {
+    MainStore.state.hoveredProject = null
+
+    let timeout = setTimeout(() => {
+      if ($webgl.state.averageDelta > 0.025) restrictFps.value = true
+    }, 5000)
+
+    onCleanup(() => clearTimeout(timeout))
+  },
+  { immediate: true }
+)
 
 useHead({
   titleTemplate: (title) => `Léon Baudouin - ${title}`,
 })
+
+const restrictFps = ref(false)
 
 useCleanup(() => {
   if (window.innerWidth < 700) isDesktop.value = false
@@ -51,12 +63,28 @@ useCleanup(() => {
   const refreshButton = $tweakpane.addButton({ title: 'Refresh', index: 1 })
   refreshButton.on('click', () => $tweakpane.refresh())
 
-  const raf = () => {
-    ;(fpsGraph as any).begin()
-    $webgl.tick()
-    ;(fpsGraph as any).end()
-    rafId = window.requestAnimationFrame(raf)
+  var basetime = window.performance.now()
+
+  function raf() {
+    const fps = restrictFps ? 1000 / 30 : 1000 / 240
+    const now = window.performance.now()
+    const check = now - basetime
+    if (check / fps >= 1) {
+      basetime = now
+      ;(fpsGraph as any).begin()
+      $webgl.tick()
+      ;(fpsGraph as any).end()
+    }
+
+    requestAnimationFrame(raf)
   }
+
+  // const raf = () => {
+  //   ;(fpsGraph as any).begin()
+  //   $webgl.tick()
+  //   ;(fpsGraph as any).end()
+  //   rafId = window.requestAnimationFrame(raf)
+  // }
 
   document.body.append($webgl.renderer.domElement)
   raf()
