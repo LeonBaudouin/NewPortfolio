@@ -1,12 +1,13 @@
 uniform float uTime;
 uniform vec2 uScale;
 uniform vec3 uCam;
+uniform vec3 uColor1;
+uniform vec3 uColor2;
+uniform float uHighlightStrength;
 
-varying vec3 vDisplace;
-varying vec3 vWorldPosition;
-varying float vNoise;
-varying float vShadow;
 varying vec2 vUv;
+varying vec3 vColor;
+varying vec3 vWorldPosition;
 
 uniform float uNoiseSpeed;
 uniform float uNoiseScale;
@@ -99,24 +100,27 @@ void main() {
   float dist = cremap(length(uCam - worldPosition.xyz), 50., 60., 1., 0.);
 
   vUv = uv;
-  vNoise = wave(worldPosition.xyz);
+  float noise = wave(worldPosition.xyz);
   vWorldPosition = worldPosition.xyz;
 
   vec2 contactUv = (uContactMatrix * vec4(worldPosition.x, 0., worldPosition.z, 1.)).xz;
   contactUv = contactUv * vec2(1., -1.) + .5;
   vec3 contact = texture2D(tContact, contactUv).rgb * isNorm(contactUv);
 
-  vDisplace = contact;
-
   vec4 pos = instanceMatrix * modelMatrix * vec4(position * uScale.xyx * dist, 1.);
   vec3 displacement = vec3(
-    mix(vNoise * uNoiseStrength, contact.y, contact.x),
+    mix(noise * uNoiseStrength, contact.y, contact.x),
     remap(contact.x, 0., 1., 0., -0.1),
     -contact.z
   );
   pos.xyz += displacement * vUv.y;
 
-  vShadow = computeAlpha(pos.xz * vec2(1., -1.) + vec2(3., 3.));
+
+  float shadow = computeAlpha(pos.xz * vec2(1., -1.) + vec2(3., 3.));
+
+  vColor = mix(uColor1, uColor2, vUv.y);
+  vColor *= 1.0 + (noise + contact.x * 3.) * uHighlightStrength;
+  vColor = mix(vColor, vec3(0.), shadow * 0.5);
 
   vec4 mvPosition = viewMatrix * pos;
   gl_Position = projectionMatrix * mvPosition;
