@@ -75,7 +75,7 @@ export default class Water extends AbstractObject<MainSceneContext> {
     this.material.uniforms.color.value.set(this.params.color)
 
     watchEffect(() => {
-      plane.getRenderTarget().setSize(this.context.state.pixelSize.x, this.context.state.pixelSize.y)
+      plane.getRenderTarget().setSize(this.context.state.screenSize.x, this.context.state.screenSize.y)
     })
 
     reactiveUniforms(this.material.uniforms, this.params)
