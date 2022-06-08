@@ -1,13 +1,26 @@
 uniform sampler2D uBlueMatcap;
 uniform sampler2D uGreenMatcap;
+uniform sampler2D uAo;
 uniform bool uInReflection;
 uniform float uTransitionProg;
 uniform float uTransitionForward;
 
 varying vec3 vViewPosition;
 varying vec3 vNormal;
+varying vec2 vUv;
 
 #include <fog_pars_fragment>
+
+
+float remap(float value, float start1, float stop1, float start2, float stop2)
+{
+    return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
+}
+
+float cremap(float value, float start1, float stop1, float start2, float stop2) {
+    float r = remap(value, start1, stop1, start2, stop2);
+    return clamp(r, start2, stop2);
+}
 
 void main() {
 	vec3 normal = normalize( vNormal );
@@ -23,7 +36,10 @@ void main() {
   float mixValue = uTransitionForward > 0. ? 1. - uTransitionProg : uTransitionProg;
   vec3 color = mix(greenColor, blueColor, mixValue);
 
-  gl_FragColor = vec4(color, 1.);
+  float ao = texture2D(uAo, vUv).r;
+  ao = cremap(ao, 0., 1., .2, 1.);
+
+  gl_FragColor = vec4(color * ao, 1.);
 
   #include <fog_fragment>
   gl_FragColor = linearToOutputTexel( gl_FragColor );

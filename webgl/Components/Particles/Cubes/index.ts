@@ -47,6 +47,7 @@ export default class Cubes extends AbstractObject<
         uNormalTexture: { value: null },
         uTextureEdges: { value: new THREE.Vector4(4.7, 0.7, -0.15, -0.7) },
         uTexture: { value: null },
+        uAo: { value: null },
         uTextureAlpha: { value: 0 },
         uBlueMatcap: { value: null },
         uGreenMatcap: { value: null },
@@ -63,6 +64,7 @@ export default class Cubes extends AbstractObject<
 
     watchEffect(() => (mat.uniforms.uGreenMatcap.value = this.context.ressources.textures.monolithMatcapGreen))
     watchEffect(() => (mat.uniforms.uBlueMatcap.value = this.context.ressources.textures.monolithMatcapBlue))
+    watchEffect(() => (mat.uniforms.uAo.value = this.context.ressources.textures.ao))
 
     const textureWatch: CustomWatch<string | HTMLImageElement | THREE.Texture> = (uniform, object, key) =>
       watchEffect(() => {

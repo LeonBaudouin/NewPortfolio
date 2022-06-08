@@ -100,6 +100,7 @@ void main() {
   float texRatio = 16./9.;
   vImageUv = adjustUvToImage(vUv, vec2(0.58, 0.5), texRatio, quadRatio, false);
 
+  vUv = uv;
   gl_Position = projectionMatrix * mvPosition;
 
 	#include <fog_vertex>
