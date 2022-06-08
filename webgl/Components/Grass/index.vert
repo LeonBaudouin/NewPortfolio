@@ -107,12 +107,12 @@ void main() {
   vec3 contact = texture2D(tContact, contactUv).rgb * isNorm(contactUv);
 
   vec3 newPosition = position;
-  // float clampV = cremap(worldPosition.x, 6., 12., 0.3, 0.15);
-  // // float clampV = cremap(worldPosition.x, -70., 20., 1., 0.);
-  // if (uv.y < 0.5) newPosition.y = clampV;
+  float clampV = cremap(worldPosition.x, 6., 12., 0.3, 0.15);
+  // float clampV = cremap(worldPosition.x, -70., 20., 1., 0.);
+  if (uv.y < 0.5) newPosition.y = clampV;
 
   vec4 pos = instanceMatrix * modelMatrix * vec4(newPosition * dist, 1.);
-  // vUv.y = (pos.y + 1.) / 0.6;
+  vUv.y = (pos.y + 1.) / 0.6;
   vec3 displacement = vec3(
     mix(noise * uNoiseStrength, contact.y, contact.x),
     remap(contact.x, 0., 1., 0., -0.1),
