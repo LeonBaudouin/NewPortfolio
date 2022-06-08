@@ -22,16 +22,25 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
   private water: Water
   private plain: Plain
   private monolith: Monolith
+  private rotation: THREE.Object3D
+  private cursor: THREE.Vector2
+  private targetCursor: THREE.Vector2
 
   private sceneState = reactive({})
 
   private params = {
     debugCam: false,
+    enableRotation: false,
+    amplitude: new THREE.Vector2(-0.06, 0.02),
+    lerp: 0.01,
   }
 
   constructor(context: WebGLAppContext) {
     super(context)
     this.setScene()
+
+    this.cursor = this.context.state.screenSize.clone().divideScalar(2)
+    this.targetCursor = this.cursor.clone()
 
     this.debugCamera = new DebugCamera(this.genContext(), { defaultPosition: new THREE.Vector3(12, 0.5, 0) })
     this.scene = new THREE.Scene()
@@ -43,10 +52,10 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.cameraHelper = new THREE.CameraHelper(this.mainCamera.object)
     this.cameraHelper.visible = false
     this.scene.add(this.debugCamera.object)
-    const rotation = new THREE.Object3D()
-    rotation.rotateY(Math.PI / 2)
-    rotation.add(this.mainCamera.object)
-    this.scene.add(rotation)
+    this.rotation = new THREE.Object3D()
+    this.rotation.rotateY(Math.PI / 2)
+    this.rotation.add(this.mainCamera.object)
+    this.scene.add(this.rotation)
     this.scene.add(this.cameraHelper)
     this.camera = this.params.debugCam ? this.debugCamera.object : this.mainCamera.object
 
@@ -54,10 +63,18 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       .addInput(this.params, 'debugCam', { label: 'Debug Cam' })
       .on('change', ({ value }) => (this.camera = value ? this.debugCamera.object : this.mainCamera.object))
 
+    this.context.tweakpane.addInput(this.params, 'enableRotation', { label: 'Enable Rotation' })
+    this.context.tweakpane.addInput(this.params, 'amplitude', { label: 'Amplitude' })
+    this.context.tweakpane.addInput(this.params, 'lerp', { label: 'Lerp' })
+
     this.cameraFolder = this.context.tweakpane.addFolder({ title: 'Main Camera', expanded: false })
     this.cameraFolder.addInput(this.cameraHelper, 'visible', { label: 'Camera Helper' })
 
     this.setObjects()
+
+    window.addEventListener('mousemove', ({ clientX, clientY }) => {
+      this.targetCursor.set(clientX, clientY)
+    })
 
     watch(
       () => this.context.ressources.state.isLoaded,
@@ -187,6 +204,14 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     this.plain?.tick(time, delta)
     this.water?.tick(time, delta)
     this.monolith?.tick(time, delta)
+    if (this.params.enableRotation) {
+      this.cursor.lerp(this.targetCursor, this.params.lerp)
+      this.rotation.rotation.y =
+        Math.PI / 2 + this.params.amplitude.x * (this.cursor.x / this.context.state.screenSize.x - 0.5)
+      const angle = this.params.amplitude.y * (this.cursor.y / this.context.state.screenSize.y - 0.5)
+      this.rotation.rotation.x = angle
+      this.rotation.rotation.order = 'YZX'
+    }
   }
 }
 export type MainSceneContext = ReturnType<MainScene['genContext']>

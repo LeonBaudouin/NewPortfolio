@@ -200,6 +200,7 @@ export default class PaperPlanes extends AbstractBehaviour {
     }
     const mousedown = (e) => {
       this.isFollowing.value = true
+      console.log('mousedown')
 
       const result = track(e)
       if (result && result.object.name === 'Cylinder') this.clickTime.value = this.context.clock.elapsedTime
@@ -231,13 +232,10 @@ export default class PaperPlanes extends AbstractBehaviour {
     watch(
       () => this.state,
       (state) => {
+        console.log(state)
         pseudoDeepAssign(this.context.particleParams, states[state])
       }
     )
-    this.context.renderer.domElement.removeEventListener('mousedown', mousedown)
-    window.removeEventListener('mouseup', mouseup)
-    window.removeEventListener('mousemove', mouseMove)
-    window.removeEventListener('mouseleave', mouseLeave)
 
     const reflectionCameraTestMesh = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(0.000001, 0.000001),
