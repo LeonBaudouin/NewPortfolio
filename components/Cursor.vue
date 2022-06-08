@@ -162,5 +162,9 @@ useCleanup(() => {
     stroke: var(--main-color);
     stroke-width: 2;
   }
+
+  &__inner {
+    fill: var(--main-color);
+  }
 }
 </style>
