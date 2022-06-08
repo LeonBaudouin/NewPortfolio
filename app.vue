@@ -15,7 +15,6 @@
     <Cursor v-if="isDesktop" />
   </div>
   <div class="tweakpane" v-if="showTweakpane"></div>
-  <GTag />
 </template>
 
 <script setup lang="ts">

@@ -19,8 +19,8 @@ import MainStore from '~~/stores/MainStore'
 import { AboutData } from '~~/types/api'
 import createMeta from '~~/utils/meta/createMeta'
 
+const { BASE_URL } = useRuntimeConfig()
 const { data } = await useAsyncData('about', () => queryContent<AboutData>('/about').findOne())
-
 definePageMeta({
   layout: 'custom',
   pageTransition: {
@@ -34,7 +34,7 @@ definePageMeta({
 
 useHead({
   title: 'About',
-  meta: createMeta({
+  meta: createMeta(BASE_URL, {
     title: 'About',
     facebookImage: (APP_URL) => `${APP_URL}/socials/facebook_about.jpg`,
     twitterImage: (APP_URL) => `${APP_URL}/socials/twitter_about.jpg`,

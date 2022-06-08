@@ -38,8 +38,7 @@ export default defineNuxtConfig({
       { name: 'theme-color', content: '#ffffff' },
       { name: 'format-detection', content: 'telephone=no' },
       { name: 'color-scheme', content: 'light dark' },
-      ...createMeta(),
+      ...createMeta(process.env.BASE_URL || 'http://localhost:3000'),
     ],
-    script: [{ async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-15PP57YC9X' }],
   },
 })

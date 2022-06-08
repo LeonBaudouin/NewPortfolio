@@ -7,6 +7,8 @@ import MainStore from '~~/stores/MainStore'
 import { ProjectApiData } from '~~/types/api'
 import createMeta from '~~/utils/meta/createMeta'
 
+const { BASE_URL } = useRuntimeConfig()
+
 definePageMeta({
   layout: 'custom',
   pageTransition: {
@@ -20,7 +22,7 @@ definePageMeta({
 
 useHead({
   title: 'Creative Developer',
-  meta: createMeta({ title: 'Creative Developer' }),
+  meta: createMeta(BASE_URL, { title: 'Creative Developer' }),
 })
 
 const { data } = await useAsyncData('all-projects', () =>
