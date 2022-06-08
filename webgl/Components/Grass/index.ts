@@ -104,6 +104,7 @@ export default class Grass extends AbstractObject<
           obj.updateMatrix()
           this.object.setMatrixAt(i, obj.matrix)
         }
+        this.object.instanceMatrix.needsUpdate = true
       },
       { immediate: true }
     )
