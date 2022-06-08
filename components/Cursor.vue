@@ -1,15 +1,17 @@
 <template>
   <div class="container" :class="{ hover: hover }" :style="mainStyle" v-if="show">
     <svg class="cursor" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 72 72">
-      <circle class="cursor__outer" cx="36" cy="36" r="16" />
+      <circle class="cursor__outer" cx="36" cy="36" :r="radius.outer" />
       <circle class="cursor__middle" cx="36" cy="36" r="16" />
-      <circle class="cursor__inner" cx="36" cy="36" r="13.2" />
+      <circle class="cursor__inner" cx="36" cy="36" :r="radius.inner" />
     </svg>
     <div class="tips" :class="{ 'tips--show': showTips && canShowTips }">hold</div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import gsap from 'gsap/all'
+
 const hover = ref(false)
 const click = ref(false)
 const show = ref(true)
@@ -20,14 +22,25 @@ const lerpPos = useLerp(mousePos, { amount: 0.8 })
 const mainStyle = computed(() => ({
   '--x': lerpPos.x + 'px',
   '--y': lerpPos.y + 'px',
-  '--transition': click.value && isHoveringCanvas.value ? '2s' : '0.6s',
-  '--inner': click.value && isHoveringCanvas.value ? 5 : (hover.value ? 10 : 12) + (click.value ? -2 : 0),
-  '--outer': click.value && isHoveringCanvas.value ? 5 : (hover.value ? 30 : 16) + (click.value ? 5 : 0),
 }))
+
+const radius = reactive({ inner: 0, outer: 0 })
 
 let canShowTips = ref(true)
 let tempIsHoveringCanvas = false
 const isHoveringCanvas = ref(false)
+
+let tween: gsap.core.Tween | undefined
+watch([click, isHoveringCanvas, hover], () => {
+  const duration = click.value && isHoveringCanvas.value ? 2 : 0.6
+  tween?.kill()
+  tween = gsap.to(radius, {
+    duration: duration,
+    ease: 'Expo.easeOut',
+    inner: click.value && isHoveringCanvas.value ? 5 : (hover.value ? 10 : 12) + (click.value ? -2 : 0),
+    outer: click.value && isHoveringCanvas.value ? 5 : (hover.value ? 30 : 16) + (click.value ? 5 : 0),
+  })
+})
 
 const isInteractable = (element: HTMLElement): boolean => {
   if (element.tagName === 'CANVAS') tempIsHoveringCanvas = true
@@ -149,58 +162,5 @@ useCleanup(() => {
     stroke: var(--main-color);
     stroke-width: 2;
   }
-
-  &__outer {
-    transition: all var(--transition) cubic-bezier(0, 0.72, 0.24, 1);
-    r: var(--outer);
-  }
-
-  &__inner {
-    transition: all var(--transition) cubic-bezier(0, 0.72, 0.24, 1);
-    fill: var(--main-color);
-    r: var(--inner);
-  }
-
-  // &--main {
-  //   width: 1.1rem;
-  //   height: 1.1rem;
-  //   border-radius: 1.1rem;
-  //   border: 1px solid var(--main-color);
-
-  //   &::before {
-  //     content: '';
-  //     border: 0.1px solid var(--main-color);
-  //     left: 50%;
-  //     top: 50%;
-  //     position: absolute;
-  //     transform: translate3d(-50%, -50%, 0) scale3d(var(--size), var(--size), 1);
-  //     pointer-events: none;
-
-  //     border-radius: 1rem;
-  //     height: 1rem;
-  //     width: 1rem;
-
-  //     transition: all 0.6s cubic-bezier(0, 0.72, 0.24, 1);
-  //   }
-
-  //   &::after {
-  //     content: '';
-  //     background-color: var(--main-color);
-  //     left: 50%;
-  //     top: 50%;
-  //     position: absolute;
-  //     transform: translate3d(calc(-50% - 0.25px), calc(-50% - 0.25px), 0) scale3d(var(--scale), var(--scale), 1);
-  //     pointer-events: none;
-
-  //     transition: all 0.6s cubic-bezier(0, 0.72, 0.24, 1);
-  //     width: 1.1rem;
-  //     height: 1.1rem;
-  //     border-radius: 1.1rem;
-
-  //     .click & {
-  //       transform: translate3d(calc(-50% - 0.25px), calc(-50% - 0.25px), 0) scale3d(0.6, 0.6, 1);
-  //     }
-  //   }
-  // }
 }
 </style>
