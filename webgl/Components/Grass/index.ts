@@ -36,7 +36,6 @@ export default class Grass extends AbstractObject<
     let amount = repartition.length / 3
 
     const origGeometry = new THREE.PlaneGeometry(0.6 * 6.17, 0.6, 12).translate(0, 0.3, 0)
-    // const origGeometry = new THREE.PlaneGeometry(0.3 * 0.05, 0.3, 1).translate(0, 0.15, 0)
 
     const bufferGeometry = new THREE.InstancedBufferGeometry()
 

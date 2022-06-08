@@ -44,19 +44,11 @@ export default class Cubes extends AbstractObject<
         uPosTexture: { value: null },
         uPreviousPosTexture: { value: null },
         uVelocityTexture: { value: null },
-        uNormalTexture: { value: null },
-        uTextureEdges: { value: new THREE.Vector4(4.7, 0.7, -0.15, -0.7) },
-        uTexture: { value: null },
         uAo: { value: null },
-        uTextureAlpha: { value: 0 },
         uBlueMatcap: { value: null },
         uGreenMatcap: { value: null },
-        uSize: {
-          value: 0,
-        },
-        uSizeVariation: {
-          value: new THREE.Vector4(),
-        },
+        uSize: { value: 0 },
+        uSizeVariation: { value: new THREE.Vector4() },
         ...THREE.UniformsLib['fog'],
         ...this.context.globalUniforms,
       },
@@ -133,9 +125,5 @@ export default class Cubes extends AbstractObject<
     this.object.material.uniforms.uPosTexture.value = positionTexture
     this.object.material.uniforms.uPreviousPosTexture.value = previousPositionTexture
     this.object.material.uniforms.uVelocityTexture.value = velocityTexture
-  }
-
-  public setAttractorTexture(normalTexture: THREE.Texture) {
-    this.object.material.uniforms.uNormalTexture.value = normalTexture
   }
 }

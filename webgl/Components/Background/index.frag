@@ -5,8 +5,6 @@ out vec4 fragColor;
 uniform vec3 uDownColor;
 uniform vec3 uUpColor;
 
-uniform vec3 uCameraPosition;
-
 uniform float uGradientStart;
 uniform float uGradientEnd;
 uniform vec2 uScreenResolution;
@@ -35,6 +33,4 @@ void main() {
   float mixValue = dist + (random(uv * 100.) - .5) / 5.;
   vec3 color = mix(uDownColor, uUpColor, mixValue);
   fragColor = linearToOutputTexel(vec4(color, 1.));
-  // fragColor = vec4(vec3(height), 1.);
-  // fragColor = vec4(eyeDirection, 1.);
 }

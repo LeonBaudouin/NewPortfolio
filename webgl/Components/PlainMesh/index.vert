@@ -28,11 +28,6 @@ float cnoise(vec3 v) {
 }
 
 float wave(vec3 pos) {
-  // Tip is the fifth vertex drawn per blade
-  // bool isTip = (gl_VertexID + 1) % 5 == 0;
-
-  // float waveDistance = isTip ? tipDistance : centerDistance;
-  // return sin((uTime / 500.0) + waveSize) * waveDistance;
   float t = uTime;
   float speed = uNoiseSpeed;
   float noise = cnoise(pos.xyz * 0.25 * uNoiseScale + vec3(-t * 0.5 * speed, t * 0.13 * speed, t * 1.3 * speed)) * 1.1;

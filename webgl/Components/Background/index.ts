@@ -15,12 +15,6 @@ export type BackgroundParams = {
 export type BackgroundData = Required<BackgroundParams>
 
 export default class Background extends AbstractObject<SceneContext> {
-  // private data = reactive({
-  //   downColor: '#090909',
-  //   upColor: '#1f1f1f',
-  //   gradientStart: -0.4,
-  //   gradientEnd: 0.3,
-  // })
   public data: BackgroundData
 
   public static DEFAULT_PARAMS: BackgroundData = reactive({
@@ -48,7 +42,6 @@ export default class Background extends AbstractObject<SceneContext> {
       uUpColor: { value: new THREE.Color(this.data.upColor) },
       uGradientStart: { value: this.data.gradientStart },
       uGradientEnd: { value: this.data.gradientEnd },
-      uCameraPosition: { value: this.context.camera.position },
       uScreenResolution: { value: this.context.state.pixelSize },
     }
 

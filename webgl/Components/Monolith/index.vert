@@ -7,6 +7,8 @@ varying vec2 vCoords;
 
 #include <fog_pars_vertex>
 
+#define PI 3.14159265359
+
 mat3 rotateY(float theta) {
   return mat3(
     cos(theta), 0., sin(theta),
@@ -17,8 +19,8 @@ mat3 rotateY(float theta) {
 
 void main() {
 
-  vTextureCoords[0] = rotateY(3.14159265359 * 0.5) * (0.5 - (uPlaneMatrix[0] * modelMatrix * vec4(position, 1.0)).xyz);
-  vTextureCoords[1] = rotateY(3.14159265359 * 0.5) * (0.5 - (uPlaneMatrix[1] * modelMatrix * vec4(position, 1.0)).xyz);
+  vTextureCoords[0] = rotateY(PI * 0.5) * (0.5 - (uPlaneMatrix[0] * modelMatrix * vec4(position, 1.0)).xyz);
+  vTextureCoords[1] = rotateY(PI * 0.5) * (0.5 - (uPlaneMatrix[1] * modelMatrix * vec4(position, 1.0)).xyz);
 
   vNormal = normalMatrix * normal;
 

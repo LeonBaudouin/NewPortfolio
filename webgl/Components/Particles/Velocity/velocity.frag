@@ -138,16 +138,6 @@ void main() {
     amount = min(amount, dist);
     if (dist < 0.01) amount = 0.;
   }
-  // ------ FIX ON ATTRACTOR
-  // if (fixOnAttractor) {
-  //   vec3 normal = texture2D(uAttractorsNormalTexture, vUv).xyz;
-  //   velocity = mix(dir, normal, 0.5);
-  //   float dist = length(positionData.xyz - attractor.xyz);
-  //   amount = min(dist, 0.2);
-  //   if (dist < 0.01) {
-  //     amount = 0.0001;
-  //   }
-  // }
 
   inputData.xyz = velocity * amount;
 

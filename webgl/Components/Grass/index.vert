@@ -38,11 +38,6 @@ float cnoise(vec3 v) {
 }
 
 float wave(vec3 pos) {
-  // Tip is the fifth vertex drawn per blade
-  // bool isTip = (gl_VertexID + 1) % 5 == 0;
-
-  // float waveDistance = isTip ? tipDistance : centerDistance;
-  // return sin((uTime / 500.0) + waveSize) * waveDistance;
   float t = uTime;
   float speed = uNoiseSpeed;
   float noise = cnoise(pos.xyz * 0.25 * uNoiseScale + vec3(-t * 0.5 * speed, t * 0.13 * speed, t * 1.3 * speed)) * 1.1;
@@ -107,10 +102,9 @@ void main() {
   vec3 contact = texture2D(tContact, contactUv).rgb * isNorm(contactUv);
 
   vec3 newPosition = position;
-  float clampV = cremap(worldPosition.x, 6., 12., 0.3, 0.15);
-  float clampC = cremap(length(contact.xy), 0., 1., 10., 0.);
-  float finalClamp = min(clampV, clampC);
-  // float clampV = cremap(worldPosition.x, -70., 20., 1., 0.);
+  float clampDist = cremap(worldPosition.x, 6., 12., 0.3, 0.15);
+  float clampContact = cremap(length(contact.xy), 0., 1., 10., 0.);
+  float finalClamp = min(clampDist, clampContact);
   if (uv.y < 0.5) newPosition.y = finalClamp;
 
   vec4 pos = instanceMatrix * modelMatrix * vec4(newPosition * dist, 1.);
@@ -128,8 +122,6 @@ void main() {
   vColor = mix(uColor1, uColor2, vUv.y);
   vColor *= 1.0 + (noise + contact.x * 3.) * uHighlightStrength;
   vColor = mix(vColor, vec3(0.), shadow * 0.5);
-
-  // vColor = vec3(clampV);
 
   vec4 mvPosition = viewMatrix * pos;
   gl_Position = projectionMatrix * mvPosition;

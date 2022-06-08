@@ -152,11 +152,11 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
   }
 
   public updateTexture(tex: THREE.Texture) {
-    this.velocity.quad.material.uniforms.uPositionFbo.value = tex
+    this.velocity.quad!.material.uniforms.uPositionFbo.value = tex
   }
 
   public setAttractorTexture(positionTexture: THREE.Texture) {
-    this.velocity.quad.material.uniforms.uAttractorsTexture.value = positionTexture
+    this.velocity.quad!.material.uniforms.uAttractorsTexture.value = positionTexture
   }
 
   public getTexture() {

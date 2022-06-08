@@ -46,11 +46,6 @@ void main() {
   drop.x = cremap(drop.x, -uRadius, 0., 1., 0.);
   drop.yz *= drop.x;
   drop *= uStrength;
-  // drop *= max(0., 1. - length(drop));
-
-  // info.r = clamp(drop.x * uStrength + info.r - 0.01, 0., 1.);
-  // info.g = clamp(drop.y * uStrength + info.g - 0.01, 0., 1.);
-  // info.b = clamp(drop.z * uStrength + info.b - 0.01, 0., 1.);
 
   info.r = min(info.r + drop.x, 1.);
   info.g = mix(info.g, drop.y, drop.x);

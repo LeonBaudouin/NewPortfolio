@@ -218,10 +218,6 @@ void main() {
   my_normal = normalize(my_normal);
 
 
-  // vec3 lightDir = normalize(vec3(30., 20., 1.));
-  // float light = cremap(dot(lightDir, my_normal), 0.5, 1., 0., .1);
-
-
   float fresnelFactor = abs(dot(vViewDirection, my_normal.rbg));
   float inversefresnelFactor = 1.0 - fresnelFactor;
   // Shaping function
@@ -233,25 +229,17 @@ void main() {
 
   mirrorCoord.xy += my_normal.xy * 0.1;
   vec4 base = texture2DProj( tDiffuse, mirrorCoord );
-  // base = linearToOutputTexel(base);
   float sat = 1. - rgb2hsv(base.rgb).y;
-  // sat = remap(sat, 0.1, 1., 0., 1.);
-  // gl_FragColor = vec4(c + f, 1.);
   sat = remap(sat, uBlendRemap.x, uBlendRemap.y, uBlendRemap.z, uBlendRemap.w);
   vec3 c = mix(base.rgb, uBlendColor, sat);
   float deepnessBlend = cremap(vUv.y, uRampRemap.x, uRampRemap.y, uRampRemap.z, uRampRemap.w);
-  // c = blendOverlay( c, color );
   c = blendOverlay( c, vec3(deepnessBlend) );
 
   float alpha = computeAlpha(vPosition.xy);
 
-  // gl_FragColor = vec4(vec3(sat), 1.);
   gl_FragColor = vec4(c + f, alpha);
 
   if (alpha < 0.5) discard;
-  // gl_FragColor = vec4(vec3(deepnessBlend), 1.);
-
-
 
   if (uDebug == 1) gl_FragColor = vec4(my_normal, 1.);
   if (uDebug == 2) gl_FragColor = vec4(position.x + 0.5, position.y + 0.5, 1., 1.);
