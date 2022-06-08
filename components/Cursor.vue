@@ -1,5 +1,5 @@
 <template>
-  <div class="container" :class="{ hover: hover }" :style="mainStyle">
+  <div class="container" :class="{ hover: hover }" :style="mainStyle" v-if="show">
     <svg class="cursor" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 72 72">
       <circle class="cursor__outer" cx="36" cy="36" r="16" />
       <circle class="cursor__middle" cx="36" cy="36" r="16" />
@@ -12,6 +12,7 @@
 <script lang="ts" setup>
 const hover = ref(false)
 const click = ref(false)
+const show = ref(true)
 const showTips = ref(false)
 const mousePos = reactive({ x: -100, y: -100 })
 const lerpPos = useLerp(mousePos, { amount: 0.8 })
@@ -86,15 +87,25 @@ useCleanup(() => {
     click.value = false
   }
 
+  const onMouseLeave = () => {
+    onMouseUp()
+    show.value = false
+  }
+  const onMouseEnter = () => {
+    show.value = true
+  }
+
   window.addEventListener('mousemove', onMouseMove, { passive: true })
   window.addEventListener('mousedown', onMouseDown, { passive: true })
   window.addEventListener('mouseup', onMouseUp, { passive: true })
-  window.addEventListener('mouseleave', onMouseUp, { passive: true })
+  document.addEventListener('mouseleave', onMouseLeave, { passive: true })
+  document.addEventListener('mouseenter', onMouseEnter, { passive: true })
   return () => {
     window.removeEventListener('mousemove', onMouseMove)
     window.removeEventListener('mousedown', onMouseDown)
     window.removeEventListener('mouseup', onMouseUp)
-    window.addEventListener('mouseleave', onMouseUp)
+    document.removeEventListener('mouseleave', onMouseLeave)
+    document.removeEventListener('mouseenter', onMouseEnter)
   }
 })
 </script>
