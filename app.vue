@@ -36,7 +36,7 @@ watch(
 
     if (!$webgl) return
     let timeout = setTimeout(() => {
-      if ($webgl.state.averageDelta > 0.025 && $webgl.state.perfTier < 3) {
+      if ($webgl.state.averageDelta > 0.02 && $webgl.state.perfTier < 3) {
         $webgl.state.perfTier++
         needRecheck.value = true
       }
