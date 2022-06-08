@@ -89,25 +89,23 @@ export default class Monolith extends AbstractObject<
     this.object.add(...this.planesGroups.map((p) => p.object))
 
     let targetRotation = defaultRotation
-    this.toUnbind(
-      watch(
-        () => MainStore.state.hoveredProject,
-        (newValue) => {
-          if (!MainStore.state.isFullyLoaded) return
-          if (this.currentIndex !== null) this.planesGroups[this.currentIndex].hide()
-          if (!newValue) return
-          targetRotation -= Math.PI / 2
-          gsap.to(this.object.rotation, { y: targetRotation, duration: 0.5, ease: 'Power0.easeNone' })
+    watch(
+      () => MainStore.state.hoveredProject,
+      (newValue) => {
+        if (!MainStore.state.isFullyLoaded) return
+        if (this.currentIndex !== null) this.planesGroups[this.currentIndex].hide()
+        if (!newValue) return
+        targetRotation -= Math.PI / 2
+        gsap.to(this.object.rotation, { y: targetRotation, duration: 0.5, ease: 'Power0.easeNone' })
 
-          const newArray = this.planesGroups.map((_, i) => i).filter((v) => v !== this.currentIndex)
-          const newIndex = Math.floor(Math.random() * (this.planesGroups.length - 2))
-          this.currentIndex = newArray[newIndex]
+        const newArray = this.planesGroups.map((_, i) => i).filter((v) => v !== this.currentIndex)
+        const newIndex = Math.floor(Math.random() * (this.planesGroups.length - 2))
+        this.currentIndex = newArray[newIndex]
 
-          this.planesGroups[this.currentIndex].object.rotation.y = -targetRotation - 0.3 + Math.PI / 2
-          this.planesGroups[this.currentIndex].show()
-          this.planesGroups[this.currentIndex].setTexture(this.context.ressources.preloadTexture(newValue))
-        }
-      )
+        this.planesGroups[this.currentIndex].object.rotation.y = -targetRotation - 0.3 + Math.PI / 2
+        this.planesGroups[this.currentIndex].show()
+        this.planesGroups[this.currentIndex].setTexture(this.context.ressources.preloadTexture(newValue))
+      }
     )
   }
 

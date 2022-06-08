@@ -8,7 +8,7 @@ export default class CloudManager extends AbstractObject<MainSceneContext> {
     super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Clouds', expanded: false }) })
 
     this.object = new THREE.Object3D()
-    this.object.scale.multiplyScalar(3.3)
+    this.object.scale.set(4.3, 3, 4.3)
     this.object.position.x -= 50
 
     const cloudParams: Exclude<ConstructorParameters<typeof Cloud>[1], undefined>[] = [

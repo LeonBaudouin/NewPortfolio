@@ -42,16 +42,8 @@ export default class Environment extends AbstractObject<SceneContext> {
       label: 'Fog Enable',
     })
 
-    this.toUnbind(
-      fogFolder.dispose,
-      fogIntensity.dispose,
-      fogEnable.dispose,
-      fogColor.dispose,
-      (this.context.tweakpane as FolderApi).dispose,
-      background.destroy,
-      watchEffect(() => fog.color.set(this.data.fogColor)),
-      watchEffect(() => (fog.density = this.data.intensity)),
-      watchEffect(() => (this.context.scene.fog = this.data.hasFog ? fog : null))
-    )
+    watchEffect(() => fog.color.set(this.data.fogColor))
+    watchEffect(() => (fog.density = this.data.intensity))
+    watchEffect(() => (this.context.scene.fog = this.data.hasFog ? fog : null))
   }
 }

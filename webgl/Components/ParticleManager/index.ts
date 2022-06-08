@@ -64,8 +64,6 @@ export default class ParticleManager extends AbstractObject<MainSceneContext> {
       console.log(JSON.parse(JSON.stringify(this.particlesParams)))
     })
 
-    this.toUnbind(() => button.dispose())
-
     watch(
       behaviourName,
       (b) => {

@@ -33,7 +33,6 @@ export default class Background extends AbstractObject<SceneContext> {
     this.data = (isReactive(params) ? params : reactive(params)) as BackgroundData
 
     this.setupMesh()
-    this.toUnbind((this.context.tweakpane as FolderApi).dispose)
   }
 
   private setupMesh() {
@@ -63,11 +62,9 @@ export default class Background extends AbstractObject<SceneContext> {
     this.context.tweakpane.addInput(this.data, 'gradientStart', { min: -1, max: 1, step: 0.01 })
     this.context.tweakpane.addInput(this.data, 'gradientEnd', { min: -1, max: 1, step: 0.01 })
 
-    this.toUnbind(
-      watchEffect(() => this.uniforms.uDownColor.value.set(this.data.downColor)),
-      watchEffect(() => this.uniforms.uUpColor.value.set(this.data.upColor)),
-      watchEffect(() => (this.uniforms.uGradientStart.value = this.data.gradientStart)),
-      watchEffect(() => (this.uniforms.uGradientEnd.value = this.data.gradientEnd))
-    )
+    watchEffect(() => this.uniforms.uDownColor.value.set(this.data.downColor))
+    watchEffect(() => this.uniforms.uUpColor.value.set(this.data.upColor))
+    watchEffect(() => (this.uniforms.uGradientStart.value = this.data.gradientStart))
+    watchEffect(() => (this.uniforms.uGradientEnd.value = this.data.gradientEnd))
   }
 }

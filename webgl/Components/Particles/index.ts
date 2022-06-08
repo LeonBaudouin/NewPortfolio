@@ -39,8 +39,6 @@ export default class Particles extends AbstractObject<WebGLAppContext> {
     this.cubes = new Cubes(this.context, params)
 
     this.object = this.cubes.object
-
-    this.toUnbind(this.velocity.destroy, this.position.destroy, this.cubes.destroy)
   }
 
   public tick(time: number, delta: number): void {

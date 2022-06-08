@@ -104,11 +104,10 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
       })
       return () => object[key]._onChange(previousOnChange)
     }
-    const unbindArray = reactiveUniforms(velocityShader.uniforms, this.data, {
+
+    reactiveUniforms(velocityShader.uniforms, this.data, {
       rotationDirection: customRotationDirection,
     })
-
-    this.toUnbind(...unbindArray)
 
     watchEffect(
       () =>
@@ -143,11 +142,6 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
       renderer: this.context.renderer,
       shader: velocityShader,
       initTexture: velocityInitTexture,
-    })
-
-    this.toUnbind(() => {
-      this.velocity.dispose()
-      velocityInitTexture.dispose()
     })
   }
 

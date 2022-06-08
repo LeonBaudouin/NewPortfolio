@@ -67,11 +67,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
       },
       { immediate: true }
     )
-
-    this.toUnbind(() => {
-      this.scene.remove(this.debugCamera.object)
-      this.debugCamera.destroy()
-    })
   }
 
   private genContext = () => {
@@ -102,10 +97,6 @@ export default class MainScene extends AbstractScene<WebGLAppContext, THREE.Pers
     })
 
     this.scene.add(this.environment.object)
-
-    this.toUnbind(() => {
-      this.environment.destroy()
-    })
 
     this.mainCamera.object.rotation.set(0, 0, 0)
     this.mainCamera.object.position.set(0, 0.2, window.innerWidth < 700 ? 25 : 21)

@@ -76,20 +76,18 @@ export default class ProjectPlane extends AbstractObject {
 
     // this.plane.visible = false
 
-    this.toUnbind(
-      watchEffect(() => {
-        const v = Easing.Quadratic.InOut(Math.abs(this.prog.value))
-        const anim = this.prog.value < 0 ? 'in' : 'out'
-        // this.plane.visible = v !== 1
-        if (anim === 'in') {
-          this.plane.position.lerpVectors(position, startPosition, v)
-          this.plane.scale.lerpVectors(scale, startScale, v)
-        } else {
-          this.plane.position.lerpVectors(position, endPosition, v)
-          this.plane.scale.lerpVectors(scale, endScale, v)
-        }
-      })
-    )
+    watchEffect(() => {
+      const v = Easing.Quadratic.InOut(Math.abs(this.prog.value))
+      const anim = this.prog.value < 0 ? 'in' : 'out'
+      // this.plane.visible = v !== 1
+      if (anim === 'in') {
+        this.plane.position.lerpVectors(position, startPosition, v)
+        this.plane.scale.lerpVectors(scale, startScale, v)
+      } else {
+        this.plane.position.lerpVectors(position, endPosition, v)
+        this.plane.scale.lerpVectors(scale, endScale, v)
+      }
+    })
   }
 
   public setTexture(texture: THREE.Texture) {

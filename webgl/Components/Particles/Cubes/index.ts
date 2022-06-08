@@ -110,11 +110,6 @@ export default class Cubes extends AbstractObject<
       max: params.textureSize.x * params.textureSize.y,
       step: 1,
     })
-
-    this.toUnbind(() => {
-      geometry.dispose()
-      mat.dispose()
-    })
   }
 
   public setTextures(

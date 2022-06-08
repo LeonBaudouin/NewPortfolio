@@ -228,29 +228,16 @@ export default class PaperPlanes extends AbstractBehaviour {
         }
       }
     )
-
-    const unbind2 = watch(
+    watch(
       () => this.state,
       (state) => {
         pseudoDeepAssign(this.context.particleParams, states[state])
       }
     )
-
-    this.toUnbind(() => {
-      freqInput.dispose()
-      amplitudeInput.dispose()
-      showRaycast.dispose()
-      this.context.scene.remove(planeHelper)
-      this.context.scene.remove(boxHelper)
-      planeHelper.geometry.dispose()
-      boxHelper.geometry.dispose()
-      ;(this.context.tweakpane as FolderApi).dispose()
-      this.context.renderer.domElement.removeEventListener('mousedown', mousedown)
-      window.removeEventListener('mouseup', mouseup)
-      window.removeEventListener('mousemove', mouseMove)
-      window.removeEventListener('mouseleave', mouseLeave)
-      unbind2()
-    })
+    this.context.renderer.domElement.removeEventListener('mousedown', mousedown)
+    window.removeEventListener('mouseup', mouseup)
+    window.removeEventListener('mousemove', mouseMove)
+    window.removeEventListener('mouseleave', mouseLeave)
 
     const reflectionCameraTestMesh = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(0.000001, 0.000001),

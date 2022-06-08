@@ -73,11 +73,9 @@ export default class TensionHold extends AbstractBehaviour {
       factor: 0,
     })
 
-    this.toUnbind(
-      watch(data, () => {
-        pseudoDeepLerp(particlesData.still, particlesData.intense, this.context.particleParams, data.factor)
-      })
-    )
+    watch(data, () => {
+      pseudoDeepLerp(particlesData.still, particlesData.intense, this.context.particleParams, data.factor)
+    })
     let tween: GSAPTween | null
 
     const pointerdown = () => {
@@ -92,9 +90,5 @@ export default class TensionHold extends AbstractBehaviour {
     }
     document.addEventListener('pointerdown', pointerdown, { passive: true })
     document.addEventListener('pointerup', pointerup, { passive: true })
-    this.toUnbind(() => {
-      document.removeEventListener('pointerdown', pointerdown)
-      document.removeEventListener('pointerup', pointerup)
-    })
   }
 }

@@ -75,14 +75,6 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     this.context.tweakpane.addInput(this.raycastMesh, 'visible', { label: 'Show Plane' })
 
     window.addEventListener('mousemove', mouseMove, { passive: true })
-
-    this.toUnbind(() => {
-      geom.dispose()
-      mat.dispose()
-      this.quad.material.dispose()
-      this.quad.geometry.dispose()
-      window.removeEventListener('mousemove', mouseMove)
-    })
   }
 
   public tick(time: number, delta: number): void {

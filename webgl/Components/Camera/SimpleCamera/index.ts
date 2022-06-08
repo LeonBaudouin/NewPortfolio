@@ -10,10 +10,6 @@ export default class SimpleCamera extends AbstractObject<WebGLAppContext, THREE.
 
     window.addEventListener('resize', this.onResize)
 
-    this.toUnbind(() => {
-      window.removeEventListener('resize', this.onResize)
-    })
-
     this.onResize()
   }
 

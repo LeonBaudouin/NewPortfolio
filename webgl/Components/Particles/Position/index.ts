@@ -41,11 +41,6 @@ export default class Position extends AbstractComponent<WebGLAppContext> {
     })
 
     this.context.tweakpane.addInput(this.positionShader.uniforms.uSpeed, 'value', { label: 'Speed' })
-
-    this.toUnbind(() => {
-      this.position.dispose()
-      posInitTexture.dispose()
-    })
   }
 
   public updateTexture(tex: THREE.Texture) {

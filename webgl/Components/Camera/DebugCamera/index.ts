@@ -16,10 +16,6 @@ export default class DebugCamera extends AbstractObject<WebGLAppContext, THREE.P
 
     window.addEventListener('resize', this.onResize, { passive: true })
 
-    this.toUnbind(() => {
-      window.removeEventListener('resize', this.onResize)
-    })
-
     this.onResize()
   }
 
