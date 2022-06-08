@@ -2,7 +2,7 @@
   <div
     class="image__container"
     :class="{
-      'image__container--loaded': loaded,
+      'image__container--loaded': effectiveLoaded,
       'image__container--show': show,
     }"
     :style="style"
@@ -39,6 +39,7 @@ const props = defineProps({
 
 const effectiveSrc = ref('/placeholder/1_1.png')
 const loaded = ref(false)
+const effectiveLoaded = ref(false)
 const show = ref(false)
 
 const [container, boundingRect] = useBoundingRect()
@@ -66,19 +67,33 @@ const style = computed(() => ({
   [oppositeSide.value]: objectSize.value[oppositeSide.value] + 'px',
 }))
 
-onMounted(() => {
-  setTimeout(() => {
-    show.value = true
-    effectiveSrc.value = props.src
-  })
-})
+watch(
+  () => MainStore.state.isFullyLoaded && !MainStore.state.inTransition,
+  (isLoaded) => {
+    if (!isLoaded) return
+    setTimeout(() => {
+      show.value = true
+      effectiveSrc.value = props.src
+    })
+  },
+  { immediate: true }
+)
 
 let timeout: ReturnType<typeof setTimeout>
 
+watch(
+  () => show.value && loaded.value,
+  (ready) => {
+    if (!ready) return
+    timeout = setTimeout(() => {
+      effectiveLoaded.value = true
+    }, 1000 * props.delay + 800)
+  },
+  { immediate: true }
+)
+
 const handleLoad = () => {
-  timeout = setTimeout(() => {
-    loaded.value = true
-  }, 1000 * props.delay + 800)
+  loaded.value = true
 }
 
 const startPos = { x: 0, y: 0 }
@@ -108,6 +123,7 @@ onUnmounted(() => {
   visibility: hidden;
   display: block;
   position: absolute;
+  opacity: 0;
 
   .layout-leave-to &,
   .page-leave-to & {
@@ -149,6 +165,7 @@ onUnmounted(() => {
     &--loaded {
       .image {
         visibility: visible;
+        opacity: 1;
       }
       &::before {
         transform-origin: top center;

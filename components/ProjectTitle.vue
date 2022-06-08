@@ -15,7 +15,6 @@
 import MainStore from '~~/stores/MainStore'
 
 const show = useShow('index')
-// const style = computed(() => ())
 
 const props = defineProps({
   name: { required: true, type: String },
@@ -32,6 +31,11 @@ const mouseEnter = () => {
 const mouseLeave = () => {
   MainStore.state.hoveredProject = null
 }
+
+useCleanup(() => {
+  document.addEventListener('mouseleave', mouseLeave, { passive: true })
+  return () => document.removeEventListener('mouseleave', mouseLeave)
+})
 
 const projectSlug = computed(() => `/project/${props.slug}`)
 </script>
@@ -87,8 +91,6 @@ const projectSlug = computed(() => `/project/${props.slug}`)
     @include lowerHeight {
       font-size: 1.2rem;
     }
-
-    transition: transform 0.1s linear;
   }
 
   @include hover {
@@ -109,7 +111,7 @@ const projectSlug = computed(() => `/project/${props.slug}`)
       font-size: 0.9rem;
     }
 
-    transition: transform 0.1s linear, opacity 0.5s ease var(--delay, 0s);
+    transition: opacity 0.5s ease var(--delay, 0s);
     transform: skewX(0);
   }
 }

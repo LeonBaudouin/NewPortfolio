@@ -18,6 +18,7 @@ const show = ref(true)
 const showTips = ref(false)
 const mousePos = reactive({ x: -100, y: -100 })
 const lerpPos = useLerp(mousePos, { amount: 0.8 })
+const size = useSize()
 
 const mainStyle = computed(() => ({
   '--x': lerpPos.x + 'px',
@@ -53,9 +54,9 @@ const isInteractable = (element: HTMLElement): boolean => {
 
 let timeout
 watch(
-  isHoveringCanvas,
-  (_, __, onCleanup) => {
-    if (isHoveringCanvas.value) {
+  () => isHoveringCanvas.value && mousePos.y < size.height / 2,
+  (inCorrectZone, __, onCleanup) => {
+    if (inCorrectZone) {
       timeout = setTimeout(() => {
         showTips.value = true
       }, 2000)

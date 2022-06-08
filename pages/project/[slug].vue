@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <NuxtLink class="project__next">Mamie Danger</NuxtLink>
+    <NuxtLink class="project__next" :to="`/project/${nextProject.slug}`">{{ nextProject.name }}</NuxtLink>
     <Image class="project__image" v-bind="data.image" :delay="0" fill="width" />
     <NuxtLink class="project__link" :to="data.link" target="__blank">See it live</NuxtLink>
     <Carousel class="project__carousel" :images="data.carousel" />
@@ -35,6 +35,7 @@
 </template>
 
 <script lang="ts" setup>
+import MainStore from '~~/stores/MainStore'
 import { ProjectApiData } from '~~/types/api'
 import createMeta from '~~/utils/meta/createMeta'
 
@@ -51,6 +52,8 @@ definePageMeta({
     name: 'page',
     mode: 'out-in',
     duration: 900,
+    onLeave: () => (MainStore.state.inTransition = true),
+    onAfterEnter: () => (MainStore.state.inTransition = false),
   },
 })
 
@@ -59,12 +62,18 @@ const { data } = await useAsyncData(route.params.slug as string, () =>
   queryContent<ProjectApiData>('/project').where({ slug: route.params.slug }).findOne()
 )
 
+const { data: allProjects } = await useAsyncData('all-projects', () =>
+  queryContent<ProjectApiData>('/project').sort({ order: 1 }).find()
+)
+
+const currentIndex = allProjects.value.findIndex((v) => v.slug === route.params.slug)
+const nextIndex = (currentIndex + 1) % allProjects.value.length
+const nextProject = allProjects.value[nextIndex]
+
 const half = Math.ceil(data.value.sections.length / 2)
 
 const firstHalf = data.value.sections.slice(0, half)
 const secondHalf = data.value.sections.slice(-half)
-
-console.log(firstHalf, secondHalf)
 
 useHead({
   title: data.value.name,
@@ -211,6 +220,7 @@ useHead({
       font-size: 0.6rem;
       right: 0;
       bottom: calc(100% - 5px);
+      white-space: nowrap;
     }
 
     transition: opacity 0.5s ease var(--delay, 0s);

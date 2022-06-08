@@ -46,7 +46,6 @@ export default class WebGL extends LifeCycle {
 
     if (this.nuxtApp.$params.debug) this.stats = new Stats(true)
     this.tweakpane = this.nuxtApp.$tweakpane!
-    this.ressources = new Ressources()
 
     this.state.pixelRatio = Math.min(window.devicePixelRatio, 1.8)
 
@@ -67,6 +66,7 @@ export default class WebGL extends LifeCycle {
     )
 
     this.setupRenderer()
+    this.ressources = new Ressources(this.renderer)
 
     this.setupSimulation()
     this.clock = new THREE.Clock(true)

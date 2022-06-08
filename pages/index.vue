@@ -9,6 +9,8 @@ import createMeta from '~~/utils/meta/createMeta'
 
 const { BASE_URL } = useRuntimeConfig()
 
+const { $webgl } = useNuxtApp()
+
 definePageMeta({
   layout: 'custom',
   pageTransition: {
@@ -28,4 +30,8 @@ useHead({
 const { data } = await useAsyncData('all-projects', () =>
   queryContent<ProjectApiData>('/project').sort({ order: 1 }).find()
 )
+
+onMounted(() => {
+  for (const { preview } of data.value) $webgl.ressources.preloadTexture(preview)
+})
 </script>

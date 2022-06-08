@@ -33,7 +33,11 @@ export default class Ressources {
     ao: this.textureLoader.load('/ao.jpg', (t) => (t.flipY = false)),
   }
 
-  constructor() {
+  private preloadedTextures: Record<string, THREE.Texture> = {}
+
+  private renderer: THREE.WebGLRenderer
+  constructor(renderer: THREE.WebGLRenderer) {
+    this.renderer = renderer
     const gltfLoader = new GLTFLoader(this.manager)
 
     gltfLoader.load('/models/scatter.glb', (gltf) => {
@@ -48,5 +52,11 @@ export default class Ressources {
 
     this.manager.onLoad = () => (this.state.isLoaded = true)
     this.manager.onProgress = (_, loaded, total) => (this.state.progress = loaded / total)
+  }
+
+  public preloadTexture(slug: string) {
+    if (!this.preloadTexture[slug])
+      this.preloadTexture[slug] = this.textureLoader.load(slug, (t) => this.renderer.initTexture(t))
+    return this.preloadTexture[slug]
   }
 }

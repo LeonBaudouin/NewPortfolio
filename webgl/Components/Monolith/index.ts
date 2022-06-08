@@ -105,17 +105,10 @@ export default class Monolith extends AbstractObject<
 
           this.planesGroups[this.currentIndex].object.rotation.y = -targetRotation - 0.3 + Math.PI / 2
           this.planesGroups[this.currentIndex].show()
-          this.planesGroups[this.currentIndex].setTexture(this.getTexture(newValue))
+          this.planesGroups[this.currentIndex].setTexture(this.context.ressources.preloadTexture(newValue))
         }
       )
     )
-  }
-
-  private getTexture(imageUrl: string) {
-    const loader = new THREE.TextureLoader()
-    if (!(imageUrl in this.textures))
-      this.textures[imageUrl] = loader.load(imageUrl, (t) => this.context.renderer.initTexture(t))
-    return this.textures[imageUrl]
   }
 
   public tick(time: number, delta: number): void {

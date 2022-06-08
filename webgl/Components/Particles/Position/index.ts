@@ -49,7 +49,7 @@ export default class Position extends AbstractComponent<WebGLAppContext> {
   }
 
   public updateTexture(tex: THREE.Texture) {
-    this.position.quad.material.uniforms.uVelocityFbo.value = tex
+    this.position.quad!.material.uniforms.uVelocityFbo.value = tex
   }
 
   public getTexture() {

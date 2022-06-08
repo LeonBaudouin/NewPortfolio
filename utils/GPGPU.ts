@@ -18,8 +18,8 @@ import * as THREE from 'three'
 export default class GPGPU {
   public size: THREE.Vector2
   private renderer: THREE.WebGLRenderer
-  private targetA: THREE.WebGLRenderTarget
-  private targetB: THREE.WebGLRenderTarget
+  public targetA: THREE.WebGLRenderTarget
+  public targetB: THREE.WebGLRenderTarget
   private scene: THREE.Scene
   private camera: THREE.OrthographicCamera
   public quad: THREE.Mesh<THREE.PlaneBufferGeometry, THREE.ShaderMaterial> | null = null

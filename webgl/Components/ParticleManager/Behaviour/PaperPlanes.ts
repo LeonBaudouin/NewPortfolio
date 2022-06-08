@@ -110,7 +110,7 @@ export default class PaperPlanes extends AbstractBehaviour {
   constructor({ tweakpane, ...context }: BehaviourContext) {
     super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Plane Behaviour', index: 1, expanded: false }) })
     pseudoDeepAssign(this.context.particleParams, particlesData)
-    pseudoDeepAssign(this.context.particleParams, states.wait)
+    pseudoDeepAssign(this.context.particleParams, states[this.state])
 
     const freqInput = this.context.tweakpane.addInput(this.params.oscillation, 'freq', {
       label: 'Frequency',
