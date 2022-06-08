@@ -170,7 +170,7 @@ export default class WebGL extends LifeCycle {
     }
 
     const deltaTime = this.clock.getDelta()
-    this.state.averageDelta = lerp(this.state.averageDelta, deltaTime, 0.05)
+    this.state.averageDelta = lerp(this.state.averageDelta, deltaTime, 0.03)
     const elapsedTime = this.clock.elapsedTime
 
     const currentScene = this.scenes[this.currentScene]

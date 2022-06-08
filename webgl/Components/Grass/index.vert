@@ -108,8 +108,10 @@ void main() {
 
   vec3 newPosition = position;
   float clampV = cremap(worldPosition.x, 6., 12., 0.3, 0.15);
+  float clampC = cremap(length(contact.xy), 0., 1., 10., 0.);
+  float finalClamp = min(clampV, clampC);
   // float clampV = cremap(worldPosition.x, -70., 20., 1., 0.);
-  if (uv.y < 0.5) newPosition.y = clampV;
+  if (uv.y < 0.5) newPosition.y = finalClamp;
 
   vec4 pos = instanceMatrix * modelMatrix * vec4(newPosition * dist, 1.);
   vUv.y = (pos.y + 1.) / 0.6;
