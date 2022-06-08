@@ -11,7 +11,11 @@ export default class Grass extends AbstractObject<
   SceneContext,
   THREE.InstancedMesh<THREE.InstancedBufferGeometry, THREE.ShaderMaterial>
 > {
-  constructor({ tweakpane, ...context }: SceneContext, repartition: ArrayLike<number>) {
+  constructor(
+    { tweakpane, ...context }: SceneContext,
+    repartition: ArrayLike<number>,
+    lowerRepartition: ArrayLike<number>
+  ) {
     super({ ...context, tweakpane: tweakpane.addFolder({ title: 'Grass', expanded: false }) })
 
     const params = reactive({
@@ -29,7 +33,7 @@ export default class Grass extends AbstractObject<
     this.context.tweakpane.addInput(params, 'color2', { label: 'Color 2' })
     this.context.tweakpane.addInput(params, 'highlightStrength', { label: 'HighlightStrength' })
 
-    const amount = repartition.length / 3
+    let amount = repartition.length / 3
 
     const origGeometry = new THREE.PlaneGeometry(0.6 * 6.17, 0.6, 12).translate(0, 0.3, 0)
     // const origGeometry = new THREE.PlaneGeometry(0.3 * 0.05, 0.3, 1).translate(0, 0.15, 0)
@@ -87,6 +91,22 @@ export default class Grass extends AbstractObject<
       obj.updateMatrix()
       this.object.setMatrixAt(i, obj.matrix)
     }
+
+    watch(
+      () => this.context.state.perfTier > 1,
+      (lowerPerf) => {
+        if (!lowerPerf) return
+        let amount = lowerRepartition.length / 3
+        this.object.count = amount
+        for (let i = 0; i < amount; i++) {
+          obj.rotation.y = Math.PI / 2
+          obj.position.set(lowerRepartition[i * 3 + 0], lowerRepartition[i * 3 + 1], lowerRepartition[i * 3 + 2])
+          obj.updateMatrix()
+          this.object.setMatrixAt(i, obj.matrix)
+        }
+      },
+      { immediate: true }
+    )
 
     const p = {
       amount,

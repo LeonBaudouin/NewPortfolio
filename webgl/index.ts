@@ -28,7 +28,7 @@ export default class WebGL extends LifeCycle {
     pixelRatio: 1,
     screenSize: new THREE.Vector2(),
     averageDelta: 0.016,
-    perfTier: 1,
+    perfTier: 2,
   })
   private prepFramesCounter = 0
   private nuxtApp: NuxtApp
@@ -60,8 +60,8 @@ export default class WebGL extends LifeCycle {
     watch(
       () => this.state.perfTier,
       (tier) => {
-        if (this.state.pixelRatio > 1.4 && tier > 1) this.state.pixelRatio = 1.4
-        if (this.state.pixelRatio > 1.2 && tier > 2) this.state.pixelRatio = 1.2
+        if (this.state.pixelRatio > 1.4 && tier === 2) this.state.pixelRatio = 1.4
+        if (this.state.pixelRatio > 1.2 && tier === 3) this.state.pixelRatio = 1.2
       },
       { immediate: true }
     )

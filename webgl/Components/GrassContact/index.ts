@@ -23,7 +23,7 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
   }
 
   public get isEnable(): boolean {
-    return this.context.state.screenSize.width > 700 && this.context.state.perfTier < 2
+    return this.context.state.screenSize.width > 700 && this.context.state.perfTier < 3
   }
 
   private params = {
