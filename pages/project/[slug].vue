@@ -6,13 +6,24 @@
         <h2 class="project__subtitle">{{ data.subtitle }}</h2>
       </div>
       <div class="project__sections">
-        <TextContent
-          class="project__section"
-          v-for="(section, i) in data.sections"
-          :title="section.title"
-          :texts="[section.text]"
-          :delay="i * 0.07"
-        />
+        <div class="project__sections__left">
+          <TextContent
+            class="project__section"
+            v-for="(section, i) in firstHalf"
+            :title="section.title"
+            :texts="[section.text]"
+            :delay="i * 0.07"
+          />
+        </div>
+        <div class="project__sections__right">
+          <TextContent
+            class="project__section"
+            v-for="(section, i) in secondHalf"
+            :title="section.title"
+            :texts="[section.text]"
+            :delay="i * 0.07"
+          />
+        </div>
       </div>
     </div>
     <NuxtLink class="project__next">Mamie Danger</NuxtLink>
@@ -48,6 +59,13 @@ const { data } = await useAsyncData(route.params.slug as string, () =>
   queryContent<ProjectApiData>('/project').where({ slug: route.params.slug }).findOne()
 )
 
+const half = Math.ceil(data.value.sections.length / 2)
+
+const firstHalf = data.value.sections.slice(0, half)
+const secondHalf = data.value.sections.slice(-half)
+
+console.log(firstHalf, secondHalf)
+
 useHead({
   title: data.value.name,
   meta: createMeta(BASE_URL, { description: data.value.sections[0].text, title: data.value.name }),
@@ -78,13 +96,6 @@ useHead({
       'link' auto
       'carousel' minmax(20vh, 250px)
       'next' auto / auto;
-  }
-
-  &__section {
-    width: calc(50% - 1.5rem);
-    @include mobile {
-      width: auto;
-    }
   }
 
   &__titles {
@@ -136,21 +147,24 @@ useHead({
   }
 
   &__sections {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     column-gap: 3rem;
-    row-gap: 1.5rem;
     margin-left: var(--x-page-margin);
-    max-height: 600px;
 
-    @media (max-width: 1300px) {
-      max-height: 800px;
+    @media (max-width: 1500px) {
+      grid-template-columns: 1fr;
     }
 
     @include mobile {
       margin-right: var(--x-page-margin);
-      max-height: none;
+    }
+
+    &__left,
+    &__right {
+      display: flex;
+      flex-direction: column;
+      row-gap: 1.5rem;
     }
   }
 

@@ -19,6 +19,15 @@ const currentImage = computed(() => MainStore.state.imageToShow)
 const handleClick = (e: PointerEvent) => {
   MainStore.state.imageToShow = null
 }
+
+useCleanup(() => {
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') MainStore.state.imageToShow = null
+  }
+
+  window.addEventListener('keydown', onKeyDown, { passive: true })
+  return () => window.removeEventListener('keydown', onKeyDown)
+})
 </script>
 
 <style lang="scss" scoped>
