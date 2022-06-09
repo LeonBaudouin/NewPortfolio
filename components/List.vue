@@ -55,6 +55,10 @@ onMounted(() => (showContact.value = window.innerWidth < 700))
     margin-top: 1.5rem;
     max-height: 330px;
 
+    @media (max-height: 700px) {
+      margin-top: 0.5rem;
+    }
+
     @include mobile {
       margin-left: 0.8rem;
       margin-top: 2.5rem;

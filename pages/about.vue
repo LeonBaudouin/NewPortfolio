@@ -53,8 +53,21 @@ useHead({
     min-height: auto;
   }
 
+  @media (max-height: 700px) {
+    margin-top: 0;
+    min-height: 35vh;
+  }
+
   &__title {
     margin-bottom: 1.5rem;
+
+    @media (max-height: 700px) {
+      margin-bottom: 0.5rem;
+    }
+
+    @include mobile {
+      margin-bottom: 1.5rem;
+    }
   }
 
   &__socials {

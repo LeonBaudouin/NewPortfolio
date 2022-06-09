@@ -41,6 +41,23 @@ useCleanup(() => {
   font-family: 'Poppins', sans-serif;
   line-height: 1;
 
+  transition: opacity 0.5s ease;
+  .loading &,
+  .layout-enter-active &,
+  .page-enter-active &,
+  .layout-leave-active &,
+  .page-leave-active & {
+    transition: opacity 0.5s ease;
+  }
+
+  .loading &,
+  .layout-enter-from &,
+  .layout-leave-to &,
+  .page-enter-from &,
+  .page-leave-to & {
+    opacity: 0;
+  }
+
   &__button {
     font-size: 1.3rem;
     font-weight: 700;
