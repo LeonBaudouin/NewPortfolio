@@ -23,8 +23,8 @@ const size = useSize()
 const { $webgl } = useNuxtApp()
 
 const mainStyle = computed(() => ({
-  '--x': $webgl.state.perfTier > 1 ? mousePos.x : lerpPos.x + 'px',
-  '--y': $webgl.state.perfTier > 1 ? mousePos.y : lerpPos.y + 'px',
+  '--x': $webgl && $webgl.state.perfTier > 1 ? mousePos.x : lerpPos.x + 'px',
+  '--y': $webgl && $webgl.state.perfTier > 1 ? mousePos.y : lerpPos.y + 'px',
 }))
 
 const radius = reactive({ inner: 0, outer: 0 })
