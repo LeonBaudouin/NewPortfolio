@@ -20,9 +20,11 @@ const mousePos = reactive({ x: -100, y: -100 })
 const lerpPos = useLerp(mousePos, { amount: 0.8 })
 const size = useSize()
 
+const { $webgl } = useNuxtApp()
+
 const mainStyle = computed(() => ({
-  '--x': lerpPos.x + 'px',
-  '--y': lerpPos.y + 'px',
+  '--x': $webgl.state.perfTier > 1 ? mousePos.x : lerpPos.x + 'px',
+  '--y': $webgl.state.perfTier > 1 ? mousePos.y : lerpPos.y + 'px',
 }))
 
 const radius = reactive({ inner: 0, outer: 0 })
