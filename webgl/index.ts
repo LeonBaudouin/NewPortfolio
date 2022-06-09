@@ -28,7 +28,7 @@ export default class WebGL extends LifeCycle {
     pixelRatio: 1,
     screenSize: new THREE.Vector2(),
     averageDelta: 0.016,
-    perfTier: 4,
+    perfTier: 1,
   })
   private prepFramesCounter = 0
   private nuxtApp: NuxtApp
