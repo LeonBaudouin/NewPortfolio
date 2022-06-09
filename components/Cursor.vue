@@ -11,6 +11,7 @@
 
 <script lang="ts" setup>
 import gsap from 'gsap/all'
+import lerp from '~~/utils/math/lerp'
 
 const hover = ref(false)
 const click = ref(false)
@@ -23,8 +24,8 @@ const size = useSize()
 const { $webgl } = useNuxtApp()
 
 const mainStyle = computed(() => ({
-  '--x': $webgl && $webgl.state.perfTier > 1 ? mousePos.x : lerpPos.x + 'px',
-  '--y': $webgl && $webgl.state.perfTier > 1 ? mousePos.y : lerpPos.y + 'px',
+  '--x': lerp(mousePos.x, lerpPos.x, $webgl && $webgl.state.perfTier > 1 ? 0 : 1) + 'px',
+  '--y': lerp(mousePos.y, lerpPos.y, $webgl && $webgl.state.perfTier > 1 ? 0 : 1) + 'px',
 }))
 
 const radius = reactive({ inner: 0, outer: 0 })
