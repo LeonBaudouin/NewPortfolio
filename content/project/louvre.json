@@ -1,70 +1,68 @@
 {
-  "name": "Figure d'artiste",
+  "name": "La vie d'une oeuvre",
   "subtitle": "Gobelins x Louvre",
-  "link": "https://safe-place.vercel.app/",
+  "link": "http://lebrun.leonbaudouin.fr/",
   "preview": "/projects/louvre.png",
   "slug": "louvre",
-  "order": 5,
+  "year": 2020,
+  "order": 4,
   "sections": [
     {
-      "text": "<i>Allow yourself some time in a calm and serene world: your safe place. Take the time to enjoy the peacefulness of the place, by walking through it. Let yourself be carried away on a narrative journey that will bring you peace and relaxation as you interact.</i>"
+      "text": "<i>La vie d'une œuvre is an interactive experience linked to the Petite Galerie du Louvre and its exhibition \"Figure d'artiste\" which ran from September 2019 to June 2020.</i>"
     },
     {
       "title": "What is it ?",
-      "text": "Safe Place is a meditative and immersive experience that offers a moment of relaxation, essential when facing overwork."
+      "text": "<b>La vie d'une œuvre</b> is an immersive experience based on Vigée Le Brun's painting <i>\"La Paix ramenant l'Abondance\"</i>. Throughout this experience, you will visit some of the places that hosted this creation and discover its impact on the art world."
     },
     {
       "title": "Context",
-      "text": "This experience is a end-of-year student project I worked on with another developer and three designers."
+      "text": "This project was produced as part of a two-week workshop between the <b>Petite Galerie du Louvre</b> and my bachelor's program at the <b>École des Gobelins</b>. I made it with Emilien Vandevelde as a developer by my side, and two designers, Vincent Calas and Chloélia Breton."
     },
     {
       "title": "Tech",
-      "text": "The immersive scenery was made using ThreeJS with React for the user interface. We used React Three Fiber to make those two tools worked together. We also added some useful development tools from Poimandres."
-    },
-    {
-      "text": "In this project I took the technical lead and set up the overall architecture of the code base. I was also in charge of the 3D scenes and I worked on advanced webgl strategies for rendering particles, water and grass. "
+      "text": "This project was made without javascript framework except <b>ThreeJS</b> for webgl. I had a great time creating <b>custom shaders</b> for transitions and object reveals. I also spent time finding ways reduce the size of assets. The website has a huge amount of textures and I found ways to reduce the load time an its <b>impact on the UX</b>."
     }
   ],
   "image": {
-    "src": "/projects/safeplace/2_S.jpg",
-    "fullScreen": "/projects/safeplace/2_F.jpg",
+    "src": "/projects/louvre/1_S.jpg",
+    "fullScreen": "/projects/louvre/1_F.jpg",
     "alt": "Safeplace",
     "width": 1920,
     "height": 1080,
-    "color": "#E2D0BC"
+    "color": "#114E45"
   },
   "carousel": [
     {
-      "src": "/projects/safeplace/1_S.jpg",
-      "fullScreen": "/projects/safeplace/1_F.jpg",
+      "src": "/projects/louvre/2_S.jpg",
+      "fullScreen": "/projects/louvre/2_F.jpg",
       "alt": "",
       "width": 1920,
       "height": 1080,
-      "color": "#6E879B"
+      "color": "#897F73"
     },
     {
-      "src": "/projects/safeplace/3_S.jpg",
-      "fullScreen": "/projects/safeplace/3_F.jpg",
+      "src": "/projects/louvre/3_S.jpg",
+      "fullScreen": "/projects/louvre/3_F.jpg",
       "alt": "",
       "width": 1920,
       "height": 1080,
-      "color": "#8C865A"
+      "color": "#CDC0B0"
     },
     {
-      "src": "/projects/safeplace/4_S.jpg",
-      "fullScreen": "/projects/safeplace/4_F.jpg",
+      "src": "/projects/louvre/4_S.jpg",
+      "fullScreen": "/projects/louvre/4_F.jpg",
       "alt": "",
       "width": 1920,
       "height": 1080,
-      "color": "#6B7048"
+      "color": "#5D2914"
     },
     {
-      "src": "/projects/safeplace/5_S.jpg",
-      "fullScreen": "/projects/safeplace/5_F.jpg",
+      "src": "/projects/louvre/5_S.jpg",
+      "fullScreen": "/projects/louvre/5_F.jpg",
       "alt": "",
       "width": 1920,
       "height": 1080,
-      "color": "#C39C8D"
+      "color": "#4E2310"
     }
   ]
 }

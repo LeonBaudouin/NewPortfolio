@@ -1,25 +1,26 @@
 {
   "name": "Le souvenir perdu",
   "subtitle": "Digital Escape Game",
-  "link": "https://safe-place.vercel.app/",
+  "link": "https://xperience.destination-metier.fr/jeux/sante-social/",
   "preview": "/projects/x-perience.png",
   "slug": "sante-social",
-  "order": 3,
+  "year": 2022,
+  "order": 6,
   "sections": [
     {
       "text": "<i>This November day started quietly, with my weekly visit to the doctor. However, on my way home, I had a revelation: today is not a day like the others, I have the feeling that it is an important date! But I can't remember why... Come with me on this day, maybe it will come back.</i>"
     },
     {
       "title": "What is it ?",
-      "text": "Le souvenir perdu is a digital escape game in which your helping Madeleine in her daily life, by discovering 8 jobs in the health and social sector."
+      "text": "Le souvenir perdu is a <b>digital escape game</b> in which your helping Madeleine in her daily life, by discovering 8 jobs in the health and social sector."
     },
     {
       "title": "Context",
-      "text": "This project was commissioned by the Normandy region to the agency Lost Mechanics. I was in charge of the integration and front-end development of this project as a freelancer."
+      "text": "This project was commissioned by the Normandy region to the agency <b>Lost Mechanics</b>. I was in charge of the integration and front-end development of this project as a <b>freelancer</b>."
     },
     {
       "title": "Tech",
-      "text": "This project is the first of in a series of other digital escape games on various other work areas. As such I had to design each puzzle to fit a wide range of different scenarios."
+      "text": "This project was made using <b>Vue with Nuxt</b>. It is the first in a series of other digital escape games on various other work areas. As such, I had to think of each puzzle as <b>reusable components</b> adapting to a wide range of scenarios."
     }
   ],
   "image": {

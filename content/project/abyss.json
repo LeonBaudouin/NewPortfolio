@@ -1,9 +1,10 @@
 {
   "name": "Abyss",
   "subtitle": "Data Visualization",
-  "link": "https://safe-place.vercel.app/",
+  "link": "https://abyss.leonbaudouin.fr/",
   "preview": "/projects/abyss.png",
   "slug": "abyss",
+  "year": 2019,
   "order": 2,
   "sections": [
     {

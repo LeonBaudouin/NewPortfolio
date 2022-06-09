@@ -1,70 +1,72 @@
 {
   "name": "Belle Epoque",
   "subtitle": "Agency Website",
-  "link": "https://safe-place.vercel.app/",
+  "link": "https://belleepoque.co/",
   "preview": "/projects/belle-epoque.jpg",
   "slug": "belle-epoque",
+  "year": 2022,
   "order": 7,
   "sections": [
     {
-      "text": "<i>Allow yourself some time in a calm and serene world: your safe place. Take the time to enjoy the peacefulness of the place, by walking through it. Let yourself be carried away on a narrative journey that will bring you peace and relaxation as you interact.</i>"
-    },
-    {
       "title": "What is it ?",
-      "text": "Safe Place is a meditative and immersive experience that offers a moment of relaxation, essential when facing overwork."
+      "text": "Belle Epoque's last website was outdated, so they decided to create a new site showing a new set of skills recently acquired. Vincent Le Vern took care of the design of the site and Michael de Laborde and myself, working as apprentices at Belle Epoque, took care of the development."
     },
     {
-      "title": "Context",
-      "text": "This experience is a end-of-year student project I worked on with another developer and three designers."
+      "text": "This new website features textured 3D abstract shapes that I enjoyed creating. I also had fun set up the small <b>UI and 3D interactions</b> that make navigating the site fun."
     },
     {
       "title": "Tech",
-      "text": "The immersive scenery was made using ThreeJS with React for the user interface. We used React Three Fiber to make those two tools worked together. We also added some useful development tools from Poimandres."
-    },
-    {
-      "text": "In this project I took the technical lead and set up the overall architecture of the code base. I was also in charge of the 3D scenes and I worked on advanced webgl strategies for rendering particles, water and grass. "
+      "text": "As for all projects made by Belle Epoque, we use NextJS and we added React Three Fiber to manage <b>ThreeJS</b> and <b>Framer Motion</b> for animations. In addition to being an animation lib, Framer Motion also allows for <b>high frequency reactivity</b> that is difficult to manage in a React application. This stack was really nice to use, even though React Three Fiber often leads to overly verbose code."
     }
   ],
   "image": {
-    "src": "/projects/safeplace/2_S.jpg",
-    "fullScreen": "/projects/safeplace/2_F.jpg",
-    "alt": "Safeplace",
+    "src": "/projects/belle-epoque/1_S.jpg",
+    "fullScreen": "/projects/belle-epoque/1_F.jpg",
+    "alt": "Belle Epoque",
     "width": 1920,
     "height": 1080,
-    "color": "#E2D0BC"
+    "color": "#AFA282"
   },
   "carousel": [
     {
-      "src": "/projects/safeplace/1_S.jpg",
-      "fullScreen": "/projects/safeplace/1_F.jpg",
+      "src": "/projects/belle-epoque/2_S.jpg",
+      "fullScreen": "/projects/belle-epoque/2_F.jpg",
       "alt": "",
       "width": 1920,
       "height": 1080,
-      "color": "#6E879B"
+      "color": "#FFFFFF"
     },
     {
-      "src": "/projects/safeplace/3_S.jpg",
-      "fullScreen": "/projects/safeplace/3_F.jpg",
+      "src": "/projects/belle-epoque/3_S.jpg",
+      "fullScreen": "/projects/belle-epoque/3_F.jpg",
       "alt": "",
       "width": 1920,
       "height": 1080,
-      "color": "#8C865A"
+      "color": "#100D0D"
     },
     {
-      "src": "/projects/safeplace/4_S.jpg",
-      "fullScreen": "/projects/safeplace/4_F.jpg",
+      "src": "/projects/belle-epoque/4_S.jpg",
+      "fullScreen": "/projects/belle-epoque/4_F.jpg",
       "alt": "",
       "width": 1920,
       "height": 1080,
-      "color": "#6B7048"
+      "color": "#1C1A1A"
     },
     {
-      "src": "/projects/safeplace/5_S.jpg",
-      "fullScreen": "/projects/safeplace/5_F.jpg",
+      "src": "/projects/belle-epoque/5_S.jpg",
+      "fullScreen": "/projects/belle-epoque/5_F.jpg",
       "alt": "",
       "width": 1920,
       "height": 1080,
-      "color": "#C39C8D"
+      "color": "#FFFFFF"
+    },
+    {
+      "src": "/projects/belle-epoque/6_S.jpg",
+      "fullScreen": "/projects/belle-epoque/6_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#FAF8EE"
     }
   ]
 }

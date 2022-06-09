@@ -1,7 +1,7 @@
 const defaultMetas = {
   title: '',
   description:
-    'I’m a french creative developer based in Paris specialized in webgl / realtime 3D on the web and front-end development.',
+    'Hi, my name is Léon Baudouin. I’m a french creative developer based in Paris specialized in webgl / realtime 3D on the web and front-end development.',
   twitterImage: (APP_URL) => `${APP_URL}/socials/twitter.jpg`,
   facebookImage: (APP_URL) => `${APP_URL}/socials/facebook.jpg`,
 }

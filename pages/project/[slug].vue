@@ -1,9 +1,9 @@
 <template>
-  <div class="project">
+  <div class="project" :class="{ 'project--wideCarousel': wideCarousel }">
     <div class="project__content">
       <div class="project__titles">
         <SlidingText tag="h1" class="project__title"> {{ data.name }} </SlidingText>
-        <h2 class="project__subtitle">{{ data.subtitle }}</h2>
+        <h2 class="project__subtitle">{{ data.subtitle }} - {{ data.year }}</h2>
       </div>
       <div class="project__sections">
         <div class="project__sections__left">
@@ -30,7 +30,7 @@
     <Image class="project__image" v-bind="data.image" :delay="0" fill="width" />
     <NuxtLink class="project__link" :to="data.link" target="__blank">See it live</NuxtLink>
     <Carousel class="project__carousel" :images="data.carousel" />
-    <CopyRight v-if="!isDesktop" />
+    <CopyRight v-if="!isDesktop" class="project__copyright" />
   </div>
 </template>
 
@@ -73,7 +73,9 @@ const nextProject = allProjects.value[nextIndex]
 const half = Math.ceil(data.value.sections.length / 2)
 
 const firstHalf = data.value.sections.slice(0, half)
-const secondHalf = data.value.sections.slice(-half)
+const secondHalf = data.value.sections.slice(half, data.value.sections.length)
+
+const wideCarousel = computed(() => data.value.carousel.filter((v) => v.height / v.width < 1.2).length === 0)
 
 useHead({
   title: data.value.name,
@@ -96,6 +98,14 @@ useHead({
   column-gap: 3rem;
   padding-top: 10vh;
   width: 100%;
+
+  &--wideCarousel {
+    grid-template:
+      'content next' auto
+      'content image' auto
+      'content link' auto
+      'carousel carousel' minmax(40vh, 500px) / 60vw auto;
+  }
 
   @include mobile {
     row-gap: 2rem;
@@ -177,14 +187,9 @@ useHead({
     }
   }
 
-  // &__aside {
-  //   grid-area: aside;
-  //   justify-self: end;
-  //   align-self: center;
-  //   width: 100%;
-  //   display: flex;
-  //   flex-direction: column;
-  // }
+  &__copyright {
+    margin-left: var(--x-page-margin);
+  }
 
   &__image {
     grid-area: image;
@@ -206,6 +211,7 @@ useHead({
     @include mobile {
       justify-self: start;
       margin-left: var(--x-page-margin);
+      margin-bottom: 0;
 
       &::before {
         right: none;

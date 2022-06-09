@@ -2,6 +2,7 @@ export type ImageData = { src: string; alt: string; width: number; height: numbe
 
 export type ProjectApiData = {
   name: string
+  year: number
   sections: { title: string; text: string }[]
   image: ImageData
   carousel: ImageData[]

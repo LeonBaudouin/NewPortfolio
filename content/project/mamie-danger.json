@@ -1,70 +1,76 @@
 {
   "name": "Mamie Danger",
   "subtitle": "Mobile Game",
-  "link": "https://safe-place.vercel.app/",
+  "link": "https://play.google.com/store/apps/details?id=app.mamiedanger",
   "preview": "/projects/mamie-danger.png",
   "slug": "mamie-danger",
-  "order": 4,
+  "year": 2020,
+  "order": 3,
   "sections": [
     {
-      "text": "<i>Allow yourself some time in a calm and serene world: your safe place. Take the time to enjoy the peacefulness of the place, by walking through it. Let yourself be carried away on a narrative journey that will bring you peace and relaxation as you interact.</i>"
+      "text": "<i>In the mobile game Mamie Danger, you play as a young student who meets Mamie Josette, a grandmother who has a hard time crossing the street alone. Through different levels, the player will help her get around a dangerous city and overcome the obstacles. Slowly, a complicity and a connection will emerge between the two generations.</i>"
     },
     {
       "title": "What is it ?",
-      "text": "Safe Place is a meditative and immersive experience that offers a moment of relaxation, essential when facing overwork."
+      "text": "<b>Mamie Danger</b> is a game that mixes <b>puzzles and dexterity</b> challenges. Our objective is to show the gap between generations and the difficulties that the elderly can encouter when moving around a city."
     },
     {
       "title": "Context",
-      "text": "This experience is a end-of-year student project I worked on with another developer and three designers."
+      "text": "This project was the <b>first long-term project I had to do for Gobelins</b>. I worked on it with another developper, Théo Lemoine, and two designers, Ronan Champigny and Marie-Liesse de Solages."
     },
     {
       "title": "Tech",
-      "text": "The immersive scenery was made using ThreeJS with React for the user interface. We used React Three Fiber to make those two tools worked together. We also added some useful development tools from Poimandres."
-    },
-    {
-      "text": "In this project I took the technical lead and set up the overall architecture of the code base. I was also in charge of the 3D scenes and I worked on advanced webgl strategies for rendering particles, water and grass. "
+      "text": "This project was created using <b>Unity</b>. I was in charge of the <b>render pipeline</b>, of the UX of the game and I integrated the UI. It was an opportunity for me to go deeper into the <b>Unity shader graph</b> and I decided to use it for most of the UI."
     }
   ],
   "image": {
-    "src": "/projects/safeplace/2_S.jpg",
-    "fullScreen": "/projects/safeplace/2_F.jpg",
+    "src": "/projects/mamie-danger/1_S.jpg",
+    "fullScreen": "/projects/mamie-danger/1_F.jpg",
     "alt": "Safeplace",
     "width": 1920,
     "height": 1080,
-    "color": "#E2D0BC"
+    "color": "#D36582"
   },
   "carousel": [
     {
-      "src": "/projects/safeplace/1_S.jpg",
-      "fullScreen": "/projects/safeplace/1_F.jpg",
+      "src": "/projects/mamie-danger/2_S.jpg",
+      "fullScreen": "/projects/mamie-danger/2_F.jpg",
       "alt": "",
-      "width": 1920,
-      "height": 1080,
-      "color": "#6E879B"
+      "width": 534,
+      "height": 947,
+      "color": "#FEB529"
     },
     {
-      "src": "/projects/safeplace/3_S.jpg",
-      "fullScreen": "/projects/safeplace/3_F.jpg",
+      "src": "/projects/mamie-danger/5_S.jpg",
+      "fullScreen": "/projects/mamie-danger/5_F.jpg",
       "alt": "",
-      "width": 1920,
-      "height": 1080,
-      "color": "#8C865A"
+      "width": 534,
+      "height": 947,
+      "color": "#6355B9"
     },
     {
-      "src": "/projects/safeplace/4_S.jpg",
-      "fullScreen": "/projects/safeplace/4_F.jpg",
+      "src": "/projects/mamie-danger/7_S.jpg",
+      "fullScreen": "/projects/mamie-danger/7_F.jpg",
       "alt": "",
-      "width": 1920,
-      "height": 1080,
-      "color": "#6B7048"
+      "width": 534,
+      "height": 947,
+      "color": "#A3B8C3"
     },
     {
-      "src": "/projects/safeplace/5_S.jpg",
-      "fullScreen": "/projects/safeplace/5_F.jpg",
+      "src": "/projects/mamie-danger/6_S.jpg",
+      "fullScreen": "/projects/mamie-danger/6_F.jpg",
       "alt": "",
-      "width": 1920,
-      "height": 1080,
-      "color": "#C39C8D"
+      "width": 534,
+      "height": 947,
+      "color": "#D36582"
+    },
+    {
+      "src": "/projects/mamie-danger/4_S.jpg",
+      "fullScreen": "/projects/mamie-danger/4_F.jpg",
+      "alt": "",
+      "width": 534,
+      "height": 947,
+      "color": "#A3B8C3"
     }
   ]
 }

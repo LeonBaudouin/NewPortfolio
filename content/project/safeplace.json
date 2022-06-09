@@ -4,25 +4,26 @@
   "link": "https://safe-place.vercel.app/",
   "preview": "/projects/safeplace.png",
   "slug": "safeplace",
-  "order": 6,
+  "year": 2021,
+  "order": 5,
   "sections": [
     {
       "text": "<i>Allow yourself some time in a calm and serene world: your safe place. Take the time to enjoy the peacefulness of the place, by walking through it. Let yourself be carried away on a narrative journey that will bring you peace and relaxation as you interact.</i>"
     },
     {
       "title": "What is it ?",
-      "text": "Safe Place is a meditative and immersive experience that offers a moment of relaxation, essential when facing overwork."
+      "text": "Safe Place is a <b>meditative and immersive experience</b> that offers a moment of relaxation, essential when facing overwork."
     },
     {
       "title": "Context",
-      "text": "This experience is a end-of-year student project I worked on with another developer and three designers."
+      "text": "This experience is a end-of-year student project I worked on with another developer, Brieuc Caillot, and three designers, Roxane Peuvrier, Marie-Liesse de Solages and Alexandre Gomez-Pardo."
     },
     {
       "title": "Tech",
-      "text": "The immersive scenery was made using ThreeJS with React for the user interface. We used React Three Fiber to make those two tools worked together. We also added some useful development tools from Poimandres."
+      "text": "The immersive scenery was made using <b>ThreeJS</b> with <b>React</b> for the user interface. We used <b>React Three Fiber</b> to make those two tools worked together. We also added some useful development tools from <b>Poimandres</b>."
     },
     {
-      "text": "In this project I took the technical lead and set up the overall architecture of the code base. I was also in charge of the 3D scenes and I worked on advanced webgl strategies for rendering particles, water and grass. "
+      "text": "In this project I took the technical lead and set up the overall architecture of the code base. I was also in charge of the 3D scenes and worked on <b>advanced Webgl strategies for particle</b>, water and grass rendering, like <b>instancing or gpgpu</b>."
     }
   ],
   "image": {
