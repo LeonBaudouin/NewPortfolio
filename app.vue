@@ -51,6 +51,9 @@ watch(
 
 useHead({
   titleTemplate: (title) => `Léon Baudouin - ${title}`,
+  htmlAttrs: {
+    lang: 'en',
+  },
 })
 
 useCleanup(() => {
