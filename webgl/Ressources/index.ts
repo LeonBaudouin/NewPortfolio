@@ -30,7 +30,7 @@ export default class Ressources {
     planeMatcapBlue: this.textureLoader.load('/textures/matcap/matcap_plane_blue.jpg'),
     planeMatcapGreen: this.textureLoader.load('/textures/matcap/matcap_plane_blue.jpg'),
     monolithMatcapGreen: this.textureLoader.load('/textures/matcap/matcap_green.jpg'),
-    ao: this.textureLoader.load('/ao.jpg', (t) => (t.flipY = false)),
+    ao: this.textureLoader.load('/textures/ao.jpg', (t) => (t.flipY = false)),
   }
 
   private preloadedTextures: Record<string, THREE.Texture> = {}
