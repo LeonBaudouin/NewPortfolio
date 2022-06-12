@@ -83,13 +83,6 @@ useCleanup(() => {
     requestAnimationFrame(raf)
   }
 
-  // const raf = () => {
-  //   ;(fpsGraph as any).begin()
-  //   $webgl.tick()
-  //   ;(fpsGraph as any).end()
-  //   rafId = window.requestAnimationFrame(raf)
-  // }
-
   document.body.append($webgl.renderer.domElement)
   raf()
 

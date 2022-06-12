@@ -61,7 +61,7 @@ export default class WebGL extends LifeCycle {
       (tier) => {
         if (this.state.pixelRatio > 1.4 && tier === 2) this.state.pixelRatio = 1.4
         if (this.state.pixelRatio > 1.2 && tier === 3) this.state.pixelRatio = 1.2
-        if (this.state.pixelRatio > 0.8 && tier === 4) this.state.pixelRatio = 0.8
+        if (this.state.pixelRatio > 0.8 && tier === 5) this.state.pixelRatio = 0.8
       },
       { immediate: true }
     )
