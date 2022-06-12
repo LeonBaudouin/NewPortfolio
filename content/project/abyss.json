@@ -13,11 +13,11 @@
     },
     {
       "title": "The subject",
-      "text": "Rachel Duvauchelle and I choose the abyss as the subject because <b>it's a little-known environment</b> and we were both inspired by it.<br/> It was the first time we designed for 3D for both of us so we had to make some comprises on the content. We couldn't spend much time finding relevants dataset so <b>we focused on some key abyss species.</b>"
+      "text": "Rachel Duvauchelle and I choose the abyss as the subject because <b>it's a very unknown environment</b> and we were both inspired by it.<br/> For the two of us, it was the very first time we designed in 3D so we had to make some compromises on the content. It was impossible to spend a big amount of time finding relevant dataset so <b>we decided to focus on some key abyss species.</b>"
     },
     {
       "title": "My work",
-      "text": "I worked on the <b>environment of the scene, particles, light and fog</b> to make it looks like an underwater environment. To reduce the designer load of work, I laid out most of the elements in the 3D scene directly in Javascript. This also helped me sync it with the page scroll."
+      "text": "I worked on the <b>environment of the scene, particles, light and fog</b> to make it look like an underwater environment. To reduce the designer load of work, I laid out most of the elements in the 3D scene directly in Javascript. This also helped me sync it with the page scroll."
     }
   ],
   "image": {

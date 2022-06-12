@@ -20,10 +20,10 @@
     },
     {
       "title": "Tech",
-      "text": "The immersive scenery was made using <b>ThreeJS</b> with <b>React</b> for the user interface. We used <b>React Three Fiber</b> to make those two tools worked together. We also added some useful development tools from <b>Poimandres</b>."
+      "text": "The immersive scenery was made using <b>ThreeJS</b> with <b>React</b> for the user interface. We used <b>React Three Fiber</b> to make those two tools work together. We also added some useful development tools from <b>Poimandres</b>."
     },
     {
-      "text": "In this project I took the technical lead and set up the overall architecture of the code base. I was also in charge of the 3D scenes and worked on <b>advanced Webgl strategies for particle</b>, water and grass rendering, like <b>instancing or gpgpu</b>."
+      "text": "On this project I took the technical lead and set up the overall architecture of the code base. I was also in charge of the 3D scenes and worked on <b>advanced Webgl strategies for particle</b>, water and grass rendering, like <b>instancing or gpgpu</b>."
     }
   ],
   "image": {

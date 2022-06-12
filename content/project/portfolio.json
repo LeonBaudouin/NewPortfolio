@@ -8,15 +8,15 @@
   "order": 1,
   "sections": [
     {
-      "text": "When I graduated from my multimedia diploma, I had to do an internship and I planned to go to <b>Gobelins l'école de l'image</b>. So I made my first real portfolio. I created this website completely by myself and <b>from scratch from design to back-end.</b>"
+      "text": "When I graduated from my multimedia diploma, I had to accomplish an internship and I planned to go to <b>Gobelins l'école de l'image</b>. So I made my first real portfolio. I created this website completely by myself and <b>from scratch from design to back-end.</b>"
     },
     {
       "title": "Design",
-      "text": "It was important to me that the website represent my profile at the time. And as I was into <b>motion design</b>, I tried to bring some elements from this world into the design. I also wanted the website to be very animated."
+      "text": "It was important for me that the website represented my profile at the time. And as I was into <b>motion design</b>, I tried to bring some elements from this world into the design. It was also meaningful for me to make it animated."
     },
     {
       "title": "Development",
-      "text": "As I said, I did this this website from scratch. The frontend is <b>vanilla javascript with typescript</b> and Canvas 2D. The backend is a <b>hand made MVC pattern</b> in PHP, with Alto Router and Twig templater."
+      "text": "As I said above, I created this website from scratch. The frontend is <b>vanilla javascript with typescript</b> and Canvas 2D. The backend is a <b>hand made MVC pattern</b> in PHP, with Alto Router and Twig templater."
     }
   ],
   "image": {
