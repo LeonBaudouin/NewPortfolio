@@ -4,6 +4,7 @@
 
 <style lang="scss" scoped>
 .copyRight {
+  user-select: none;
   @include desktop {
     position: absolute;
     bottom: 17px;
