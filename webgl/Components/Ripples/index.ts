@@ -65,9 +65,9 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     this.context.scene.add(this.raycastMesh)
 
     const mouseMove = (e: MouseEvent | TouchEvent) => {
-      console.log('mousemove', this.isEnable)
-      const cursorX = 'touches' in e ? e.touches[0].clientX : e.x
-      const cursorY = 'touches' in e ? e.touches[0].clientY : e.y
+      const cursorX = 'touches' in e ? e.touches[0].clientX : e.clientX
+      const cursorY = 'touches' in e ? e.touches[0].clientY : e.clientY
+      console.log('mousemove', this.isEnable, { cursorX, cursorY })
       if (!this.isEnable) return
       if (this.context.nuxtApp.$router.currentRoute.value.name === 'about') return
       this.raycaster.setFromCamera(pixelToScreenCoords(cursorX, cursorY), this.context.camera)
