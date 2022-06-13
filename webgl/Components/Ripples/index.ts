@@ -72,7 +72,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
       this.raycaster.setFromCamera(pixelToScreenCoords(cursorX, cursorY), this.context.camera)
       const [intersection] = this.raycaster.intersectObject(this.raycastMesh)
       if (intersection) this.mousePos.copy(intersection.uv!)
-      console.log('mousemove', this.isEnable, { cursorX, cursorY }, intersection)
+      console.log(intersection.uv)
     }
 
     this.context.tweakpane.addInput(this.params, 'debugAnimation', { label: 'Debug Animation' })
