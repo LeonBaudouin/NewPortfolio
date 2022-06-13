@@ -65,6 +65,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     this.context.scene.add(this.raycastMesh)
 
     const mouseMove = (e: MouseEvent | TouchEvent) => {
+      console.log('mousemove', this.isEnable)
       const cursorX = 'touches' in e ? e.touches[0].clientX : e.x
       const cursorY = 'touches' in e ? e.touches[0].clientY : e.y
       if (!this.isEnable) return
