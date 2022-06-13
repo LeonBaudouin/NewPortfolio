@@ -92,7 +92,7 @@ useHead({
     'content image' auto
     'content link' auto
     'carousel carousel' minmax(20vh, 250px) / 60vw auto;
-  max-height: 90vh;
+  max-height: calc(90 * var(--vh));
   overflow-y: auto;
   position: absolute;
   column-gap: 3rem;
