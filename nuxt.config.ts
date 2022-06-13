@@ -10,6 +10,7 @@ export default defineNuxtConfig({
       mdc: false,
     },
   },
+  target: 'static',
   publicRuntimeConfig: {
     BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
   },
