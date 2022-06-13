@@ -147,7 +147,7 @@ export default class WebGL extends LifeCycle {
       initTexture,
       renderTargetParams: {
         minFilter: THREE.LinearFilter,
-        magFilter: THREE.LinearMipmapLinearFilter,
+        magFilter: THREE.LinearFilter,
       },
     })
 

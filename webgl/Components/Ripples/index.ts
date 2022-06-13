@@ -89,7 +89,6 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     const distFromLastFrame = this.quad.material.uniforms.uCenter.value.distanceTo(this.mousePos)
     this.quad.material.uniforms.uCenter.value.copy(this.mousePos)
     this.quad.material.uniforms.uStrength.value = cremap(distFromLastFrame, [0, 0.001], [0, 0.02])
-    console.log(cremap(distFromLastFrame, [0, 0.001], [0, 0.02]))
 
     this.quad.material.uniforms.uPlaneScale.value = this.raycastMesh.scale.x
     temp1.sub(this.raycastMesh.position)
