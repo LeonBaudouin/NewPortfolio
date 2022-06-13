@@ -9,14 +9,14 @@
   "sections": [
     {
       "title": "What is it ?",
-      "text": "Belle Epoque's last website was outdated, so the studio decided to create a new site showing a new set of skills recently acquired. Vincent Le Vern took care of the design of the site and Michael de Laborde and myself, working as apprentices at Belle Epoque, took care of the development."
+      "text": "<i>Belle Epoque</i>'s last website was outdated, so the studio decided to create a new site showing a new set of skills recently acquired. Vincent Le Vern took care of the design of the site and Michael de Laborde and myself, working as apprentices at <i>Belle Epoque</i>, took care of the development."
     },
     {
       "text": "I had a great time creating 3D abstract shapes and making up textures. I also had fun setting up the small <b>UI and 3D interactions</b> that makes the navigation of the website fun."
     },
     {
       "title": "Tech",
-      "text": "As for all projects made by Belle Epoque, we used NextJS and we added React Three Fiber to manage <b>ThreeJS</b>. We also used <b>Framer Motion</b> to handle animations. In addition to being an animation lib, Framer Motion makes <b>high frequency reactivity</b> easier which is difficult to manage in a React application. This stack was really nice to use, even though React Three Fiber often leads to overly verbose code."
+      "text": "As for all projects made by <i>Belle Epoque</i>, we used NextJS and we added React Three Fiber to manage <b>ThreeJS</b>. We also used <b>Framer Motion</b> to handle animations. In addition to being an animation lib, Framer Motion makes <b>high frequency reactivity</b> easier which is difficult to manage in a React application. This stack was really nice to use, even though React Three Fiber often leads to overly verbose code."
     }
   ],
   "image": {
