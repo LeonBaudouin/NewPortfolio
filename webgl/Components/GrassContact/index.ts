@@ -23,7 +23,7 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
   }
 
   public get isEnable(): boolean {
-    return this.context.state.screenSize.width > 700 && this.context.state.perfTier < 3
+    return this.context.state.perfTier < 3
   }
 
   private params = {
@@ -32,16 +32,6 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
 
   constructor(context: SceneContext) {
     super(context)
-    const size = new THREE.Vector2(1024, 1024)
-
-    const initTexture = new THREE.DataTexture(
-      new Float32Array(new Array(size.x * size.y * 4).fill(0)),
-      size.x,
-      size.y,
-      THREE.RGBAFormat,
-      THREE.FloatType
-    )
-
     const simulationShader = new THREE.ShaderMaterial({
       fragmentShader: simFragment,
       vertexShader: vertex,
@@ -70,15 +60,18 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
     this.raycastMesh = new THREE.Mesh(geom, mat)
     this.raycastMesh.position.y = -0.6
     this.raycastMesh.position.x = 11
+    if (this.context.state.screenSize.x < 700) this.raycastMesh.position.x = 14
     this.raycastMesh.visible = false
     this.raycastMesh.renderOrder = 100
     this.raycastMesh.scale.setScalar(20)
     this.context.scene.add(this.raycastMesh)
 
-    const mouseMove = (e: MouseEvent) => {
+    const mouseMove = (e: MouseEvent | TouchEvent) => {
+      const cursorX = 'touches' in e ? e.touches[0].clientX : e.x
+      const cursorY = 'touches' in e ? e.touches[0].clientY : e.y
       if (!this.isEnable) return
       if (this.context.nuxtApp.$router.currentRoute.value.name !== 'about') return
-      this.raycaster.setFromCamera(pixelToScreenCoords(e.clientX, e.clientY), this.context.camera)
+      this.raycaster.setFromCamera(pixelToScreenCoords(cursorX, cursorY), this.context.camera)
       const [intersection] = this.raycaster.intersectObject(this.raycastMesh)
       if (intersection) this.mousePos.copy(intersection.uv!)
     }
@@ -87,6 +80,7 @@ export default class GrassContact extends AbstractComponent<SceneContext> {
     this.context.tweakpane.addInput(this.raycastMesh, 'visible', { label: 'Show Plane' })
 
     window.addEventListener('mousemove', mouseMove, { passive: true })
+    window.addEventListener('touchmove', mouseMove, { passive: true })
   }
 
   public tick(time: number, delta: number): void {

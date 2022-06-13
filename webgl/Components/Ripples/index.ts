@@ -23,7 +23,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
   }
 
   public get isEnable(): boolean {
-    return this.context.state.screenSize.width > 700 && this.context.state.perfTier < 3
+    return this.context.state.perfTier < 3
   }
 
   private params = {
@@ -59,14 +59,17 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     this.raycastMesh = new THREE.Mesh(geom, mat)
     this.raycastMesh.position.y = 0.01
     this.raycastMesh.position.x = 11
+    if (this.context.state.screenSize.x < 700) this.raycastMesh.position.x = 16
     this.raycastMesh.visible = false
     this.raycastMesh.scale.setScalar(20)
     this.context.scene.add(this.raycastMesh)
 
-    const mouseMove = (e: MouseEvent) => {
+    const mouseMove = (e: MouseEvent | TouchEvent) => {
+      const cursorX = 'touches' in e ? e.touches[0].clientX : e.x
+      const cursorY = 'touches' in e ? e.touches[0].clientY : e.y
       if (!this.isEnable) return
       if (this.context.nuxtApp.$router.currentRoute.value.name === 'about') return
-      this.raycaster.setFromCamera(pixelToScreenCoords(e.clientX, e.clientY), this.context.camera)
+      this.raycaster.setFromCamera(pixelToScreenCoords(cursorX, cursorY), this.context.camera)
       const [intersection] = this.raycaster.intersectObject(this.raycastMesh)
       if (intersection) this.mousePos.copy(intersection.uv!)
     }
@@ -75,6 +78,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     this.context.tweakpane.addInput(this.raycastMesh, 'visible', { label: 'Show Plane' })
 
     window.addEventListener('mousemove', mouseMove, { passive: true })
+    window.addEventListener('touchmove', mouseMove, { passive: true })
   }
 
   public tick(time: number, delta: number): void {

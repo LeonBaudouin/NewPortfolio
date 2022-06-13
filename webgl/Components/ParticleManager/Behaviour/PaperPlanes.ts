@@ -168,15 +168,17 @@ export default class PaperPlanes extends AbstractBehaviour {
 
     const raycaster = new THREE.Raycaster()
 
-    const raycast = (e: MouseEvent, useReflection = false): THREE.Intersection | undefined => {
-      const p = pixelToScreenCoords(e.clientX, e.clientY)
+    const raycast = (e: MouseEvent | TouchEvent, useReflection = false): THREE.Intersection | undefined => {
+      const cursorX = 'touches' in e ? e.touches[0].clientX : e.x
+      const cursorY = 'touches' in e ? e.touches[0].clientY : e.y
+      const p = pixelToScreenCoords(cursorX, cursorY)
       if (useReflection) p.x = -p.x
       raycaster.setFromCamera(p, useReflection ? (reflectionCamera as THREE.Camera) : this.context.camera)
       const [intersection] = raycaster.intersectObject(interesectMeshes)
       return intersection
     }
 
-    const track = (e: MouseEvent) => {
+    const track = (e: MouseEvent | TouchEvent) => {
       if (this.state === 'project') return
       if (this.isFollowing.value) {
         const intersect = raycast(e)
@@ -187,11 +189,12 @@ export default class PaperPlanes extends AbstractBehaviour {
       }
     }
 
-    const mouseMove = (e: MouseEvent) => {
-      if (this.target == null) this.target = e.clientX
-      if (this.current == null) this.current = e.clientX
+    const mouseMove = (e: MouseEvent | TouchEvent) => {
+      const cursorX = 'touches' in e ? e.touches[0].clientX : e.x
+      if (this.target == null) this.target = cursorX
+      if (this.current == null) this.current = cursorX
 
-      this.target = e.clientX
+      this.target = cursorX
       track(e)
     }
 
@@ -209,9 +212,10 @@ export default class PaperPlanes extends AbstractBehaviour {
       if (this.context.clock.elapsedTime - this.clickTime.value < 0.2) this.impulse.value = 10
     }
 
-    this.context.renderer.domElement.addEventListener('mousedown', mousedown, { passive: true })
-    window.addEventListener('mouseup', mouseup, { passive: true })
+    this.context.renderer.domElement.addEventListener('pointerdown', mousedown, { passive: true })
+    window.addEventListener('pointerup', mouseup, { passive: true })
     window.addEventListener('mousemove', mouseMove, { passive: true })
+    window.addEventListener('touchmove', mouseMove, { passive: true })
     window.addEventListener('mouseleave', mouseLeave, { passive: true })
 
     this.context.scene.add(planeHelper)
