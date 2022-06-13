@@ -72,7 +72,6 @@ export default class Ripples extends AbstractComponent<SceneContext> {
       this.raycaster.setFromCamera(pixelToScreenCoords(cursorX, cursorY), this.context.camera)
       const [intersection] = this.raycaster.intersectObject(this.raycastMesh)
       if (intersection) this.mousePos.copy(intersection.uv!)
-      console.log(intersection.uv)
     }
 
     this.context.tweakpane.addInput(this.params, 'debugAnimation', { label: 'Debug Animation' })
@@ -90,6 +89,7 @@ export default class Ripples extends AbstractComponent<SceneContext> {
     const distFromLastFrame = this.quad.material.uniforms.uCenter.value.distanceTo(this.mousePos)
     this.quad.material.uniforms.uCenter.value.copy(this.mousePos)
     this.quad.material.uniforms.uStrength.value = cremap(distFromLastFrame, [0, 0.001], [0, 0.02])
+    console.log(cremap(distFromLastFrame, [0, 0.001], [0, 0.02]))
 
     this.quad.material.uniforms.uPlaneScale.value = this.raycastMesh.scale.x
     temp1.sub(this.raycastMesh.position)
