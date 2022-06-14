@@ -42,6 +42,8 @@ export default class Background extends AbstractObject<SceneContext> {
       uGradientStart: { value: this.data.gradientStart },
       uGradientEnd: { value: this.data.gradientEnd },
       uScreenResolution: { value: this.context.state.pixelSize },
+      inverseProjectionMatrix: { value: new THREE.Matrix4() },
+      inverseViewMatrix: { value: new THREE.Matrix4() },
     }
 
     this.object = new THREE.Mesh(
@@ -53,6 +55,11 @@ export default class Background extends AbstractObject<SceneContext> {
         uniforms: this.uniforms,
       })
     )
+
+    this.object.onBeforeRender = (_, __, camera: THREE.PerspectiveCamera) => {
+      this.uniforms.inverseViewMatrix.value.copy(camera.matrixWorld)
+      this.uniforms.inverseProjectionMatrix.value.copy(camera.projectionMatrixInverse)
+    }
     this.object.renderOrder = -100
     this.object.frustumCulled = false
 

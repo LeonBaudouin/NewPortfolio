@@ -39,10 +39,16 @@ export default class ProjectPlane extends AbstractObject {
           uLocalMatrix: { value: null },
           uPlaneRatio: { value: 1 },
           uTexture: { value: null },
+          uTextureRatio: { value: 1 },
         },
         transparent: true,
       })
     )
+    this.plane.onBeforeRender = () => {
+      const texture = this.plane.material.uniforms.uTexture.value as THREE.Texture
+      if (texture?.image?.width)
+        this.plane.material.uniforms.uTextureRatio.value = texture?.image?.width / texture?.image?.height
+    }
     this.plane.material.uniforms.uLocalMatrix.value = this.plane.matrix
 
     this.object.add(this.plane)
