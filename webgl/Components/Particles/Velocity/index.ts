@@ -142,6 +142,7 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
       renderer: this.context.renderer,
       shader: velocityShader,
       initTexture: velocityInitTexture,
+      renderTargetParams: { type: THREE.FloatType },
     })
   }
 

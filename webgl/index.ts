@@ -149,6 +149,7 @@ export default class WebGL extends LifeCycle {
       renderTargetParams: {
         minFilter: THREE.LinearFilter,
         magFilter: THREE.LinearFilter,
+        type: THREE.FloatType,
       },
     })
 

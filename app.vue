@@ -164,7 +164,7 @@ body {
   font-family: 'Poppins', sans-serif;
   color: var(--main-color);
   margin: 0;
-  background-color: black;
+  background-color: #2a659f;
   cursor: none;
 }
 

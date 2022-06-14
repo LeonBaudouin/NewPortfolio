@@ -38,6 +38,7 @@ export default class Position extends AbstractComponent<WebGLAppContext> {
       renderer: this.context.renderer,
       shader: this.positionShader,
       initTexture: posInitTexture,
+      renderTargetParams: { type: THREE.FloatType },
     })
 
     this.context.tweakpane.addInput(this.positionShader.uniforms.uSpeed, 'value', { label: 'Speed' })
