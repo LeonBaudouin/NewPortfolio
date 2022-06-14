@@ -175,6 +175,7 @@ body > canvas {
   background-color: white;
   width: 100% !important;
   height: 100% !important;
+  user-select: none;
 }
 .tp-fldv_c > .tp-cntv,
 .tp-tabv_c .tp-brkv > .tp-cntv {
