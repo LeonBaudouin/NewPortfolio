@@ -7,6 +7,7 @@ import GPGPU from '~~/utils/GPGPU'
 import RenderTargetDebugger from './Components/RenderTargetDebugger'
 import Stats from './Stats'
 import { lerp } from 'three/src/math/MathUtils'
+import { isIOS } from '~~/utils/browser/isIOS'
 
 type Scenes = {
   main: MainScene
@@ -149,7 +150,7 @@ export default class WebGL extends LifeCycle {
       renderTargetParams: {
         minFilter: THREE.LinearFilter,
         magFilter: THREE.LinearFilter,
-        type: THREE.FloatType,
+        type: isIOS() ? THREE.HalfFloatType : THREE.FloatType,
       },
     })
 

@@ -7,6 +7,7 @@ import { inSphere } from '~~/utils/math/inSphere'
 import { WebGLAppContext } from '~~/webgl'
 import AbstractComponent from '~~/webgl/abstract/AbstractComponent'
 import lerp from '~~/utils/math/lerp'
+import { isIOS } from '~~/utils/browser/isIOS'
 
 export default class Position extends AbstractComponent<WebGLAppContext> {
   private position: GPGPU
@@ -38,7 +39,7 @@ export default class Position extends AbstractComponent<WebGLAppContext> {
       renderer: this.context.renderer,
       shader: this.positionShader,
       initTexture: posInitTexture,
-      renderTargetParams: { type: THREE.FloatType },
+      renderTargetParams: { type: isIOS() ? THREE.HalfFloatType : THREE.FloatType },
     })
 
     this.context.tweakpane.addInput(this.positionShader.uniforms.uSpeed, 'value', { label: 'Speed' })
