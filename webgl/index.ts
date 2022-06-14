@@ -122,6 +122,7 @@ export default class WebGL extends LifeCycle {
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
     })
+    this.renderer.setClearColor('#2a659f')
     this.renderer.outputEncoding = THREE.LinearEncoding
     this.renderer.debug.checkShaderErrors = true
     this.stats?.setRenderPanel(this.renderer.getContext())
