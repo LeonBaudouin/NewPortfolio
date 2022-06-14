@@ -1,7 +1,5 @@
 precision mediump float;
 
-out vec4 fragColor;
-
 uniform vec3 uDownColor;
 uniform vec3 uUpColor;
 
@@ -32,5 +30,5 @@ void main() {
 	vec2 uv = gl_FragCoord.xy / uScreenResolution;
   float mixValue = dist + (random(uv * 100.) - .5) / 5.;
   vec3 color = mix(uDownColor, uUpColor, mixValue);
-  fragColor = linearToOutputTexel(vec4(color, 1.));
+  gl_FragColor = linearToOutputTexel(vec4(color, 1.));
 }

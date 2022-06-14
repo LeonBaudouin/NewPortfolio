@@ -51,7 +51,6 @@ export default class Background extends AbstractObject<SceneContext> {
         vertexShader: vertexShader,
         depthTest: false,
         uniforms: this.uniforms,
-        glslVersion: THREE.GLSL3,
       })
     )
     this.object.renderOrder = -100
