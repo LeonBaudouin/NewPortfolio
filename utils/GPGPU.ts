@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { isIOS } from './browser/isIOS'
 
 /**
  * Utility class for gpgpu
@@ -65,7 +66,7 @@ export default class GPGPU {
     this.targetA = new THREE.WebGLRenderTarget(this.size.x, this.size.y, {
       minFilter: THREE.NearestFilter,
       magFilter: THREE.NearestFilter,
-      type: THREE.FloatType,
+      type: isIOS() ? THREE.HalfFloatType : THREE.FloatType,
       stencilBuffer: false,
       ...renderTargetParams,
     })
