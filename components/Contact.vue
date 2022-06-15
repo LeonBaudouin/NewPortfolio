@@ -8,7 +8,7 @@
         <div class="contact__content">
           <NuxtLink to="mailto:leondedouin@gmail.com" class="contact__link"> leondedouin@gmail.com </NuxtLink>
           <span class="separator"> - </span>
-          <NuxtLink to="tel:0652716926" class="contact__link"> 06 52 71 69 26 </NuxtLink>
+          <NuxtLink to="tel:+330652716926" class="contact__link"> +33 06 52 71 69 26 </NuxtLink>
         </div>
       </SlidingText>
     </transition>
@@ -27,7 +27,7 @@ useCleanup(() => {
   }
 
   window.addEventListener('click', onClick, { passive: true })
-  return () => window.removeEventListener('click', onClick, { passive: true })
+  return () => window.removeEventListener('click', onClick)
 })
 </script>
 
