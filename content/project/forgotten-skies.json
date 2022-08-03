@@ -1,0 +1,72 @@
+{
+  "name": "Forgotten Skies",
+  "subtitle": "Immersive Website",
+  "link": "https://forgotten-skies.leonbaudouin.fr/",
+  "preview": "/projects/forgotten-skies.jpg",
+  "slug": "forgotten-skies",
+  "year": 2022,
+  "order": 8,
+  "sections": [
+    {
+      "text": "<i>With Forgotten Skies, sail through the celestial vault of ancient civilizations and revive the stories of the stars, as they were told and used by the people. Explore the nightsky, and observe the constellations with a totally new perspective !</i>"
+    },
+    {
+      "title": "Context",
+      "text": "This project is a 6-month prototype realized within the framework of the Design and Management of Interactive Innovation program at Gobelins, Paris. I worked on this project with two other developers : Juliette Sage--Aubriot and Aurélien Hémidy and two designers : Ronan Champigny and Alexandre Gomez-Pardo."
+    },
+    {
+      "title": "My work",
+      "text": "I lead the webgl dev side of this immersive website. To make it really feels like you're navigating through the stars, I created a <b>custom fluid simulation</b> that seems endless and also works on a sphere. Working with a sphere was difficult, I had to find different ways to integrate the design, avoid pole pinching and <b>keep the rendering fast.</b>"
+    }
+  ],
+  "image": {
+    "src": "/projects/forgotten-skies/4_S.jpg",
+    "fullScreen": "/projects/forgotten-skies/4_F.jpg",
+    "alt": "abyss",
+    "width": 1920,
+    "height": 1080,
+    "color": "#FAE868"
+  },
+  "carousel": [
+    {
+      "src": "/projects/forgotten-skies/6_S.jpg",
+      "fullScreen": "/projects/forgotten-skies/6_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#0F0140"
+    },
+    {
+      "src": "/projects/forgotten-skies/2_S.jpg",
+      "fullScreen": "/projects/forgotten-skies/2_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#1D0259"
+    },
+    {
+      "src": "/projects/forgotten-skies/3_S.jpg",
+      "fullScreen": "/projects/forgotten-skies/3_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#090126"
+    },
+    {
+      "src": "/projects/forgotten-skies/1_S.jpg",
+      "fullScreen": "/projects/forgotten-skies/1_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#0F0140"
+    },
+    {
+      "src": "/projects/forgotten-skies/5_S.jpg",
+      "fullScreen": "/projects/forgotten-skies/5_F.jpg",
+      "alt": "",
+      "width": 1920,
+      "height": 1080,
+      "color": "#1D0259"
+    }
+  ]
+}
