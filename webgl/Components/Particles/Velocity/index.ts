@@ -144,6 +144,8 @@ export default class Velocity extends AbstractComponent<WebGLAppContext> {
       initTexture: velocityInitTexture,
       renderTargetParams: { type: THREE.FloatType },
     })
+
+    this.context.renderTargetDebugger.registerRenderTarget('velocity', this.velocity.getBuffer())
   }
 
   public updateTexture(tex: THREE.Texture) {
