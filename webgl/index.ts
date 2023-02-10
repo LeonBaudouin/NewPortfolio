@@ -156,6 +156,7 @@ export default class WebGL extends LifeCycle {
     })
 
     this.renderTargetDebugger = new RenderTargetDebugger(this.genContext())
+    this.renderTargetDebugger.registerRenderTarget('simulation', this.simulation.getBuffer())
     // this.renderTargetDebugger.object.visible = false
     // this.tweakpane.addInput(this.renderTargetDebugger.object, 'visible', { label: 'Render Target Debugger' })
   }
