@@ -112,7 +112,7 @@ useCleanup(() => {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  cursor: none;
+  // cursor: none;
 }
 
 .tweakpane {
@@ -165,7 +165,7 @@ body {
   color: var(--main-color);
   margin: 0;
   background-color: #2a659f;
-  cursor: none;
+  // cursor: none;
 }
 
 body > canvas {

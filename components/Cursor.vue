@@ -18,14 +18,12 @@ const click = ref(false)
 const show = ref(true)
 const showTips = ref(false)
 const mousePos = reactive({ x: -100, y: -100 })
-const lerpPos = useLerp(mousePos, { amount: 0.8 })
+const lerpPos = useLerp(mousePos, { amount: 0.2 })
 const size = useSize()
 
-const { $webgl } = useNuxtApp()
-
 const mainStyle = computed(() => ({
-  '--x': lerp(mousePos.x, lerpPos.x, $webgl && $webgl.state.perfTier > 1 ? 0 : 1) + 'px',
-  '--y': lerp(mousePos.y, lerpPos.y, $webgl && $webgl.state.perfTier > 1 ? 0 : 1) + 'px',
+  '--x': lerpPos.x + 'px',
+  '--y': lerpPos.y + 'px',
 }))
 
 const radius = reactive({ inner: 0, outer: 0 })
