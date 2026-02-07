@@ -7,8 +7,8 @@
       <SlidingText v-if="enable" :show="enable" :skew="-1" :padding="2">
         <div class="contact__content">
           <NuxtLink to="mailto:leondedouin@gmail.com" class="contact__link"> leondedouin@gmail.com </NuxtLink>
-          <span class="separator"> - </span>
-          <NuxtLink to="tel:0652716926" class="contact__link"> 06 52 71 69 26 </NuxtLink>
+          <!-- <span class="separator"> - </span>
+          <NuxtLink to="tel:0652716926" class="contact__link"> 06 52 71 69 26 </NuxtLink> -->
         </div>
       </SlidingText>
     </transition>
@@ -27,7 +27,7 @@ useCleanup(() => {
   }
 
   window.addEventListener('click', onClick, { passive: true })
-  return () => window.removeEventListener('click', onClick, { passive: true })
+  return () => window.removeEventListener('click', onClick)
 })
 </script>
 
@@ -61,7 +61,7 @@ useCleanup(() => {
   &__button {
     font-size: 1.3rem;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     line-height: 1.7;
     text-transform: uppercase;
     display: inline-block;
@@ -71,16 +71,16 @@ useCleanup(() => {
     border: none;
     transition: all 0.3s linear;
     color: transparent;
-    -webkit-text-stroke: 1px var(--main-color);
+    -webkit-text-stroke: 0.5px var(--main-color);
 
     &--enable {
       color: var(--main-color);
-      -webkit-text-stroke: 1px transparent;
+      -webkit-text-stroke: 0.5px transparent;
     }
 
     @include hover {
       color: var(--main-color);
-      -webkit-text-stroke: 1px transparent;
+      -webkit-text-stroke: 0.5px transparent;
     }
   }
 
